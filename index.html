@@ -616,7 +616,7 @@
                         <tr>
                             <th scope="col">Nombre del Indicador</th>
                             <th scope="col">Componente</th>
-                            <th scope="col">Dirección</th> <!-- Cambiado a Dirección, ya que Temática no tiene valores -->
+                            <th scope="col">Dirección</th>
                             <th scope="col">Sector Estadístico</th>
                             <th scope="col">ID RA</th>
                             <th scope="col">Periodicidad</th>
@@ -636,21 +636,58 @@
         let periodicityChartInstance = null; // Para guardar la instancia del gráfico de periodicidad
 
         // Función para parsear el CSV
-	function parseCSV(csv) {
-    const lines = csv.split('\n');
-    // La primera línea contiene los encabezados. Limpiar espacios en blanco y el carácter BOM (Byte Order Mark) si existe.
-    const headers = lines[0].split(';').map(h => h.trim().replace(/^\uFEFF/, '')); 
-    return lines.slice(1).map(line => {
-        const values = line.split(';');
-        const obj = {};
-        headers.forEach((header, i) => {
-            // Limpiar comillas y espacios en los valores.
-            obj[header] = values[i] ? values[i].trim().replace(/"/g, '') : ''; 
-        });
-        return obj;
-    // CUIDADO AQUÍ: obj.N° debe ser accedido con corchetes
-    }).filter(obj => obj['N°'] && obj['N°'].trim() !== ''); // <-- ¡Corregido!
-}
+        function parseCSV(csv) {
+            console.log("Raw CSV length:", csv.length);
+            // Usar una expresión regular para manejar tanto \n como \r\n como saltos de línea
+            const lines = csv.split(/\r?\n/); 
+            console.log("Total lines (after initial split):", lines.length);
+
+            // Filtra las líneas completamente vacías antes de procesar
+            const nonEmptyLines = lines.filter(line => line.trim() !== '');
+            console.log("Non-empty lines:", nonEmptyLines.length);
+
+            if (nonEmptyLines.length === 0) {
+                console.error("No hay líneas válidas después de filtrar las vacías.");
+                return [];
+            }
+
+            // La primera línea (ya filtrada si había vacío al principio) es la cabecera
+            const rawHeaders = nonEmptyLines[0].split(';');
+            const headers = rawHeaders.map(h => h.trim().replace(/^\uFEFF/, '')); 
+            console.log("Parsed Headers (raw):", rawHeaders);
+            console.log("Parsed Headers (trimmed & BOM-removed):", headers);
+
+            // Verifica si la cabecera 'N' (ahora sin el símbolo de grado) existe y es limpia
+            const N_COLUMN_NAME = 'N'; // Definimos el nombre exacto de la columna
+            const nColumnIndex = headers.indexOf(N_COLUMN_NAME);
+            console.log(`Column '${N_COLUMN_NAME}' found at index:`, nColumnIndex);
+
+            if (nColumnIndex === -1) {
+                console.error(`ERROR: La columna '${N_COLUMN_NAME}' no fue encontrada en las cabeceras parseadas. ¡Esto es crítico!`);
+                console.error("Contenido de la primera línea del CSV (para inspección):", nonEmptyLines[0]);
+                return []; // Salir si la columna N no se encuentra
+            }
+
+            const parsedData = nonEmptyLines.slice(1).map(line => {
+                const values = line.split(';');
+                const obj = {};
+                headers.forEach((header, i) => {
+                    obj[header] = values[i] ? values[i].trim().replace(/"/g, '') : ''; 
+                });
+                return obj;
+            });
+
+            console.log("Parsed Data (before final filter, first 5 rows):", parsedData.slice(0, 5));
+
+            // Filtro final: asegura que el objeto tenga la propiedad 'N' y que su valor no sea una cadena vacía
+            const filteredData = parsedData.filter(obj => 
+                obj.hasOwnProperty(N_COLUMN_NAME) && obj[N_COLUMN_NAME].trim() !== ''
+            ); 
+
+            console.log("Filtered Data length (final result):", filteredData.length);
+
+            return filteredData;
+        }
 
         // Dummy periodicities for the table as they are not in CSV
         const periodicities = ['Mensual', 'Trimestral', 'Semestral', 'Anual'];
@@ -663,20 +700,20 @@
 
             data.forEach(item => {
                 if (item.Componente) componentsSet.add(item.Componente);
-                // Asegurarse de que la dirección no tenga espacios adicionales o caracteres ocultos al final
-                if (item.Dirección) directionsSet.add(item.Dirección.trim()); 
-                if (item.Sector) sectorsSet.add(item.Sector.trim());
+                // Usar el nuevo nombre de columna "Direccion"
+                if (item.Direccion) directionsSet.add(item.Direccion.trim()); 
+                // Usar el nuevo nombre de columna "SectorE"
+                if (item.SectorE) sectorsSet.add(item.SectorE.trim());
             });
 
             // Helper para rellenar un select
             function fillSelect(selectId, values, defaultText) {
                 const selectElement = document.getElementById(selectId);
-                // **Verificación defensiva para asegurarse de que el elemento existe**
                 if (!selectElement) {
                     console.error(`Elemento select con ID "${selectId}" no encontrado.`);
                     return;
                 }
-                selectElement.innerHTML = `<option value="">${defaultText}</option>`; // Mantener la opción "Todos"
+                selectElement.innerHTML = `<option value="">${defaultText}</option>`;
                 Array.from(values).sort().forEach(value => {
                     const option = document.createElement('option');
                     option.value = value;
@@ -688,9 +725,8 @@
             fillSelect('component-filter', componentsSet, 'Todos los componentes');
             fillSelect('direction-filter', directionsSet, 'Todas las direcciones');
             
-            // El filtro de temática no presenta valores por el momento, solo la opción "Todas"
             const themeFilterElement = document.getElementById('theme-filter');
-            if (themeFilterElement) { // Verificación defensiva
+            if (themeFilterElement) {
                 themeFilterElement.innerHTML = '<option value="">Todas las temáticas</option>';
             } else {
                 console.error('Elemento select con ID "theme-filter" no encontrado.');
@@ -701,7 +737,6 @@
 
         // Función para actualizar las tarjetas de estadísticas y la tabla
         function updateDashboard(data) {
-            // **Añadimos verificaciones defensivas para los elementos de las tarjetas**
             const totalIndicatorsElement = document.querySelector('.stat-card:nth-child(1) .stat-value');
             if (totalIndicatorsElement) {
                 totalIndicatorsElement.textContent = data.length;
@@ -711,7 +746,8 @@
 
             const uniqueRAsElement = document.querySelector('.stat-card:nth-child(2) .stat-value');
             if (uniqueRAsElement) {
-                const uniqueRAs = new Set(data.map(item => item.Id_RA)).size;
+                // Asegurarse de que Id_RA es el nombre correcto
+                const uniqueRAs = new Set(data.map(item => item.Id_RA)).size; 
                 uniqueRAsElement.textContent = uniqueRAs;
             } else {
                 console.error("Elemento '.stat-card:nth-child(2) .stat-value' no encontrado.");
@@ -727,27 +763,27 @@
 
             // Llenar la tabla
             const tableBody = document.querySelector('.indicators-table tbody');
-            // **Verificación defensiva para la tabla**
             if (!tableBody) {
                 console.error("Elemento 'indicators-table tbody' no encontrado.");
-                return; // Salir de la función si el body de la tabla no existe
+                return;
             }
             tableBody.innerHTML = ''; // Limpiar filas existentes
 
             data.forEach((indicator, index) => {
                 const row = tableBody.insertRow();
-                row.insertCell().innerHTML = `<strong>${indicator['Descripción IN']}</strong>`;
+                // Usar el nuevo nombre de columna "Nombre_Indicador" o "Descripción IN" si no lo cambiaste
+                row.insertCell().innerHTML = `<strong>${indicator.Nombre_Indicador || indicator['Descripción IN']}</strong>`; 
                 row.insertCell().innerHTML = `<span class="badge badge-primary">${indicator.Componente}</span>`;
-                // Para temática, usamos el valor de "Dirección" del CSV
-                row.insertCell().textContent = indicator.Dirección.trim(); 
-                row.insertCell().textContent = indicator.Sector.trim(); // Usar el sector del CSV
+                // Usar el nuevo nombre de columna "Direccion"
+                row.insertCell().textContent = indicator.Direccion.trim(); 
+                // Usar el nuevo nombre de columna "SectorE"
+                row.insertCell().textContent = indicator.SectorE.trim(); 
                 row.insertCell().textContent = indicator.Id_RA; // Mostrar el ID del RA
                 row.insertCell().innerHTML = `<span class="badge badge-success">${periodicities[index % periodicities.length]}</span>`; // Periodicidad dummy
             });
         }
 
         function initializeCharts() {
-            // Calcular los datos para el gráfico de componentes
             const componentCounts = {};
             indicatorsData.forEach(item => {
                 const component = item.Componente;
@@ -757,21 +793,14 @@
             const chartLabels = Object.keys(componentCounts);
             const chartData = Object.values(componentCounts);
 
-            // Colores para el gráfico de componentes (se puede expandir si hay más componentes)
             const chartColors = [
-                '#1e4c72', // primary-blue
-                '#2d5aa0', // secondary-blue
-                '#4a90c2', // light-blue
-                '#87ceeb',  // accent-blue
-                '#a0c8e8', 
-                '#b3d9ff'
+                '#1e4c72', '#2d5aa0', '#4a90c2', '#87ceeb', '#a0c8e8', '#b3d9ff'
             ];
 
-            // Component Chart (Doughnut)
             const componentCtx = document.getElementById('componentChart');
-            if (componentCtx) { // Verificación defensiva
+            if (componentCtx) {
                 if (componentChartInstance) {
-                    componentChartInstance.destroy(); // Destruir la instancia anterior si existe
+                    componentChartInstance.destroy();
                 }
                 componentChartInstance = new Chart(componentCtx.getContext('2d'), {
                     type: 'doughnut',
@@ -813,12 +842,10 @@
                 console.error("Elemento 'componentChart' no encontrado.");
             }
 
-
-            // Periodicity Chart (los datos no vienen del CSV, se mantienen fijos por ahora)
             const periodicityCtx = document.getElementById('periodicityChart');
-            if (periodicityCtx) { // Verificación defensiva
+            if (periodicityCtx) {
                 if (periodicityChartInstance) {
-                    periodicityChartInstance.destroy(); // Destruir la instancia anterior si existe
+                    periodicityChartInstance.destroy();
                 }
                 periodicityChartInstance = new Chart(periodicityCtx.getContext('2d'), {
                     type: 'bar',
@@ -826,7 +853,7 @@
                         labels: ['Mensual', 'Trimestral', 'Semestral', 'Anual'],
                         datasets: [{
                             label: 'Número de Indicadores',
-                            data: [8, 15, 12, 41], // Datos de ejemplo, no del CSV
+                            data: [8, 15, 12, 41],
                             backgroundColor: 'rgba(30, 76, 114, 0.8)',
                             borderColor: '#1e4c72',
                             borderWidth: 1,
@@ -866,7 +893,6 @@
         function setupFilters() {
             const filters = document.querySelectorAll('.filter-select, .filter-input');
             filters.forEach(filter => {
-                // **Verificación defensiva antes de agregar el listener**
                 if (filter) {
                     filter.addEventListener('change', filterData);
                     filter.addEventListener('input', debounce(filterData, 300));
@@ -876,7 +902,6 @@
 
         function filterData() {
             console.log('Filtering data...');
-            // **Verificaciones defensivas para los elementos de filtro**
             const componentFilterElement = document.getElementById('component-filter');
             const directionFilterElement = document.getElementById('direction-filter');
             const sectorFilterElement = document.getElementById('sector-filter');
@@ -889,19 +914,19 @@
 
             let filteredData = indicatorsData.filter(item => {
                 const matchesComponent = componentFilter === '' || item.Componente === componentFilter;
-                const matchesDirection = directionFilter === '' || item.Dirección.trim() === directionFilter;
-                // 'Temática' no se usa para filtrar de momento
-                const matchesSector = sectorFilter === '' || item.Sector.trim() === sectorFilter;
-                const matchesSearch = item['Descripción IN'].toLowerCase().includes(searchInput);
+                // Usar el nuevo nombre de columna "Direccion"
+                const matchesDirection = directionFilter === '' || item.Direccion.trim() === directionFilter;
+                // Usar el nuevo nombre de columna "SectorE"
+                const matchesSector = sectorFilter === '' || item.SectorE.trim() === sectorFilter;
+                // Usar el nuevo nombre de columna "Nombre_Indicador" para la búsqueda
+                // Si tu CSV final usa 'Descripción IN', cámbialo de nuevo aquí
+                const matchesSearch = (item.Nombre_Indicador && item.Nombre_Indicador.toLowerCase().includes(searchInput)) || 
+                                      (item['Descripción IN'] && item['Descripción IN'].toLowerCase().includes(searchInput));
                 
                 return matchesComponent && matchesDirection && matchesSector && matchesSearch;
             });
 
             updateDashboard(filteredData);
-            // Si los gráficos también deben reflejar los datos filtrados, descomenta la siguiente línea.
-            // Para este caso, los gráficos Doughnut y Bar suelen mostrar estadísticas globales,
-            // por lo que no se actualizan al filtrar la tabla en el ejemplo.
-            // initializeCharts(filteredData); // Si se desea que los gráficos también se filtren
         }
 
         function debounce(func, wait) {
@@ -916,7 +941,6 @@
             };
         }
 
-        // Accesibilidad
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Tab') {
                 document.body.classList.add('keyboard-navigation');
@@ -927,10 +951,8 @@
             document.body.classList.remove('keyboard-navigation');
         });
 
-        // Función asíncrona para cargar y procesar los datos
         async function loadDataAndInitializeDashboard() {
             try {
-                // Cargar el archivo CSV
                 const response = await fetch('data/indicators.csv');
                 if (!response.ok) {
                     throw new Error(`Error HTTP: ${response.status} ${response.statusText}. Por favor, verifica la ruta del archivo CSV y los permisos.`);
@@ -939,10 +961,15 @@
                 
                 indicatorsData = parseCSV(csvText);
                 
-                // Asegurarse de que indicatorsData tenga datos antes de continuar
                 if (indicatorsData.length === 0) {
                     console.warn("El archivo CSV se cargó, pero no contiene datos o el parseo resultó en un array vacío.");
-                    // Podrías mostrar un mensaje en la UI aquí si no hay datos.
+                    // Muestra un mensaje al usuario si no hay datos.
+                    const errorMessage = document.createElement('p');
+                    errorMessage.textContent = "No se pudieron cargar los datos de indicadores. Por favor, intente de nuevo más tarde o contacte al soporte.";
+                    errorMessage.style.color = "var(--danger)";
+                    errorMessage.style.textAlign = "center";
+                    errorMessage.style.marginTop = "2rem";
+                    document.querySelector('.container').prepend(errorMessage);
                 }
 
                 populateFilters(indicatorsData);
@@ -955,7 +982,6 @@
             }
         }
 
-        // Inicializar cuando la página cargue
         document.addEventListener('DOMContentLoaded', loadDataAndInitializeDashboard);
     </script>
 </body>
