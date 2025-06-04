@@ -181,7 +181,7 @@ class Dashboard {
     hasEncodingIssues(text) {
         // Patrones que indican problemas de codificación
         const problemPatterns = [
-            / /g,                    // Caracteres de reemplazo
+            /\uFFFD/g,               // Caracteres de reemplazo
             /Ã[¡-ÿ]/g,             // Secuencias Ã seguidas de caracteres especiales
             /Â[°ª-ÿ]/g,            // Secuencias Â problemáticas
             /â€[œ""']/g             // Comillas y apóstrofes mal codificados
