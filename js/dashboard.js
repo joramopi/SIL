@@ -224,15 +224,31 @@ class Dashboard {
     getUniqueValues(data, fieldMapping) {
         const values = new Set();
         
+        // Mapeo directo a las columnas reales del CSV
+        const fieldMap = {
+            'component': 'Componente',
+            'direction': 'Direccion', 
+            'sector': 'SectorE',
+            'registroAdmin': 'Registro_Administrativo'
+        };
+        
+        const csvField = fieldMap[fieldMapping] || fieldMapping;
+        console.log(`🔍 Debug getUniqueValues - Buscando campo: ${csvField} para ${fieldMapping}`);
+        
         data.forEach(item => {
-            const value = DataUtils.getFieldValue(item, fieldMapping);
-            if (ValidationUtils.isNotEmpty(value) && value !== CONFIG.FALLBACK_VALUES[fieldMapping]) {
+            const value = item[csvField];
+            if (value && value.trim() !== '') {
                 values.add(value.trim());
+                // Solo mostrar los primeros valores para debug
+                if (values.size <= 3) {
+                    console.log(`🔍 Debug - Valor encontrado: "${value}"`);
+                }
             }
         });
         
         const uniqueArray = Array.from(values).sort();
-        console.log(`🔍 Debug getUniqueValues - Campo: ${fieldMapping}, Valores: `, uniqueArray);
+        console.log(`🔍 Debug getUniqueValues - Campo: ${fieldMapping} (${csvField}), Total valores únicos: ${uniqueArray.length}`);
+        console.log(`🔍 Debug getUniqueValues - Primeros valores: `, uniqueArray.slice(0, 5));
         
         return uniqueArray;
     }
@@ -283,19 +299,35 @@ class Dashboard {
      */
     calculateStats(data) {
         const uniqueRAs = new Set();
+        const uniqueComponents = new Set();
+        const uniqueDirections = new Set();
+        const uniqueSectors = new Set();
+
         data.forEach(item => {
-            const idRA = DataUtils.getFieldValue(item, 'idRA');
-            if (idRA && idRA !== CONFIG.FALLBACK_VALUES.idRA) {
-                uniqueRAs.add(idRA);
+            // Acceso directo a las columnas del CSV
+            if (item.Id_RA && item.Id_RA.trim() !== '') {
+                uniqueRAs.add(item.Id_RA.trim());
+            }
+            if (item.Componente && item.Componente.trim() !== '') {
+                uniqueComponents.add(item.Componente.trim());
+            }
+            if (item.Direccion && item.Direccion.trim() !== '') {
+                uniqueDirections.add(item.Direccion.trim());
+            }
+            if (item.SectorE && item.SectorE.trim() !== '') {
+                uniqueSectors.add(item.SectorE.trim());
             }
         });
+
+        console.log('📊 Debug Stats - RAs únicos:', uniqueRAs.size, Array.from(uniqueRAs).slice(0, 3));
+        console.log('📊 Debug Stats - Componentes únicos:', uniqueComponents.size, Array.from(uniqueComponents));
 
         return {
             total: data.length,
             uniqueRAs: uniqueRAs.size,
-            uniqueComponents: Object.keys(DataUtils.countUniqueValues(data, 'component')).length,
-            uniqueDirections: Object.keys(DataUtils.countUniqueValues(data, 'direction')).length,
-            uniqueSectors: Object.keys(DataUtils.countUniqueValues(data, 'sector')).length
+            uniqueComponents: uniqueComponents.size,
+            uniqueDirections: uniqueDirections.size,
+            uniqueSectors: uniqueSectors.size
         };
     }
 
@@ -333,24 +365,27 @@ class Dashboard {
     createTableRow(indicator, index) {
         const row = document.createElement('tr');
         
-        // Datos de la fila
+        // Obtener nombre del indicador
+        const indicatorName = indicator.Nombre_Indicador || indicator.Indicador || indicator.N || 'Sin nombre';
+        
+        // Datos de la fila con acceso directo a las columnas
         const rowData = [
             {
-                content: `<strong>${DataUtils.getIndicatorName(indicator)}</strong>`,
+                content: `<strong>${indicatorName}</strong>`,
                 isHTML: true
             },
             {
-                content: `<span class="badge badge-primary">${DataUtils.getFieldValue(indicator, 'component')}</span>`,
+                content: `<span class="badge badge-primary">${indicator.Componente || 'Sin categorizar'}</span>`,
                 isHTML: true
             },
             {
-                content: DataUtils.getFieldValue(indicator, 'direction')
+                content: indicator.Direccion || 'No especificado'
             },
             {
-                content: DataUtils.getFieldValue(indicator, 'sector')
+                content: indicator.SectorE || 'No especificado'
             },
             {
-                content: DataUtils.getFieldValue(indicator, 'idRA')
+                content: indicator.Id_RA || 'N/A'
             },
             {
                 content: `<span class="badge badge-success">${this.getPeriodicityForIndex(index)}</span>`,

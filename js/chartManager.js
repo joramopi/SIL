@@ -221,12 +221,19 @@ class ChartManager {
         try {
             this.showChartLoading('componentChart', true);
 
-            // Calcular datos del gráfico
-            const componentCounts = DataUtils.countUniqueValues(data, 'component');
+            // Contar componentes directamente del CSV
+            const componentCounts = {};
+            data.forEach(item => {
+                const component = item.Componente; // Acceso directo a la columna
+                if (component && component.trim() !== '') {
+                    const cleanComponent = component.trim();
+                    componentCounts[cleanComponent] = (componentCounts[cleanComponent] || 0) + 1;
+                }
+            });
             
-            console.log('🔍 Debug - Datos de componentes:', componentCounts);
+            console.log('🔍 Debug - Datos de componentes (directo):', componentCounts);
             
-            // Filtrar valores sin categorizar si hay otros datos
+            // Filtrar valores si hay demasiados
             const filteredCounts = this.filterChartData(componentCounts);
             
             const labels = Object.keys(filteredCounts);
