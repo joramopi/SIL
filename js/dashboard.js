@@ -192,15 +192,21 @@ class Dashboard {
             const uniqueValues = {
                 components: this.getUniqueValues(data, 'component'),
                 directions: this.getUniqueValues(data, 'direction'),
-                themes: this.getUniqueValues(data, 'theme'),
-                sectors: this.getUniqueValues(data, 'sector')
+                sectors: this.getUniqueValues(data, 'sector'),
+                registrosAdmin: this.getUniqueValues(data, 'registroAdmin')
             };
 
             // Llenar cada select
             this.fillSelect('component-filter', uniqueValues.components, 'Todos los componentes');
             this.fillSelect('direction-filter', uniqueValues.directions, 'Todas las direcciones');
-            this.fillSelect('theme-filter', uniqueValues.themes, 'Todas las temáticas');
             this.fillSelect('sector-filter', uniqueValues.sectors, 'Todos los sectores');
+            
+            // Solo llenar el filtro de temática si existe el elemento en el HTML
+            const themeFilter = DOMUtils.safeQuerySelector('#theme-filter');
+            if (themeFilter) {
+                // Para el filtro de temática, podemos usar los registros administrativos
+                this.fillSelect('theme-filter', uniqueValues.registrosAdmin, 'Todos los registros administrativos');
+            }
 
             console.log(`✅ Filtros poblados exitosamente`);
             
@@ -270,9 +276,17 @@ class Dashboard {
      * Calcula estadísticas de los datos
      */
     calculateStats(data) {
+        const uniqueRAs = new Set();
+        data.forEach(item => {
+            const idRA = DataUtils.getFieldValue(item, 'idRA');
+            if (idRA && idRA !== CONFIG.FALLBACK_VALUES.idRA) {
+                uniqueRAs.add(idRA);
+            }
+        });
+
         return {
             total: data.length,
-            uniqueRAs: DataUtils.countUniqueValues(data, 'idRA'),
+            uniqueRAs: uniqueRAs.size,
             uniqueComponents: Object.keys(DataUtils.countUniqueValues(data, 'component')).length,
             uniqueDirections: Object.keys(DataUtils.countUniqueValues(data, 'direction')).length,
             uniqueSectors: Object.keys(DataUtils.countUniqueValues(data, 'sector')).length

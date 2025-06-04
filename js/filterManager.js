@@ -8,7 +8,6 @@ class FilterManager {
         this.filters = {
             component: '',
             direction: '',
-            theme: '',
             sector: '',
             search: ''
         };
@@ -54,10 +53,16 @@ class FilterManager {
         this.elements = {
             component: DOMUtils.safeQuerySelector('#component-filter'),
             direction: DOMUtils.safeQuerySelector('#direction-filter'),
-            theme: DOMUtils.safeQuerySelector('#theme-filter'),
             sector: DOMUtils.safeQuerySelector('#sector-filter'),
             search: DOMUtils.safeQuerySelector('#search-input')
         };
+
+        // Verificar si existe el filtro de temática (opcional)
+        const themeFilter = DOMUtils.safeQuerySelector('#theme-filter');
+        if (themeFilter) {
+            this.elements.theme = themeFilter;
+            this.filters.theme = '';
+        }
 
         // Verificar que todos los elementos existan
         const missingElements = Object.entries(this.elements)
@@ -74,7 +79,7 @@ class FilterManager {
      */
     setupEventListeners() {
         // Filtros select
-        ['component', 'direction', 'theme', 'sector'].forEach(filterType => {
+        ['component', 'direction', 'sector', 'theme'].forEach(filterType => {
             const element = this.elements[filterType];
             if (element) {
                 element.addEventListener('change', (e) => {
@@ -135,8 +140,8 @@ class FilterManager {
         const tooltips = {
             component: 'Filtra indicadores por componente del PDOT',
             direction: 'Filtra por dirección responsable',
-            theme: 'Filtra por área temática',
             sector: 'Filtra por sector estadístico',
+            theme: 'Filtra por registro administrativo',
             search: 'Busca en nombres y descripciones de indicadores'
         };
 
@@ -223,9 +228,9 @@ class FilterManager {
                 if (itemDirection !== filters.direction) return false;
             }
 
-            // Filtro de temática
-            if (filters.theme && filters.theme !== '') {
-                const itemTheme = DataUtils.getFieldValue(item, 'theme');
+            // Filtro de temática (solo si existe)
+            if (filters.theme && filters.theme !== '' && this.elements.theme) {
+                const itemTheme = DataUtils.getFieldValue(item, 'registroAdmin');
                 if (itemTheme !== filters.theme) return false;
             }
 
@@ -245,7 +250,8 @@ class FilterManager {
                     DataUtils.getFieldValue(item, 'component'),
                     DataUtils.getFieldValue(item, 'direction'),
                     DataUtils.getFieldValue(item, 'sector'),
-                    DataUtils.getFieldValue(item, 'theme')
+                    DataUtils.getFieldValue(item, 'registroAdmin'),
+                    DataUtils.getFieldValue(item, 'idRA')
                 ];
 
                 const matchFound = searchableFields.some(field => 
