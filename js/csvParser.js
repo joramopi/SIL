@@ -87,53 +87,64 @@ class CSVParser {
         
         // Mapa de caracteres mal codificados a caracteres correctos
         const encodingMap = {
-            // Vocales con tilde
-            'Ã¡': 'á', 'Ã©': 'é', 'Ã­': 'í', 'Ã³': 'ó', 'Ãº': 'ú',
-            'Ã': 'Á', 'Ã‰': 'É', 'Ã': 'Í', 'Ã"': 'Ó', 'Ãš': 'Ú',
+            // Vocales con tilde - usando códigos de escape
+            '\u00C3\u00A1': 'á', // Ã¡ -> á
+            '\u00C3\u00A9': 'é', // Ã© -> é
+            '\u00C3\u00AD': 'í', // Ã­ -> í
+            '\u00C3\u00B3': 'ó', // Ã³ -> ó
+            '\u00C3\u00BA': 'ú', // Ãº -> ú
+            '\u00C3\u0081': 'Á', // Ã -> Á
+            '\u00C3\u0089': 'É', // Ã‰ -> É
+            '\u00C3\u008D': 'Í', // Ã -> Í
+            '\u00C3\u0093': 'Ó', // Ã" -> Ó
+            '\u00C3\u009A': 'Ú', // Ãš -> Ú
             
             // Eñe
-            'Ã±': 'ñ', 'Ã'': 'Ñ',
+            '\u00C3\u00B1': 'ñ', // Ã± -> ñ
+            '\u00C3\u0091': 'Ñ', // Ã' -> Ñ
             
             // Diéresis
-            'Ã¼': 'ü', 'Ãœ': 'Ü',
+            '\u00C3\u00BC': 'ü', // Ã¼ -> ü
+            '\u00C3\u009C': 'Ü', // Ãœ -> Ü
             
             // Otros caracteres especiales comunes
-            'Â¿': '¿', 'Â¡': '¡',
-            'Â°': '°', 'Âª': 'ª', 'Âº': 'º',
+            '\u00C2\u00BF': '¿', // Â¿ -> ¿
+            '\u00C2\u00A1': '¡', // Â¡ -> ¡
+            '\u00C2\u00B0': '°', // Â° -> °
+            '\u00C2\u00AA': 'ª', // Âª -> ª
+            '\u00C2\u00BA': 'º', // Âº -> º
             
             // Patrones específicos encontrados
-            'N mero': 'Número',
-            'n mero': 'número',
-            'tecnol gico': 'tecnológico',
-            'Tecnol gico': 'Tecnológico',
-            'beneficiados': 'beneficiados', // Ya está bien, pero por si acaso
+            'N\uFFFDmero': 'Número',
+            'n\uFFFDmero': 'número',
+            'tecnol\uFFFDgico': 'tecnológico',
+            'Tecnol\uFFFDgico': 'Tecnológico',
             
             // Más patrones comunes
-            'Educaci n': 'Educación',
-            'educaci n': 'educación',
-            'Poblaci n': 'Población',
-            'poblaci n': 'población',
-            'Informaci n': 'Información',
-            'informaci n': 'información',
-            'Direcci n': 'Dirección',
-            'direcci n': 'dirección',
-            'Atenci n': 'Atención',
-            'atenci n': 'atención',
-            'Prevenci n': 'Prevención',
-            'prevenci n': 'prevención'
+            'Educaci\uFFFDn': 'Educación',
+            'educaci\uFFFDn': 'educación',
+            'Poblaci\uFFFDn': 'Población',
+            'poblaci\uFFFDn': 'población',
+            'Informaci\uFFFDn': 'Información',
+            'informaci\uFFFDn': 'información',
+            'Direcci\uFFFDn': 'Dirección',
+            'direcci\uFFFDn': 'dirección',
+            'Atenci\uFFFDn': 'Atención',
+            'atenci\uFFFDn': 'atención',
+            'Prevenci\uFFFDn': 'Prevención',
+            'prevenci\uFFFDn': 'prevención'
         };
 
         let fixedText = text;
 
         // Aplicar reemplazos directos
         Object.keys(encodingMap).forEach(badChar => {
-            if (typeof encodingMap[badChar] === 'string') {
-                fixedText = fixedText.split(badChar).join(encodingMap[badChar]);
-            }
+            const fixedChar = encodingMap[badChar];
+            fixedText = fixedText.split(badChar).join(fixedChar);
         });
 
-        // Patrón especial para   seguido de caracteres
-        fixedText = fixedText.replace(/ ([a-zA-Z])/g, (match, letter) => {
+        // Patrón especial para caracteres de reemplazo seguidos de letras
+        fixedText = fixedText.replace(/\uFFFD([a-zA-Z])/g, function(match, letter) {
             const commonReplacements = {
                 'n': 'ñ', 'N': 'Ñ',
                 'a': 'á', 'A': 'Á',
@@ -145,15 +156,15 @@ class CSVParser {
             return commonReplacements[letter] || letter;
         });
 
-        // Limpiar otros caracteres problemáticos
+        // Limpiar otros caracteres problemáticos usando códigos de escape
         fixedText = fixedText
-            .replace(/â€™/g, "'")  // Apóstrofe
-            .replace(/â€œ/g, '"')  // Comilla izquierda
-            .replace(/â€/g, '"')   // Comilla derecha
-            .replace(/â€"/g, '–')  // Guión en dash
-            .replace(/â€"/g, '—')  // Guión em dash
-            .replace(/Â/g, '')     // Caracteres Â sueltos
-            .replace(/ /g, '');    // Caracteres   que no se pudieron corregir
+            .replace(/\u2019/g, "'")     // Apóstrofe curvado
+            .replace(/\u201C/g, '"')     // Comilla izquierda
+            .replace(/\u201D/g, '"')     // Comilla derecha
+            .replace(/\u2013/g, '–')     // Guión en dash
+            .replace(/\u2014/g, '—')     // Guión em dash
+            .replace(/\u00C2/g, '')      // Caracteres Â sueltos
+            .replace(/\uFFFD/g, '');     // Caracteres de reemplazo que no se pudieron corregir
 
         return fixedText;
     }
