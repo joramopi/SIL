@@ -6,6 +6,7 @@
     <title>SIL - Dashboard de Indicadores | GADPM</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
+        /* (Tu CSS sigue siendo el mismo aquí) */
         * {
             margin: 0;
             padding: 0;
@@ -669,6 +670,11 @@
             // Helper para rellenar un select
             function fillSelect(selectId, values, defaultText) {
                 const selectElement = document.getElementById(selectId);
+                // **Verificación defensiva para asegurarse de que el elemento existe**
+                if (!selectElement) {
+                    console.error(`Elemento select con ID "${selectId}" no encontrado.`);
+                    return;
+                }
                 selectElement.innerHTML = `<option value="">${defaultText}</option>`; // Mantener la opción "Todos"
                 Array.from(values).sort().forEach(value => {
                     const option = document.createElement('option');
@@ -680,26 +686,51 @@
 
             fillSelect('component-filter', componentsSet, 'Todos los componentes');
             fillSelect('direction-filter', directionsSet, 'Todas las direcciones');
+            
             // El filtro de temática no presenta valores por el momento, solo la opción "Todas"
-            document.getElementById('theme-filter').innerHTML = '<option value="">Todas las temáticas</option>';
+            const themeFilterElement = document.getElementById('theme-filter');
+            if (themeFilterElement) { // Verificación defensiva
+                themeFilterElement.innerHTML = '<option value="">Todas las temáticas</option>';
+            } else {
+                console.error('Elemento select con ID "theme-filter" no encontrado.');
+            }
+            
             fillSelect('sector-filter', sectorsSet, 'Todos los sectores');
         }
 
         // Función para actualizar las tarjetas de estadísticas y la tabla
         function updateDashboard(data) {
-            // Actualizar Total de Indicadores
-            document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = data.length;
+            // **Añadimos verificaciones defensivas para los elementos de las tarjetas**
+            const totalIndicatorsElement = document.querySelector('.stat-card:nth-child(1) .stat-value');
+            if (totalIndicatorsElement) {
+                totalIndicatorsElement.textContent = data.length;
+            } else {
+                console.error("Elemento '.stat-card:nth-child(1) .stat-value' no encontrado.");
+            }
 
-            // Actualizar Registros Administrativos (contar Id_RA únicos en los datos filtrados)
-            const uniqueRAs = new Set(data.map(item => item.Id_RA)).size;
-            document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = uniqueRAs;
+            const uniqueRAsElement = document.querySelector('.stat-card:nth-child(2) .stat-value');
+            if (uniqueRAsElement) {
+                const uniqueRAs = new Set(data.map(item => item.Id_RA)).size;
+                uniqueRAsElement.textContent = uniqueRAs;
+            } else {
+                console.error("Elemento '.stat-card:nth-child(2) .stat-value' no encontrado.");
+            }
 
-            // Actualizar Componentes Temáticos (contar Componentes únicos en los datos filtrados)
-            const uniqueComponents = new Set(data.map(item => item.Componente)).size;
-            document.querySelector('.stat-card:nth-child(3) .stat-value').textContent = uniqueComponents;
+            const uniqueComponentsElement = document.querySelector('.stat-card:nth-child(3) .stat-value');
+            if (uniqueComponentsElement) {
+                const uniqueComponents = new Set(data.map(item => item.Componente)).size;
+                uniqueComponentsElement.textContent = uniqueComponents;
+            } else {
+                console.error("Elemento '.stat-card:nth-child(3) .stat-value' no encontrado.");
+            }
 
             // Llenar la tabla
             const tableBody = document.querySelector('.indicators-table tbody');
+            // **Verificación defensiva para la tabla**
+            if (!tableBody) {
+                console.error("Elemento 'indicators-table tbody' no encontrado.");
+                return; // Salir de la función si el body de la tabla no existe
+            }
             tableBody.innerHTML = ''; // Limpiar filas existentes
 
             data.forEach((indicator, index) => {
@@ -736,107 +767,124 @@
             ];
 
             // Component Chart (Doughnut)
-            const componentCtx = document.getElementById('componentChart').getContext('2d');
-            if (componentChartInstance) {
-                componentChartInstance.destroy(); // Destruir la instancia anterior si existe
-            }
-            componentChartInstance = new Chart(componentCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: chartLabels,
-                    datasets: [{
-                        data: chartData,
-                        backgroundColor: chartLabels.map((_, i) => chartColors[i % chartColors.length]),
-                        borderWidth: 0,
-                        hoverBorderWidth: 2,
-                        hoverBorderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                font: {
-                                    size: 12
+            const componentCtx = document.getElementById('componentChart');
+            if (componentCtx) { // Verificación defensiva
+                if (componentChartInstance) {
+                    componentChartInstance.destroy(); // Destruir la instancia anterior si existe
+                }
+                componentChartInstance = new Chart(componentCtx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            data: chartData,
+                            backgroundColor: chartLabels.map((_, i) => chartColors[i % chartColors.length]),
+                            borderWidth: 0,
+                            hoverBorderWidth: 2,
+                            hoverBorderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true,
+                                    font: {
+                                        size: 12
+                                    }
                                 }
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.label + ': ' + context.parsed + ' indicadores';
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + ' indicadores';
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
+                });
+            } else {
+                console.error("Elemento 'componentChart' no encontrado.");
+            }
+
 
             // Periodicity Chart (los datos no vienen del CSV, se mantienen fijos por ahora)
-            const periodicityCtx = document.getElementById('periodicityChart').getContext('2d');
-            if (periodicityChartInstance) {
-                periodicityChartInstance.destroy(); // Destruir la instancia anterior si existe
-            }
-            periodicityChartInstance = new Chart(periodicityCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Mensual', 'Trimestral', 'Semestral', 'Anual'],
-                    datasets: [{
-                        label: 'Número de Indicadores',
-                        data: [8, 15, 12, 41], // Datos de ejemplo, no del CSV
-                        backgroundColor: 'rgba(30, 76, 114, 0.8)',
-                        borderColor: '#1e4c72',
-                        borderWidth: 1,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
+            const periodicityCtx = document.getElementById('periodicityChart');
+            if (periodicityCtx) { // Verificación defensiva
+                if (periodicityChartInstance) {
+                    periodicityChartInstance.destroy(); // Destruir la instancia anterior si existe
+                }
+                periodicityChartInstance = new Chart(periodicityCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mensual', 'Trimestral', 'Semestral', 'Anual'],
+                        datasets: [{
+                            label: 'Número de Indicadores',
+                            data: [8, 15, 12, 41], // Datos de ejemplo, no del CSV
+                            backgroundColor: 'rgba(30, 76, 114, 0.8)',
+                            borderColor: '#1e4c72',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y + ' indicadores';
+                                    }
+                                }
+                            }
                         },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.parsed.y + ' indicadores';
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 5
                                 }
                             }
                         }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 5
-                            }
-                        }
                     }
-                }
-            });
+                });
+            } else {
+                console.error("Elemento 'periodicityChart' no encontrado.");
+            }
         }
 
         function setupFilters() {
             const filters = document.querySelectorAll('.filter-select, .filter-input');
             filters.forEach(filter => {
-                filter.addEventListener('change', filterData);
-                filter.addEventListener('input', debounce(filterData, 300));
+                // **Verificación defensiva antes de agregar el listener**
+                if (filter) {
+                    filter.addEventListener('change', filterData);
+                    filter.addEventListener('input', debounce(filterData, 300));
+                }
             });
         }
 
         function filterData() {
             console.log('Filtering data...');
-            const componentFilter = document.getElementById('component-filter').value;
-            const directionFilter = document.getElementById('direction-filter').value;
-            const themeFilter = document.getElementById('theme-filter').value; // Actualmente no se usa para filtrar
-            const sectorFilter = document.getElementById('sector-filter').value;
-            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            // **Verificaciones defensivas para los elementos de filtro**
+            const componentFilterElement = document.getElementById('component-filter');
+            const directionFilterElement = document.getElementById('direction-filter');
+            const sectorFilterElement = document.getElementById('sector-filter');
+            const searchInputElement = document.getElementById('search-input');
+
+            const componentFilter = componentFilterElement ? componentFilterElement.value : '';
+            const directionFilter = directionFilterElement ? directionFilterElement.value : '';
+            const sectorFilter = sectorFilterElement ? sectorFilterElement.value : '';
+            const searchInput = searchInputElement ? searchInputElement.value.toLowerCase() : '';
 
             let filteredData = indicatorsData.filter(item => {
                 const matchesComponent = componentFilter === '' || item.Componente === componentFilter;
@@ -884,20 +932,25 @@
                 // Cargar el archivo CSV
                 const response = await fetch('data/indicators.csv');
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(`Error HTTP: ${response.status} ${response.statusText}. Por favor, verifica la ruta del archivo CSV y los permisos.`);
                 }
                 const csvText = await response.text();
                 
-                indicatorsData = parseCSV(csvText); // Parsear los datos
+                indicatorsData = parseCSV(csvText);
                 
-                populateFilters(indicatorsData); // Poblar los filtros con TODOS los datos
-                updateDashboard(indicatorsData); // Actualizar las tarjetas y la tabla con TODOS los datos inicialmente
-                initializeCharts(); // Inicializar los gráficos con TODOS los datos
-                setupFilters(); // Configurar los event listeners para los filtros
+                // Asegurarse de que indicatorsData tenga datos antes de continuar
+                if (indicatorsData.length === 0) {
+                    console.warn("El archivo CSV se cargó, pero no contiene datos o el parseo resultó en un array vacío.");
+                    // Podrías mostrar un mensaje en la UI aquí si no hay datos.
+                }
+
+                populateFilters(indicatorsData);
+                updateDashboard(indicatorsData);
+                initializeCharts();
+                setupFilters();
             } catch (error) {
                 console.error("Error al cargar o procesar los datos del CSV:", error);
-                // Aquí podrías mostrar un mensaje de error en la UI si lo deseas
-                alert("Hubo un error al cargar los datos del dashboard. Por favor, inténtalo de nuevo.");
+                alert(`Hubo un error al cargar los datos del dashboard: ${error.message}. Por favor, asegúrate de que el archivo 'data/indicators.csv' exista y sea accesible.`);
             }
         }
 
