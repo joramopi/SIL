@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIL - Dashboard de Indicadores | GADPM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #1e4c72;
+            --secondary-blue: #2d5aa0;
+            --light-blue: #4a90c2;
+            --accent-blue: #87ceeb;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #495057;
+            --white: #ffffff;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-hover: 0 4px 20px rgba(0,0,0,0.15);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-gray) 0%, var(--medium-gray) 100%);
+            color: var(--dark-gray);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: var(--white);
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .header-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.25rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .filters-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select, .filter-input {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--light-blue);
+            box-shadow: 0 0 0 3px rgba(74, 144, 194, 0.2);
+        }
+
+        .search-container {
+            grid-column: 1 / -1;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+            font-size: 1.2rem;
+        }
+
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-blue), var(--light-blue));
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-description {
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            opacity: 0.8;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 2px solid var(--medium-gray);
+        }
+
+        .table-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .table-subtitle {
+            color: var(--dark-gray);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .indicators-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .indicators-table th {
+            background: var(--light-gray);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid var(--medium-gray);
+        }
+
+        .indicators-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--medium-gray);
+            font-size: 0.95rem;
+        }
+
+        .indicators-table tr:hover {
+            background: var(--light-gray);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-primary {
+            background: var(--accent-blue);
+            color: var(--primary-blue);
+        }
+
+        .badge-success {
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(255, 193, 7, 0.2);
+            color: #856404;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header-content {
+                padding: 0 1rem;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-section, .chart-card, .table-header {
+                padding: 1.5rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            margin: -15px 0 0 -15px;
+            border: 3px solid var(--medium-gray);
+            border-top: 3px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">SIL</div>
+                <div>
+                    <h1>Sistema de Información Local</h1>
+                    <!-- Título corregido aquí -->
+                    <div class="header-subtitle">Dashboard de Indicadores - GADPM</div>
+                </div>
+            </div>
+            <div style="font-size: 0.9rem; opacity: 0.9;">
+                Provincia de Manabí
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Filters Section -->
+        <section class="filters-section" role="search" aria-labelledby="filters-title">
+            <div class="filters-header">
+                <span>🔍</span>
+                <span id="filters-title">Filtros de Búsqueda</span>
+            </div>
+            
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label" for="component-filter">Componente</label>
+                    <select class="filter-select" id="component-filter" aria-describedby="component-help">
+                        <option value="">Todos los componentes</option>
+                        <!-- Opciones de componentes se llenarán dinámicamente -->
+                    </select>
+                    <div id="component-help" class="sr-only">Selecciona un componente para filtrar los indicadores</div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="direction-filter">Dirección</label>
+                    <select class="filter-select" id="direction-filter" aria-describedby="direction-help">
+                        <option value="">Todas las direcciones</option>
+                        <!-- Opciones de dirección se llenarán dinámicamente -->
+                    </select>
+                    <div id="direction-help" class="sr-only">Selecciona una dirección para filtrar los indicadores</div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="theme-filter">Temática</label>
+                    <select class="filter-select" id="theme-filter" aria-describedby="theme-help">
+                        <option value="">Todas las temáticas</option>
+                        <!-- Esta sección no tendrá valores por el momento, solo la opción "Todas" -->
+                    </select>
+                    <div id="theme-help" class="sr-only">Selecciona una temática para filtrar los indicadores</div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label" for="sector-filter">Sector Estadístico</label>
+                    <select class="filter-select" id="sector-filter" aria-describedby="sector-help">
+                        <option value="">Todos los sectores</option>
+                        <!-- Opciones de sector se llenarán dinámicamente -->
+                    </select>
+                    <div id="sector-help" class="sr-only">Selecciona un sector estadístico para filtrar los indicadores</div>
+                </div>
+
+                <div class="search-container">
+                    <label class="filter-label" for="search-input">Buscar Indicador</label>
+                    <div style="position: relative;">
+                        <span class="search-icon">🔍</span>
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            id="search-input"
+                            placeholder="Escribe el nombre del indicador que buscas..."
+                            aria-describedby="search-help"
+                        >
+                    </div>
+                    <div id="search-help" class="sr-only">Escribe para buscar indicadores por nombre</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics Cards -->
+        <section class="stats-grid" role="region" aria-labelledby="stats-title">
+            <h2 id="stats-title" class="sr-only">Estadísticas Generales</h2>
+            
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Total de Indicadores</div>
+                    <div class="stat-icon">📊</div>
+                </div>
+                <div class="stat-value">0</div> <!-- Se llenará con JS -->
+                <div class="stat-description">Indicadores definidos en el PDOT provincial</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Registros Administrativos</div>
+                    <div class="stat-icon">📋</div>
+                </div>
+                <div class="stat-value">0</div> <!-- Se llenará con JS -->
+                <div class="stat-description">Fuentes de datos administrativos disponibles</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Componentes Temáticos</div>
+                    <div class="stat-icon">🏗️</div>
+                </div>
+                <div class="stat-value">0</div> <!-- Se llenará con JS -->
+                <div class="stat-description">Áreas de desarrollo territorial</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-title">Última Actualización</div>
+                    <div class="stat-icon">🔄</div>
+                </div>
+                <div class="stat-value">Mayo</div>
+                <div class="stat-description">2025 - Datos actualizados mensualmente</div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section" role="region" aria-labelledby="charts-title">
+            <h2 id="charts-title" class="sr-only">Visualizaciones de Datos</h2>
+            
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span>📈</span>
+                    <span>Indicadores por Componente</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="componentChart" aria-label="Gráfico de indicadores por componente"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span>⏱️</span>
+                    <span>Distribución por Periodicidad</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="periodicityChart" aria-label="Gráfico de distribución por periodicidad"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Table Section -->
+        <section class="table-section" role="region" aria-labelledby="table-title">
+            <div class="table-header">
+                <div class="table-title">
+                    <span>📋</span>
+                    <span id="table-title">Listado Detallado de Indicadores</span>
+                </div>
+                <div class="table-subtitle">
+                    Explora todos los indicadores disponibles con información detallada
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="indicators-table" role="table" aria-labelledby="table-title">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre del Indicador</th>
+                            <th scope="col">Componente</th>
+                            <th scope="col">Dirección</th> <!-- Cambiado a Dirección, ya que Temática no tiene valores -->
+                            <th scope="col">Sector Estadístico</th>
+                            <th scope="col">ID RA</th>
+                            <th scope="col">Periodicidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Las filas se generarán con JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let indicatorsData = []; // Para almacenar los datos del CSV parseados
+        let componentChartInstance = null; // Para guardar la instancia del gráfico de componentes
+        let periodicityChartInstance = null; // Para guardar la instancia del gráfico de periodicidad
+
+        // Función para parsear el CSV
+        function parseCSV(csv) {
+            const lines = csv.split('\n');
+            // La primera línea contiene los encabezados. Limpiar espacios en blanco y el carácter BOM (Byte Order Mark) si existe.
+            const headers = lines[0].split(';').map(h => h.trim().replace(/^\uFEFF/, '')); 
+            return lines.slice(1).map(line => {
+                const values = line.split(';');
+                const obj = {};
+                headers.forEach((header, i) => {
+                    // Limpiar comillas y espacios en los valores.
+                    obj[header] = values[i] ? values[i].trim().replace(/"/g, '') : ''; 
+                });
+                return obj;
+            }).filter(obj => obj.N && obj.N.trim() !== ''); // Filtrar filas vacías o incompletas si el CSV tiene líneas en blanco al final
+        }
+
+        // Dummy periodicities for the table as they are not in CSV
+        const periodicities = ['Mensual', 'Trimestral', 'Semestral', 'Anual'];
+
+        // Función para poblar los filtros dinámicamente
+        function populateFilters(data) {
+            const componentsSet = new Set();
+            const directionsSet = new Set();
+            const sectorsSet = new Set();
+
+            data.forEach(item => {
+                if (item.Componente) componentsSet.add(item.Componente);
+                // Asegurarse de que la dirección no tenga espacios adicionales o caracteres ocultos al final
+                if (item.Dirección) directionsSet.add(item.Dirección.trim()); 
+                if (item.Sector) sectorsSet.add(item.Sector.trim());
+            });
+
+            // Helper para rellenar un select
+            function fillSelect(selectId, values, defaultText) {
+                const selectElement = document.getElementById(selectId);
+                selectElement.innerHTML = `<option value="">${defaultText}</option>`; // Mantener la opción "Todos"
+                Array.from(values).sort().forEach(value => {
+                    const option = document.createElement('option');
+                    option.value = value;
+                    option.textContent = value;
+                    selectElement.appendChild(option);
+                });
+            }
+
+            fillSelect('component-filter', componentsSet, 'Todos los componentes');
+            fillSelect('direction-filter', directionsSet, 'Todas las direcciones');
+            // El filtro de temática no presenta valores por el momento, solo la opción "Todas"
+            document.getElementById('theme-filter').innerHTML = '<option value="">Todas las temáticas</option>';
+            fillSelect('sector-filter', sectorsSet, 'Todos los sectores');
+        }
+
+        // Función para actualizar las tarjetas de estadísticas y la tabla
+        function updateDashboard(data) {
+            // Actualizar Total de Indicadores
+            document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = data.length;
+
+            // Actualizar Registros Administrativos (contar Id_RA únicos en los datos filtrados)
+            const uniqueRAs = new Set(data.map(item => item.Id_RA)).size;
+            document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = uniqueRAs;
+
+            // Actualizar Componentes Temáticos (contar Componentes únicos en los datos filtrados)
+            const uniqueComponents = new Set(data.map(item => item.Componente)).size;
+            document.querySelector('.stat-card:nth-child(3) .stat-value').textContent = uniqueComponents;
+
+            // Llenar la tabla
+            const tableBody = document.querySelector('.indicators-table tbody');
+            tableBody.innerHTML = ''; // Limpiar filas existentes
+
+            data.forEach((indicator, index) => {
+                const row = tableBody.insertRow();
+                row.insertCell().innerHTML = `<strong>${indicator['Descripción IN']}</strong>`;
+                row.insertCell().innerHTML = `<span class="badge badge-primary">${indicator.Componente}</span>`;
+                // Para temática, usamos el valor de "Dirección" del CSV
+                row.insertCell().textContent = indicator.Dirección.trim(); 
+                row.insertCell().textContent = indicator.Sector.trim(); // Usar el sector del CSV
+                row.insertCell().textContent = indicator.Id_RA; // Mostrar el ID del RA
+                row.insertCell().innerHTML = `<span class="badge badge-success">${periodicities[index % periodicities.length]}</span>`; // Periodicidad dummy
+            });
+        }
+
+        function initializeCharts() {
+            // Calcular los datos para el gráfico de componentes
+            const componentCounts = {};
+            indicatorsData.forEach(item => {
+                const component = item.Componente;
+                componentCounts[component] = (componentCounts[component] || 0) + 1;
+            });
+
+            const chartLabels = Object.keys(componentCounts);
+            const chartData = Object.values(componentCounts);
+
+            // Colores para el gráfico de componentes (se puede expandir si hay más componentes)
+            const chartColors = [
+                '#1e4c72', // primary-blue
+                '#2d5aa0', // secondary-blue
+                '#4a90c2', // light-blue
+                '#87ceeb',  // accent-blue
+                '#a0c8e8', 
+                '#b3d9ff'
+            ];
+
+            // Component Chart (Doughnut)
+            const componentCtx = document.getElementById('componentChart').getContext('2d');
+            if (componentChartInstance) {
+                componentChartInstance.destroy(); // Destruir la instancia anterior si existe
+            }
+            componentChartInstance = new Chart(componentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: chartLabels.map((_, i) => chartColors[i % chartColors.length]),
+                        borderWidth: 0,
+                        hoverBorderWidth: 2,
+                        hoverBorderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed + ' indicadores';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Periodicity Chart (los datos no vienen del CSV, se mantienen fijos por ahora)
+            const periodicityCtx = document.getElementById('periodicityChart').getContext('2d');
+            if (periodicityChartInstance) {
+                periodicityChartInstance.destroy(); // Destruir la instancia anterior si existe
+            }
+            periodicityChartInstance = new Chart(periodicityCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mensual', 'Trimestral', 'Semestral', 'Anual'],
+                    datasets: [{
+                        label: 'Número de Indicadores',
+                        data: [8, 15, 12, 41], // Datos de ejemplo, no del CSV
+                        backgroundColor: 'rgba(30, 76, 114, 0.8)',
+                        borderColor: '#1e4c72',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + ' indicadores';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 5
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function setupFilters() {
+            const filters = document.querySelectorAll('.filter-select, .filter-input');
+            filters.forEach(filter => {
+                filter.addEventListener('change', filterData);
+                filter.addEventListener('input', debounce(filterData, 300));
+            });
+        }
+
+        function filterData() {
+            console.log('Filtering data...');
+            const componentFilter = document.getElementById('component-filter').value;
+            const directionFilter = document.getElementById('direction-filter').value;
+            const themeFilter = document.getElementById('theme-filter').value; // Actualmente no se usa para filtrar
+            const sectorFilter = document.getElementById('sector-filter').value;
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+
+            let filteredData = indicatorsData.filter(item => {
+                const matchesComponent = componentFilter === '' || item.Componente === componentFilter;
+                const matchesDirection = directionFilter === '' || item.Dirección.trim() === directionFilter;
+                // 'Temática' no se usa para filtrar de momento
+                const matchesSector = sectorFilter === '' || item.Sector.trim() === sectorFilter;
+                const matchesSearch = item['Descripción IN'].toLowerCase().includes(searchInput);
+                
+                return matchesComponent && matchesDirection && matchesSector && matchesSearch;
+            });
+
+            updateDashboard(filteredData);
+            // Si los gráficos también deben reflejar los datos filtrados, descomenta la siguiente línea.
+            // Para este caso, los gráficos Doughnut y Bar suelen mostrar estadísticas globales,
+            // por lo que no se actualizan al filtrar la tabla en el ejemplo.
+            // initializeCharts(filteredData); // Si se desea que los gráficos también se filtren
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Accesibilidad
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') {
+                document.body.classList.add('keyboard-navigation');
+            }
+        });
+
+        document.addEventListener('mousedown', function() {
+            document.body.classList.remove('keyboard-navigation');
+        });
+
+        // Función asíncrona para cargar y procesar los datos
+        async function loadDataAndInitializeDashboard() {
+            try {
+                // Cargar el archivo CSV
+                const response = await fetch('data/indicators.csv');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const csvText = await response.text();
+                
+                indicatorsData = parseCSV(csvText); // Parsear los datos
+                
+                populateFilters(indicatorsData); // Poblar los filtros con TODOS los datos
+                updateDashboard(indicatorsData); // Actualizar las tarjetas y la tabla con TODOS los datos inicialmente
+                initializeCharts(); // Inicializar los gráficos con TODOS los datos
+                setupFilters(); // Configurar los event listeners para los filtros
+            } catch (error) {
+                console.error("Error al cargar o procesar los datos del CSV:", error);
+                // Aquí podrías mostrar un mensaje de error en la UI si lo deseas
+                alert("Hubo un error al cargar los datos del dashboard. Por favor, inténtalo de nuevo.");
+            }
+        }
+
+        // Inicializar cuando la página cargue
+        document.addEventListener('DOMContentLoaded', loadDataAndInitializeDashboard);
+    </script>
+</body>
+</html>
