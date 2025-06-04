@@ -19,3 +19,11 @@ The application has no build step because all dependencies are loaded from publi
 
 The CSV data used by the dashboard is located under `data/indicators.csv` and configured in `js/config.js`.
 
+---
+
+## Running tests
+
+Run the CSV parser test with:
+
+```bash
+node tests/test-csv-parser.js
