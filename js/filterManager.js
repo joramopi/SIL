@@ -141,7 +141,7 @@ class FilterManager {
             component: 'Filtra indicadores por componente del PDOT',
             direction: 'Filtra por dirección responsable',
             sector: 'Filtra por sector estadístico',
-            theme: 'Filtra por registro administrativo',
+            theme: 'Filtra por temática',
             search: 'Busca en nombres y descripciones de indicadores'
         };
 
