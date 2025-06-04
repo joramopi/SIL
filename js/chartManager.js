@@ -89,18 +89,8 @@ class ChartManager {
                             labels: {
                                 padding: 20,
                                 usePointStyle: true,
-                                font: { size: 12 },
-                                generateLabels: (chart) => {
-                                    const original = Chart.defaults.plugins.legend.labels.generateLabels;
-                                    const labels = original.call(this, chart);
-                                    
-                                    labels.forEach((label, index) => {
-                                        const value = chart.data.datasets[0].data[index];
-                                        label.text = `${label.text} (${value})`;
-                                    });
-                                    
-                                    return labels;
-                                }
+                                font: { size: 12 }
+                                // Removida la función generateLabels personalizada
                             }
                         },
                         tooltip: {
