@@ -36,7 +36,7 @@ class ChartManager {
      */
     updateCharts(data) {
         if (!this.isInitialized) {
-            console.warn('⚠️ Gráficos no inicializados, inicializando ahora...');
+            console.warn(⚠️ Gráficos no inicializados, inicializando ahora...');
             this.initialize();
         }
 
@@ -215,17 +215,18 @@ class ChartManager {
         try {
             this.showChartLoading('componentChart', true);
 
-            // Contar componentes directamente del CSV
+            // Contar componentes directamente del CSV con corrección de codificación
             const componentCounts = {};
             data.forEach(item => {
-                const component = item.Componente; // Acceso directo a la columna
+                let component = item.Componente; // Acceso directo a la columna
                 if (component && component.trim() !== '') {
-                    const cleanComponent = component.trim();
-                    componentCounts[cleanComponent] = (componentCounts[cleanComponent] || 0) + 1;
+                    // Aplicar corrección de codificación
+                    component = CSVParser.fixEncoding(component.trim());
+                    componentCounts[component] = (componentCounts[component] || 0) + 1;
                 }
             });
             
-            console.log('🔍 Debug - Datos de componentes (directo):', componentCounts);
+            console.log('🔍 Debug - Datos de componentes (con codificación corregida):', componentCounts);
             
             // Filtrar valores si hay demasiados
             const filteredCounts = this.filterChartData(componentCounts);
@@ -234,7 +235,7 @@ class ChartManager {
             const values = Object.values(filteredCounts);
             const colors = CONFIG.getChartColors(labels.length);
 
-            console.log('📊 Debug - Labels del gráfico:', labels);
+            console.log('📊 Debug - Labels del gráfico (corregidos):', labels);
             console.log('📊 Debug - Valores del gráfico:', values);
 
             if (labels.length === 0) {
@@ -478,4 +479,4 @@ window.addEventListener('resize', PerformanceUtils.debounce(() => {
 }, 250));
 
 // Hacer disponible globalmente
-window.ChartManager = ChartManager;s
+window.ChartManager = ChartManager;

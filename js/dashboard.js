@@ -67,19 +67,14 @@ class Dashboard {
         try {
             NotificationManager.show('Cargando datos de indicadores...', 'info', 2000);
 
-            const response = await fetch(CONFIG.CSV_PATH);
-            
-            if (!response.ok) {
-                throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
-            }
-
-            const csvText = await response.text();
+            // Intentar cargar con diferentes codificaciones
+            let csvText = await this.fetchCSVWithEncoding(CONFIG.CSV_PATH);
             
             if (!csvText.trim()) {
                 throw new Error(CONFIG.ERROR_MESSAGES.csvEmpty);
             }
 
-            // Parsear datos
+            // Parsear datos con corrección de codificación
             this.state.data = CSVParser.parse(csvText);
             
             console.log('🔍 Debug - Primeros 3 registros parseados:', this.state.data.slice(0, 3));
@@ -120,6 +115,79 @@ class Dashboard {
         } finally {
             this.setLoadingState(false);
         }
+    }
+
+    /**
+     * Carga el CSV intentando diferentes codificaciones si es necesario
+     */
+    async fetchCSVWithEncoding(url) {
+        console.log('📂 Cargando archivo CSV:', url);
+        
+        try {
+            // Primer intento: carga normal
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
+            }
+
+            // Intentar leer como texto UTF-8
+            let text = await response.text();
+            
+            // Verificar si hay caracteres problemáticos que indican mala codificación
+            if (this.hasEncodingIssues(text)) {
+                console.log('⚠️ Detectados problemas de codificación, intentando corrección...');
+                
+                // Intentar re-fetch con diferentes configuraciones
+                try {
+                    const response2 = await fetch(url);
+                    const arrayBuffer = await response2.arrayBuffer();
+                    
+                    // Intentar decodificar como ISO-8859-1 (Latin-1)
+                    const decoder = new TextDecoder('iso-8859-1');
+                    const altText = decoder.decode(arrayBuffer);
+                    
+                    if (!this.hasEncodingIssues(altText)) {
+                        console.log('✅ Corrección de codificación exitosa con ISO-8859-1');
+                        return altText;
+                    }
+                    
+                    // Intentar con Windows-1252
+                    const decoder2 = new TextDecoder('windows-1252');
+                    const altText2 = decoder2.decode(arrayBuffer);
+                    
+                    if (!this.hasEncodingIssues(altText2)) {
+                        console.log('✅ Corrección de codificación exitosa con Windows-1252');
+                        return altText2;
+                    }
+                    
+                } catch (decodingError) {
+                    console.warn('⚠️ No se pudo corregir automáticamente la codificación');
+                }
+            }
+            
+            console.log('📂 Archivo CSV cargado exitosamente');
+            return text;
+            
+        } catch (error) {
+            console.error('❌ Error cargando CSV:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Detecta si hay problemas de codificación en el texto
+     */
+    hasEncodingIssues(text) {
+        // Patrones que indican problemas de codificación
+        const problemPatterns = [
+            / /g,                    // Caracteres de reemplazo
+            /Ã[¡-ÿ]/g,             // Secuencias Ã seguidas de caracteres especiales
+            /Â[°ª-ÿ]/g,            // Secuencias Â problemáticas
+            /â€[œ""']/g             // Comillas y apóstrofes mal codificados
+        ];
+        
+        return problemPatterns.some(pattern => pattern.test(text));
     }
 
     /**
@@ -241,12 +309,14 @@ class Dashboard {
         console.log(`🔍 Debug getUniqueValues - Buscando campo: ${csvField} para ${fieldMapping}`);
         
         data.forEach(item => {
-            const value = item[csvField];
+            let value = item[csvField];
             if (value && value.trim() !== '') {
-                values.add(value.trim());
+                // Aplicar corrección de codificación
+                value = CSVParser.fixEncoding(value.trim());
+                values.add(value);
                 // Solo mostrar los primeros valores para debug
                 if (values.size <= 3) {
-                    console.log(`🔍 Debug - Valor encontrado: "${value}"`);
+                    console.log(`🔍 Debug - Valor encontrado (corregido): "${value}"`);
                 }
             }
         });
@@ -380,24 +450,30 @@ class Dashboard {
     createTableRow(indicator, index) {
         const row = document.createElement('tr');
         
-        // Obtener nombre del indicador
-        const indicatorName = indicator.Nombre_Indicador || indicator.Indicador || indicator.N || 'Sin nombre';
+        // Obtener nombre del indicador con corrección de codificación
+        let indicatorName = indicator.Nombre_Indicador || indicator.Indicador || indicator.N || 'Sin nombre';
+        indicatorName = CSVParser.fixEncoding(indicatorName);
         
-        // Datos de la fila con acceso directo a las columnas
+        // Aplicar corrección de codificación a otros campos también
+        const component = CSVParser.fixEncoding(indicator.Componente || 'Sin categorizar');
+        const direction = CSVParser.fixEncoding(indicator.Direccion || 'No especificado');
+        const sector = CSVParser.fixEncoding(indicator.SectorE || 'No especificado');
+        
+        // Datos de la fila con corrección de codificación
         const rowData = [
             {
                 content: `<strong>${indicatorName}</strong>`,
                 isHTML: true
             },
             {
-                content: `<span class="badge badge-primary">${indicator.Componente || 'Sin categorizar'}</span>`,
+                content: `<span class="badge badge-primary">${component}</span>`,
                 isHTML: true
             },
             {
-                content: indicator.Direccion || 'No especificado'
+                content: direction
             },
             {
-                content: indicator.SectorE || 'No especificado'
+                content: sector
             },
             {
                 content: indicator.Id_RA || 'N/A'
