@@ -422,6 +422,9 @@ class Dashboard {
         try {
             console.log(`📋 Actualizando tabla con ${data.length} registros`);
             
+            // Reiniciar el mapa de colores para datos filtrados
+            this.componentColorMap = null;
+            
             if (data.length === 0) {
                 this.showEmptyTable();
                 return;
@@ -436,7 +439,7 @@ class Dashboard {
                 tableBody.appendChild(row);
             });
 
-            console.log('✅ Tabla actualizada exitosamente');
+            console.log('✅ Tabla actualizada exitosamente con colores consistentes');
 
         } catch (error) {
             ErrorUtils.handleError(error, 'Actualización de Tabla');
@@ -459,14 +462,17 @@ class Dashboard {
         const direction = CSVParser.fixEncoding(indicator.Direccion || 'No especificado');
         const sector = CSVParser.fixEncoding(indicator.SectorE || 'No especificado');
         
-        // Datos de la fila con corrección de codificación
+        // Obtener color del componente basado en el índice del componente en la lista de componentes únicos
+        const componentColor = this.getComponentColor(component);
+        
+        // Datos de la fila con corrección de codificación y colores dinámicos
         const rowData = [
             {
                 content: `<strong>${indicatorName}</strong>`,
                 isHTML: true
             },
             {
-                content: `<span class="badge badge-primary">${component}</span>`,
+                content: `<span class="badge badge-component" style="background-color: ${componentColor}; color: white;">${component}</span>`,
                 isHTML: true
             },
             {
@@ -495,6 +501,23 @@ class Dashboard {
         });
 
         return row;
+    }
+
+    /**
+     * Obtiene el color correspondiente para un componente específico
+     */
+    getComponentColor(componentName) {
+        // Obtener todos los componentes únicos para mantener consistencia
+        if (!this.componentColorMap) {
+            this.componentColorMap = {};
+            const uniqueComponents = this.getUniqueValues(this.state.data, 'component');
+            
+            uniqueComponents.forEach((component, index) => {
+                this.componentColorMap[component] = CONFIG.CHART_COLORS[index % CONFIG.CHART_COLORS.length];
+            });
+        }
+        
+        return this.componentColorMap[componentName] || CONFIG.CHART_COLORS[0];
     }
 
     /**

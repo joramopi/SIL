@@ -1,256 +1,198 @@
-/* Estilos adicionales para mejorar la funcionalidad de filtros */
+/* Estilos adicionales para gráficos con valores y porcentajes visibles */
 
-/* Filtros activos */
-.filter-active {
-    border-color: var(--primary-blue) !important;
-    box-shadow: 0 0 0 3px rgba(30, 76, 114, 0.2) !important;
-    background: linear-gradient(135deg, var(--white) 0%, rgba(30, 76, 114, 0.02) 100%) !important;
+/* Mejorar la legibilidad de las leyendas de gráficos */
+.chart-container canvas {
+    max-height: 350px !important; /* Dar más espacio para las etiquetas */
 }
 
-/* Contenedor de búsqueda activa */
-.search-active {
+/* Estilos para la leyenda del gráfico de componentes */
+.chart-card .chart-container {
     position: relative;
-}
-
-.search-active .search-input {
-    padding-right: 3rem !important;
-    border-color: var(--primary-blue);
-    box-shadow: 0 0 0 3px rgba(30, 76, 114, 0.2);
-}
-
-/* Botón de limpiar búsqueda */
-.search-clear {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--dark-gray);
-    cursor: pointer;
-    font-size: 0.9rem;
-    opacity: 0.7;
-    z-index: 10;
-    transition: var(--transition);
-}
-
-.search-clear:hover {
-    opacity: 1;
-    color: var(--danger);
-}
-
-/* Contador de resultados */
-.results-counter {
-    text-align: center;
-    font-size: 0.9rem;
-    color: var(--dark-gray);
-    opacity: 0.8;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--medium-gray);
-    transition: var(--transition);
-}
-
-/* Estados de carga mejorados */
-.loading-card {
-    opacity: 0.6;
-    pointer-events: none;
-    position: relative;
-    overflow: hidden;
-}
-
-.loading-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.4),
-        transparent
-    );
-    animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-    0% {
-        left: -100%;
-    }
-    100% {
-        left: 100%;
-    }
-}
-
-/* Mejoras de accesibilidad */
-.keyboard-navigation *:focus {
-    outline: 3px solid var(--light-blue) !important;
-    outline-offset: 2px !important;
-    border-radius: var(--border-radius-small);
-}
-
-/* Estados de error mejorados */
-.chart-error {
-    color: var(--danger);
-    text-align: center;
-    padding: 2rem;
-    opacity: 0.8;
-}
-
-.chart-error i {
-    font-size: 2rem;
+    height: 350px; /* Aumentar altura para acomodar etiquetas */
     margin-bottom: 1rem;
-    display: block;
 }
 
-/* Animaciones suaves para cambios de estado */
-.stat-value {
+/* Asegurar que las leyendas tengan suficiente espacio */
+.chart-card {
+    min-height: 450px; /* Aumentar altura mínima de las tarjetas de gráfico */
+}
+
+/* Mejorar la visualización de la leyenda con valores y porcentajes */
+.chart-container .chartjs-legend {
+    margin-top: 20px;
+}
+
+.chart-container .chartjs-legend ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.chart-container .chartjs-legend li {
+    display: inline-block;
+    margin: 5px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* Estilos para mejorar la legibilidad del texto en gráficos */
+.chart-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Responsive adjustments para gráficos con etiquetas */
+@media (max-width: 768px) {
+    .chart-container {
+        height: 300px;
+    }
+    
+    .chart-card {
+        min-height: 400px;
+    }
+    
+    /* Ajustar tamaño de fuente en móviles */
+    .chart-container canvas {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-container {
+        height: 250px;
+    }
+    
+    .chart-card {
+        min-height: 350px;
+    }
+}
+
+/* Mejorar contraste de las etiquetas en gráficos */
+.chart-container .chartjs-datalabels {
+    color: #495057;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Asegurar que el texto del centro del doughnut sea visible */
+.chart-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Colores de badges dinámicos que coincidan con los gráficos */
+.badge-component {
+    color: white;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+}
+
+/* Clases específicas para cada tipo de componente */
+.badge-component-1 { background-color: #1e4c72; } /* Azul oscuro */
+.badge-component-2 { background-color: #2d5aa0; } /* Azul medio */
+.badge-component-3 { background-color: #4a90c2; } /* Azul claro */
+.badge-component-4 { background-color: #1565c0; } /* Azul material */
+.badge-component-5 { background-color: #1976d2; } /* Azul vibrante */
+.badge-component-6 { background-color: #42a5f5; } /* Azul cielo */
+.badge-component-7 { background-color: #2e7d32; } /* Verde oscuro */
+.badge-component-8 { background-color: #388e3c; } /* Verde medio */
+.badge-component-9 { background-color: #43a047; } /* Verde claro */
+.badge-component-10 { background-color: #4caf50; } /* Verde material */
+
+/* Animaciones suaves para los gráficos */
+.chart-card {
     transition: all 0.3s ease;
 }
 
-.stat-value.updating {
-    transform: scale(1.05);
-    color: var(--light-blue);
+.chart-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* Mejoras para tabla responsive */
-@media (max-width: 768px) {
-    .indicators-table {
-        font-size: 0.8rem;
-    }
-    
-    .indicators-table th,
-    .indicators-table td {
-        padding: 0.5rem;
-    }
-    
-    .badge {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.5rem;
-    }
-}
-
-/* Estados hover mejorados */
-.filter-select:hover,
-.filter-input:hover {
-    border-color: var(--light-blue);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Indicador visual de filtros aplicados */
-.filters-section::before {
-    content: '';
+/* Mejorar la apariencia de los tooltips */
+.chartjs-tooltip {
+    opacity: 1;
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: transparent;
-    transition: var(--transition);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 3px;
+    -webkit-transition: all .1s ease;
+    transition: all .1s ease;
+    pointer-events: none;
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    padding: 8px 12px;
+    font-size: 12px;
 }
 
-.filters-section.has-active-filters::before {
-    background: linear-gradient(90deg, var(--primary-blue), var(--light-blue));
-}
-
-/* Mejoras para notificaciones */
-.notification {
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.notification.success {
-    background: rgba(40, 167, 69, 0.1);
-    border-left-color: var(--success);
-}
-
-.notification.error {
-    background: rgba(220, 53, 69, 0.1);
-    border-left-color: var(--danger);
-}
-
-.notification.warning {
-    background: rgba(255, 193, 7, 0.1);
-    border-left-color: var(--warning);
-}
-
-/* Efectos de enfoque mejorados */
-.search-input:focus {
-    transform: scale(1.02);
-}
-
-/* Loading spinner con mejor animación */
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
-}
-
-.loading-spinner {
-    animation: spin 1s linear infinite, pulse 2s ease-in-out infinite;
-}
-
-/* Mejoras para modo oscuro automático */
-@media (prefers-color-scheme: dark) {
-    .filter-active {
-        background: linear-gradient(135deg, var(--white) 0%, rgba(74, 144, 194, 0.1) 100%) !important;
-    }
-    
-    .search-clear:hover {
-        color: var(--light-blue);
-    }
-}
-
-/* Animaciones de entrada para elementos */
-.stat-card,
-.chart-card,
-.table-section,
-.filters-section {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Delay progresivo para animaciones */
-.stat-card:nth-child(1) { animation-delay: 0.1s; }
-.stat-card:nth-child(2) { animation-delay: 0.2s; }
-.stat-card:nth-child(3) { animation-delay: 0.3s; }
-.stat-card:nth-child(4) { animation-delay: 0.4s; }
-
-/* Mejoras para tooltips */
-[title]:hover::after {
-    content: attr(title);
+/* Indicador de carga mejorado para gráficos */
+.chart-loading {
     position: absolute;
-    bottom: 100%;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    background: var(--dark-gray);
-    color: var(--white);
-    padding: 0.5rem;
-    border-radius: var(--border-radius-small);
-    font-size: 0.8rem;
-    white-space: nowrap;
-    z-index: 1000;
-    margin-bottom: 0.5rem;
-    animation: fadeIn 0.2s ease-out;
+    transform: translate(-50%, -50%);
+    z-index: 100;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.chart-loading .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 3px;
+}
+
+/* Mejorar la visualización en modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .chart-container canvas {
+        filter: brightness(0.9);
+    }
+    
+    .chart-center-text {
+        color: #e0e0e0;
+    }
+    
+    .chartjs-tooltip {
+        background: rgba(255, 255, 255, 0.9);
+        color: #333;
+    }
+}
+
+/* Asegurar que los gráficos no se desborden */
+.chart-container {
+    overflow: hidden;
+    border-radius: var(--border-radius);
+}
+
+/* Mejorar la separación entre elementos del gráfico */
+.chart-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--medium-gray);
+}
+
+/* Estilo para resaltar el total en el centro del doughnut */
+.doughnut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-weight: bold;
+    color: var(--primary-blue);
+}
+
+.doughnut-center .total-label {
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+    margin-bottom: 2px;
+}
+
+.doughnut-center .total-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-blue);
 }

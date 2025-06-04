@@ -93,8 +93,33 @@ class ChartManager {
                             labels: {
                                 padding: 20,
                                 usePointStyle: true,
-                                font: { size: 12 }
-                                // Removida la función generateLabels personalizada
+                                font: { size: 12 },
+                                // Función personalizada para mostrar valores y porcentajes en la leyenda
+                                generateLabels: function(chart) {
+                                    const data = chart.data;
+                                    if (data.labels.length && data.datasets.length) {
+                                        const dataset = data.datasets[0];
+                                        const total = dataset.data.reduce(function(sum, value) {
+                                            return sum + value;
+                                        }, 0);
+                                        
+                                        return data.labels.map(function(label, index) {
+                                            const value = dataset.data[index];
+                                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                            
+                                            return {
+                                                text: label + ' (' + value + ' - ' + percentage + '%)',
+                                                fillStyle: dataset.backgroundColor[index],
+                                                strokeStyle: dataset.backgroundColor[index],
+                                                lineWidth: 0,
+                                                pointStyle: 'circle',
+                                                hidden: false,
+                                                index: index
+                                            };
+                                        });
+                                    }
+                                    return [];
+                                }
                             }
                         },
                         tooltip: {
@@ -105,6 +130,38 @@ class ChartManager {
                                     return context.label + ': ' + context.parsed + ' indicadores (' + percentage + '%)';
                                 }
                             }
+                        },
+                        // Plugin para mostrar valores y porcentajes en el centro del gráfico
+                        beforeDraw: function(chart) {
+                            if (chart.config.type === 'doughnut') {
+                                const ctx = chart.ctx;
+                                const width = chart.width;
+                                const height = chart.height;
+                                
+                                ctx.restore();
+                                const fontSize = (height / 114).toFixed(2);
+                                ctx.font = fontSize + "em sans-serif";
+                                ctx.textBaseline = "middle";
+                                ctx.fillStyle = "#495057";
+                                
+                                const total = chart.data.datasets[0].data.reduce(function(sum, value) {
+                                    return sum + value;
+                                }, 0);
+                                
+                                const text = "Total";
+                                const textX = Math.round((width - ctx.measureText(text).width) / 2);
+                                const textY = height / 2 - 10;
+                                
+                                const valueText = total.toString();
+                                const valueX = Math.round((width - ctx.measureText(valueText).width) / 2);
+                                const valueY = height / 2 + 15;
+                                
+                                ctx.fillText(text, textX, textY);
+                                ctx.font = (fontSize * 1.5) + "em sans-serif";
+                                ctx.fillStyle = "#1e4c72";
+                                ctx.fillText(valueText, valueX, valueY);
+                                ctx.save();
+                            }
                         }
                     },
                     animation: {
@@ -113,7 +170,7 @@ class ChartManager {
                 }
             });
 
-            console.log("✅ Gráfico de componentes inicializado");
+            console.log("✅ Gráfico de componentes inicializado con valores y porcentajes visibles");
 
         } catch (error) {
             this.showChartError('componentChart', 'Error al inicializar gráfico de componentes');
@@ -166,7 +223,11 @@ class ChartManager {
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return context.parsed.y + ' indicadores con periodicidad ' + context.label.toLowerCase();
+                                    const total = context.dataset.data.reduce(function(sum, value) {
+                                        return sum + value;
+                                    }, 0);
+                                    const percentage = total > 0 ? ((context.parsed.y / total) * 100).toFixed(1) : 0;
+                                    return context.parsed.y + ' indicadores (' + percentage + '%) - ' + context.label;
                                 }
                             }
                         }
@@ -193,12 +254,47 @@ class ChartManager {
                         }
                     },
                     animation: {
-                        duration: CONFIG.CHART_ANIMATION_DURATION
+                        duration: CONFIG.CHART_ANIMATION_DURATION,
+                        onComplete: function(context) {
+                            // Dibujar etiquetas con valores y porcentajes encima de las barras
+                            const chart = context.chart;
+                            const ctx = chart.ctx;
+                            
+                            ctx.font = 'bold 12px sans-serif';
+                            ctx.fillStyle = '#495057';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'bottom';
+                            
+                            const dataset = chart.data.datasets[0];
+                            const total = dataset.data.reduce(function(sum, value) {
+                                return sum + value;
+                            }, 0);
+                            
+                            dataset.data.forEach(function(value, index) {
+                                if (value > 0) {
+                                    const meta = chart.getDatasetMeta(0);
+                                    const bar = meta.data[index];
+                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                    
+                                    // Dibujar valor
+                                    ctx.fillText(value.toString(), bar.x, bar.y - 25);
+                                    
+                                    // Dibujar porcentaje
+                                    ctx.font = '10px sans-serif';
+                                    ctx.fillStyle = '#666';
+                                    ctx.fillText('(' + percentage + '%)', bar.x, bar.y - 10);
+                                    
+                                    // Restaurar fuente para la siguiente iteración
+                                    ctx.font = 'bold 12px sans-serif';
+                                    ctx.fillStyle = '#495057';
+                                }
+                            });
+                        }
                     }
                 }
             });
 
-            console.log("✅ Gráfico de periodicidad inicializado con colores personalizados");
+            console.log("✅ Gráfico de periodicidad inicializado con valores y porcentajes visibles");
 
         } catch (error) {
             this.showChartError('periodicityChart', 'Error al inicializar gráfico de periodicidad');
@@ -254,13 +350,40 @@ class ChartManager {
             this.charts.component.data.datasets[0].data = values;
             this.charts.component.data.datasets[0].backgroundColor = colors;
 
+            // Forzar actualización de las etiquetas de la leyenda con valores y porcentajes
+            this.charts.component.options.plugins.legend.labels.generateLabels = function(chart) {
+                const data = chart.data;
+                if (data.labels.length && data.datasets.length) {
+                    const dataset = data.datasets[0];
+                    const total = dataset.data.reduce(function(sum, value) {
+                        return sum + value;
+                    }, 0);
+                    
+                    return data.labels.map(function(label, index) {
+                        const value = dataset.data[index];
+                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                        
+                        return {
+                            text: label + ' (' + value + ' - ' + percentage + '%)',
+                            fillStyle: dataset.backgroundColor[index],
+                            strokeStyle: dataset.backgroundColor[index],
+                            lineWidth: 0,
+                            pointStyle: 'circle',
+                            hidden: false,
+                            index: index
+                        };
+                    });
+                }
+                return [];
+            };
+
             // Actualizar el gráfico
             this.charts.component.update('active');
 
             this.hideChartError('componentChart');
             this.showChartLoading('componentChart', false);
 
-            console.log(`✅ Gráfico de componentes actualizado con ${labels.length} categorías y colores únicos`);
+            console.log(`✅ Gráfico de componentes actualizado con ${labels.length} categorías, colores únicos y porcentajes visibles`);
 
         } catch (error) {
             this.showChartError('componentChart', 'Error al actualizar gráfico de componentes');
@@ -332,13 +455,49 @@ class ChartManager {
             this.charts.periodicity.data.datasets[0].backgroundColor = CONFIG.PERIODICITY_COLORS;
             this.charts.periodicity.data.datasets[0].borderColor = CONFIG.PERIODICITY_COLORS;
 
+            // Actualizar la función de animación para mostrar valores y porcentajes
+            this.charts.periodicity.options.animation.onComplete = function(context) {
+                const chart = context.chart;
+                const ctx = chart.ctx;
+                
+                ctx.font = 'bold 12px sans-serif';
+                ctx.fillStyle = '#495057';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                
+                const dataset = chart.data.datasets[0];
+                const total = dataset.data.reduce(function(sum, value) {
+                    return sum + value;
+                }, 0);
+                
+                dataset.data.forEach(function(value, index) {
+                    if (value > 0) {
+                        const meta = chart.getDatasetMeta(0);
+                        const bar = meta.data[index];
+                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                        
+                        // Dibujar valor
+                        ctx.fillText(value.toString(), bar.x, bar.y - 25);
+                        
+                        // Dibujar porcentaje
+                        ctx.font = '10px sans-serif';
+                        ctx.fillStyle = '#666';
+                        ctx.fillText('(' + percentage + '%)', bar.x, bar.y - 10);
+                        
+                        // Restaurar fuente para la siguiente iteración
+                        ctx.font = 'bold 12px sans-serif';
+                        ctx.fillStyle = '#495057';
+                    }
+                });
+            };
+
             // Actualizar el gráfico
             this.charts.periodicity.update('active');
 
             this.hideChartError('periodicityChart');
             this.showChartLoading('periodicityChart', false);
 
-            console.log('✅ Gráfico de periodicidad actualizado con colores únicos por periodo');
+            console.log('✅ Gráfico de periodicidad actualizado con colores únicos y porcentajes visibles');
 
         } catch (error) {
             this.showChartError('periodicityChart', 'Error al actualizar gráfico de periodicidad');
