@@ -135,8 +135,12 @@ class Dashboard {
             // Poblar filtros
             this.populateFilters();
             
+            // IMPORTANTE: Establecer los datos en el FilterManager ANTES de configurarlo
+            this.filterManager.setData(this.state.data);
+            
             // Configurar sistema de filtros
             this.filterManager.setup((filteredData) => {
+                console.log(`🔍 Filtros aplicados: ${filteredData.length} de ${this.state.data.length} registros`);
                 this.state.filteredData = filteredData;
                 this.updateDashboard();
             });
@@ -160,6 +164,7 @@ class Dashboard {
         
         try {
             const data = this.state.filteredData;
+            console.log(`📊 Actualizando dashboard con ${data.length} registros filtrados`);
             
             // Actualizar estadísticas
             this.updateStatsCards(data);
@@ -277,7 +282,11 @@ class Dashboard {
      */
     updateStatsCards(data) {
         try {
+            console.log(`📊 Actualizando estadísticas con ${data.length} registros`);
+            
             const stats = this.calculateStats(data);
+            
+            console.log('📊 Estadísticas calculadas:', stats);
             
             // Actualizar cada tarjeta
             DOMUtils.safeSetContent('#totalIndicatorsCard .stat-value', FormatUtils.formatNumber(stats.total));
@@ -288,6 +297,8 @@ class Dashboard {
             const currentDate = new Date();
             const monthName = FormatUtils.formatDate(currentDate, { month: 'long' });
             DOMUtils.safeSetContent('#updateCard .stat-value', FormatUtils.capitalizeWords(monthName));
+            
+            console.log('✅ Tarjetas de estadísticas actualizadas');
             
         } catch (error) {
             ErrorUtils.handleError(error, 'Actualización de Estadísticas');
@@ -339,6 +350,8 @@ class Dashboard {
         if (!tableBody) return;
 
         try {
+            console.log(`📋 Actualizando tabla con ${data.length} registros`);
+            
             if (data.length === 0) {
                 this.showEmptyTable();
                 return;
@@ -352,6 +365,8 @@ class Dashboard {
                 const row = this.createTableRow(indicator, index);
                 tableBody.appendChild(row);
             });
+
+            console.log('✅ Tabla actualizada exitosamente');
 
         } catch (error) {
             ErrorUtils.handleError(error, 'Actualización de Tabla');

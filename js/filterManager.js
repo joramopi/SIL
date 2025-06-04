@@ -164,6 +164,7 @@ class FilterManager {
 
             // Log del cambio para debugging
             console.log(`🔍 Filtro ${filterType} cambiado a: "${value}"`);
+            console.log('🔍 Estado actual de filtros:', this.filters);
 
             // Aplicar filtros
             this.applyFilters();
@@ -188,12 +189,18 @@ class FilterManager {
         const timer = PerformanceUtils.measureTime('Aplicación de filtros');
 
         try {
+            console.log('🔍 Aplicando filtros:', this.filters);
+            
             // Filtrar datos
             const filteredData = this.filterData(this.originalData, this.filters);
+            
+            console.log(`✅ Filtros aplicados: ${filteredData.length} de ${this.originalData.length} registros`);
 
             // Notificar cambio
             if (this.onFilterChange) {
                 this.onFilterChange(filteredData);
+            } else {
+                console.warn('⚠️ No hay callback configurado para onFilterChange');
             }
 
             // Actualizar contador de resultados
@@ -442,6 +449,12 @@ class FilterManager {
     setData(data) {
         this.originalData = data;
         console.log(`📊 Datos establecidos para filtros: ${data.length} registros`);
+        
+        // Aplicar filtros iniciales (sin filtros activos, debería devolver todos los datos)
+        if (this.isSetup && this.onFilterChange) {
+            console.log('🔄 Aplicando filtros iniciales después de setData');
+            this.applyFilters();
+        }
     }
 
     /**

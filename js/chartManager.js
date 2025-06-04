@@ -41,8 +41,12 @@ class ChartManager {
         }
 
         try {
+            console.log(`📈 Actualizando gráficos con ${data.length} registros`);
+            
             this.updateComponentChart(data);
             this.updatePeriodicityChart(data);
+            
+            console.log('✅ Gráficos actualizados exitosamente');
             
         } catch (error) {
             ErrorUtils.handleError(error, 'Actualización de Gráficos');
@@ -474,4 +478,4 @@ window.addEventListener('resize', PerformanceUtils.debounce(() => {
 }, 250));
 
 // Hacer disponible globalmente
-window.ChartManager = ChartManager;
+window.ChartManager = ChartManager;s
