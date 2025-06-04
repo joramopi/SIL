@@ -196,3 +196,10 @@
     font-weight: 700;
     color: var(--primary-blue);
 }
+
+/* Component text color classes */
+.color-1 { color: #1f8fff; }
+.color-2 { color: #00bfff; }
+.color-3 { color: #89cfeb; }
+.color-4 { color: #add8e6; }
+.color-5 { color: #b1e0e7; }

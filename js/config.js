@@ -3,28 +3,13 @@ const CONFIG = {
     // Data Source
     CSV_PATH: 'data/indicators.csv',
     
-    // Chart Configuration - Paleta de azules y verdes
+    // Chart Configuration - Paleta de colores para componentes
     CHART_COLORS: [
-        '#1e4c72', // Azul oscuro (Primary Blue)
-        '#2d5aa0', // Azul medio (Secondary Blue) 
-        '#4a90c2', // Azul claro (Light Blue)
-        '#1565c0', // Azul material
-        '#1976d2', // Azul vibrante
-        '#42a5f5', // Azul cielo
-        '#2e7d32', // Verde oscuro
-        '#388e3c', // Verde medio
-        '#43a047', // Verde claro
-        '#4caf50', // Verde material
-        '#66bb6a', // Verde suave
-        '#81c784', // Verde pastel
-        '#00695c', // Verde azulado oscuro
-        '#00796b', // Verde azulado
-        '#26a69a', // Verde azulado claro
-        '#4db6ac', // Verde agua
-        '#0d47a1', // Azul marino
-        '#1e88e5', // Azul eléctrico
-        '#29b6f6', // Azul celeste
-        '#4fc3f7'  // Azul cielo claro
+        '#1f8fff',
+        '#00bfff',
+        '#89cfeb',
+        '#add8e6',
+        '#b1e0e7'
     ],
     
     // Colores específicos para periodicidad
