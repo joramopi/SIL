@@ -636,20 +636,21 @@
         let periodicityChartInstance = null; // Para guardar la instancia del gráfico de periodicidad
 
         // Función para parsear el CSV
-        function parseCSV(csv) {
-            const lines = csv.split('\n');
-            // La primera línea contiene los encabezados. Limpiar espacios en blanco y el carácter BOM (Byte Order Mark) si existe.
-            const headers = lines[0].split(';').map(h => h.trim().replace(/^\uFEFF/, '')); 
-            return lines.slice(1).map(line => {
-                const values = line.split(';');
-                const obj = {};
-                headers.forEach((header, i) => {
-                    // Limpiar comillas y espacios en los valores.
-                    obj[header] = values[i] ? values[i].trim().replace(/"/g, '') : ''; 
-                });
-                return obj;
-            }).filter(obj => obj.N && obj.N.trim() !== ''); // Filtrar filas vacías o incompletas si el CSV tiene líneas en blanco al final
-        }
+	function parseCSV(csv) {
+    const lines = csv.split('\n');
+    // La primera línea contiene los encabezados. Limpiar espacios en blanco y el carácter BOM (Byte Order Mark) si existe.
+    const headers = lines[0].split(';').map(h => h.trim().replace(/^\uFEFF/, '')); 
+    return lines.slice(1).map(line => {
+        const values = line.split(';');
+        const obj = {};
+        headers.forEach((header, i) => {
+            // Limpiar comillas y espacios en los valores.
+            obj[header] = values[i] ? values[i].trim().replace(/"/g, '') : ''; 
+        });
+        return obj;
+    // CUIDADO AQUÍ: obj.N° debe ser accedido con corchetes
+    }).filter(obj => obj['N°'] && obj['N°'].trim() !== ''); // <-- ¡Corregido!
+}
 
         // Dummy periodicities for the table as they are not in CSV
         const periodicities = ['Mensual', 'Trimestral', 'Semestral', 'Anual'];
