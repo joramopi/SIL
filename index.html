@@ -637,57 +637,72 @@
 
         // Función para parsear el CSV
         function parseCSV(csv) {
-            console.log("Raw CSV length:", csv.length);
-            // Usar una expresión regular para manejar tanto \n como \r\n como saltos de línea
-            const lines = csv.split(/\r?\n/); 
-            console.log("Total lines (after initial split):", lines.length);
+    console.log("--- DEBUGGING parseCSV START ---");
+    console.log("Raw CSV length:", csv.length);
 
-            // Filtra las líneas completamente vacías antes de procesar
-            const nonEmptyLines = lines.filter(line => line.trim() !== '');
-            console.log("Non-empty lines:", nonEmptyLines.length);
+    // Limpiar el posible BOM del inicio del archivo, si no se eliminó antes
+    // y dividir líneas. /\r?\n/ maneja saltos de línea de Windows y Unix.
+    const lines = csv.replace(/^\uFEFF/, '').split(/\r?\n/); 
+    console.log("Total lines (after BOM removal and initial split):", lines.length);
 
-            if (nonEmptyLines.length === 0) {
-                console.error("No hay líneas válidas después de filtrar las vacías.");
-                return [];
-            }
+    // Filtra las líneas completamente vacías (por ejemplo, al final del archivo)
+    const nonEmptyLines = lines.filter(line => line.trim() !== '');
+    console.log("Non-empty lines count:", nonEmptyLines.length);
 
-            // La primera línea (ya filtrada si había vacío al principio) es la cabecera
-            const rawHeaders = nonEmptyLines[0].split(';');
-            const headers = rawHeaders.map(h => h.trim().replace(/^\uFEFF/, '')); 
-            console.log("Parsed Headers (raw):", rawHeaders);
-            console.log("Parsed Headers (trimmed & BOM-removed):", headers);
+    if (nonEmptyLines.length === 0) {
+        console.error("DEBUG: No hay líneas válidas después de filtrar las vacías. El CSV podría estar realmente vacío o malformado.");
+        return [];
+    }
 
-            // Verifica si la cabecera 'N' (ahora sin el símbolo de grado) existe y es limpia
-            const N_COLUMN_NAME = 'N'; // Definimos el nombre exacto de la columna
-            const nColumnIndex = headers.indexOf(N_COLUMN_NAME);
-            console.log(`Column '${N_COLUMN_NAME}' found at index:`, nColumnIndex);
+    // La primera línea no vacía es la cabecera
+    const headerLine = nonEmptyLines[0];
+    console.log("Header Line (raw from CSV):", headerLine);
 
-            if (nColumnIndex === -1) {
-                console.error(`ERROR: La columna '${N_COLUMN_NAME}' no fue encontrada en las cabeceras parseadas. ¡Esto es crítico!`);
-                console.error("Contenido de la primera línea del CSV (para inspección):", nonEmptyLines[0]);
-                return []; // Salir si la columna N no se encuentra
-            }
+    // Dividir los encabezados por punto y coma.
+    const rawHeaders = headerLine.split(';');
+    console.log("Raw Headers (split by ';'):", rawHeaders);
 
-            const parsedData = nonEmptyLines.slice(1).map(line => {
-                const values = line.split(';');
-                const obj = {};
-                headers.forEach((header, i) => {
-                    obj[header] = values[i] ? values[i].trim().replace(/"/g, '') : ''; 
-                });
-                return obj;
-            });
+    // Limpiar cada encabezado: trim() y remover BOM si persiste en algún elemento
+    // Considera una limpieza más agresiva si `trim()` no funciona para todos los invisibles:
+    // .map(h => h.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim().replace(/^\uFEFF/, ''));
+    // Por ahora, nos quedamos con el trim() y BOM removal que ya tenemos.
+    const headers = rawHeaders.map(h => h.trim().replace(/^\uFEFF/, '')); 
+    console.log("Cleaned Headers (after trim & BOM removal):", headers);
 
-            console.log("Parsed Data (before final filter, first 5 rows):", parsedData.slice(0, 5));
+    // --- VERIFICACIÓN CRÍTICA DE LA COLUMNA 'N' ---
+    const N_COLUMN_NAME = 'N'; // El nombre de columna que esperamos
+    const nColumnIndex = headers.indexOf(N_COLUMN_NAME);
+    console.log(`Searching for column '${N_COLUMN_NAME}'. Found at index:`, nColumnIndex);
 
-            // Filtro final: asegura que el objeto tenga la propiedad 'N' y que su valor no sea una cadena vacía
-            const filteredData = parsedData.filter(obj => 
-                obj.hasOwnProperty(N_COLUMN_NAME) && obj[N_COLUMN_NAME].trim() !== ''
-            ); 
+    if (nColumnIndex === -1) {
+        console.error(`ERROR: La columna '${N_COLUMN_NAME}' no fue encontrada en las cabeceras parseadas. ¡Esto es crítico!`);
+        console.error("Posibles causas: Nombre incorrecto, espacios invisibles, o un delimitador de CSV diferente. Por favor, revise la primera línea del archivo CSV.");
+        console.log("--- DEBUGGING parseCSV END (Error) ---");
+        return []; // Salir si la columna 'N' no se encuentra
+    }
 
-            console.log("Filtered Data length (final result):", filteredData.length);
+    const parsedData = nonEmptyLines.slice(1).map(line => {
+        const values = line.split(';');
+        const obj = {};
+        headers.forEach((header, i) => {
+            // Asegurarse de que el índice del valor exista para evitar errores
+            obj[header] = (values[i] !== undefined) ? values[i].trim().replace(/"/g, '') : ''; 
+        });
+        return obj;
+    });
 
-            return filteredData;
-        }
+    console.log("Parsed Data (before final filter, first 5 rows):", parsedData.slice(0, Math.min(5, parsedData.length)));
+
+    // Filtro final: asegura que el objeto tenga la propiedad 'N' y que su valor no sea una cadena vacía
+    const filteredData = parsedData.filter(obj => 
+        obj.hasOwnProperty(N_COLUMN_NAME) && obj[N_COLUMN_NAME].trim() !== ''
+    ); 
+
+    console.log("Filtered Data length (final result):", filteredData.length);
+    console.log("--- DEBUGGING parseCSV END ---");
+
+    return filteredData;
+}
 
         // Dummy periodicities for the table as they are not in CSV
         const periodicities = ['Mensual', 'Trimestral', 'Semestral', 'Anual'];
