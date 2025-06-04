@@ -82,6 +82,9 @@ class Dashboard {
             // Parsear datos
             this.state.data = CSVParser.parse(csvText);
             
+            console.log('🔍 Debug - Primeros 3 registros parseados:', this.state.data.slice(0, 3));
+            console.log('🔍 Debug - Columnas detectadas:', Object.keys(this.state.data[0] || {}));
+            
             if (this.state.data.length === 0) {
                 throw new Error(CONFIG.ERROR_MESSAGES.csvEmpty);
             }
@@ -228,7 +231,10 @@ class Dashboard {
             }
         });
         
-        return Array.from(values).sort();
+        const uniqueArray = Array.from(values).sort();
+        console.log(`🔍 Debug getUniqueValues - Campo: ${fieldMapping}, Valores: `, uniqueArray);
+        
+        return uniqueArray;
     }
 
     /**

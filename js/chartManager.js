@@ -224,12 +224,17 @@ class ChartManager {
             // Calcular datos del gráfico
             const componentCounts = DataUtils.countUniqueValues(data, 'component');
             
+            console.log('🔍 Debug - Datos de componentes:', componentCounts);
+            
             // Filtrar valores sin categorizar si hay otros datos
             const filteredCounts = this.filterChartData(componentCounts);
             
             const labels = Object.keys(filteredCounts);
             const values = Object.values(filteredCounts);
             const colors = CONFIG.getChartColors(labels.length);
+
+            console.log('📊 Debug - Labels del gráfico:', labels);
+            console.log('📊 Debug - Valores del gráfico:', values);
 
             if (labels.length === 0) {
                 this.showEmptyChart('componentChart', 'No hay datos de componentes para mostrar');
@@ -252,6 +257,7 @@ class ChartManager {
         } catch (error) {
             this.showChartError('componentChart', 'Error al actualizar gráfico de componentes');
             this.showChartLoading('componentChart', false);
+            console.error('❌ Error detallado en gráfico de componentes:', error);
             throw error;
         }
     }
