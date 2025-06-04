@@ -36,7 +36,7 @@ class ChartManager {
      */
     updateCharts(data) {
         if (!this.isInitialized) {
-            console.warn(⚠️ Gráficos no inicializados, inicializando ahora...');
+            console.warn('⚠️ Gráficos no inicializados, inicializando ahora...');
             this.initialize();
         }
 
@@ -99,10 +99,10 @@ class ChartManager {
                         },
                         tooltip: {
                             callbacks: {
-                                label: (context) => {
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce(function(a, b) { return a + b; }, 0);
                                     const percentage = ((context.parsed / total) * 100).toFixed(1);
-                                    return `${context.label}: ${context.parsed} indicadores (${percentage}%)`;
+                                    return context.label + ': ' + context.parsed + ' indicadores (' + percentage + '%)';
                                 }
                             }
                         }
@@ -162,8 +162,8 @@ class ChartManager {
                         },
                         tooltip: {
                             callbacks: {
-                                label: (context) => {
-                                    return `${context.parsed.y} indicadores con periodicidad ${context.label.toLowerCase()}`;
+                                label: function(context) {
+                                    return context.parsed.y + ' indicadores con periodicidad ' + context.label.toLowerCase();
                                 }
                             }
                         }
@@ -217,11 +217,11 @@ class ChartManager {
 
             // Contar componentes directamente del CSV con corrección de codificación
             const componentCounts = {};
-            data.forEach(item => {
+            data.forEach(function(item) {
                 let component = item.Componente; // Acceso directo a la columna
                 if (component && component.trim() !== '') {
-                    // Aplicar corrección de codificación
-                    component = CSVParser.fixEncoding(component.trim());
+                    // Aplicar corrección básica de codificación
+                    component = ChartManager.fixBasicEncoding(component.trim());
                     componentCounts[component] = (componentCounts[component] || 0) + 1;
                 }
             });
@@ -265,6 +265,31 @@ class ChartManager {
     }
 
     /**
+     * Corrección básica de codificación sin dependencias externas
+     */
+    static fixBasicEncoding(text) {
+        if (typeof text !== 'string') return text;
+        
+        return text
+            .replace(/\uFFFD/g, '')  // Remover caracteres de reemplazo
+            .replace(/N\uFFFDmero/g, 'Número')
+            .replace(/n\uFFFDmero/g, 'número')
+            .replace(/tecnol\uFFFDgico/g, 'tecnológico')
+            .replace(/Educaci\uFFFDn/g, 'Educación')
+            .replace(/educaci\uFFFDn/g, 'educación')
+            .replace(/Poblaci\uFFFDn/g, 'Población')
+            .replace(/poblaci\uFFFDn/g, 'población')
+            .replace(/Informaci\uFFFDn/g, 'Información')
+            .replace(/informaci\uFFFDn/g, 'información')
+            .replace(/Direcci\uFFFDn/g, 'Dirección')
+            .replace(/direcci\uFFFDn/g, 'dirección')
+            .replace(/Atenci\uFFFDn/g, 'Atención')
+            .replace(/atenci\uFFFDn/g, 'atención')
+            .replace(/Prevenci\uFFFDn/g, 'Prevención')
+            .replace(/prevenci\uFFFDn/g, 'prevención');
+    }
+
+    /**
      * Actualiza el gráfico de periodicidad
      */
     updatePeriodicityChart(data) {
@@ -290,7 +315,7 @@ class ChartManager {
             this.hideChartError('periodicityChart');
             this.showChartLoading('periodicityChart', false);
 
-            console.log(`✅ Gráfico de periodicidad actualizado`);
+            console.log('✅ Gráfico de periodicidad actualizado');
 
         } catch (error) {
             this.showChartError('periodicityChart', 'Error al actualizar gráfico de periodicidad');
@@ -302,7 +327,8 @@ class ChartManager {
     /**
      * Filtra datos del gráfico para mejorar visualización
      */
-    filterChartData(counts, maxItems = CONFIG.MAX_CHART_ITEMS) {
+    filterChartData(counts, maxItems) {
+        maxItems = maxItems || CONFIG.MAX_CHART_ITEMS;
         const entries = Object.entries(counts);
         
         // Si hay pocos elementos, devolver todos
@@ -311,18 +337,18 @@ class ChartManager {
         }
 
         // Ordenar por valor descendente
-        entries.sort((a, b) => b[1] - a[1]);
+        entries.sort(function(a, b) { return b[1] - a[1]; });
 
         // Tomar los primeros maxItems-1 elementos
         const topEntries = entries.slice(0, maxItems - 1);
         const otherEntries = entries.slice(maxItems - 1);
 
         // Agrupar el resto en "Otros"
-        const otherTotal = otherEntries.reduce((sum, [, value]) => sum + value, 0);
+        const otherTotal = otherEntries.reduce(function(sum, entry) { return sum + entry[1]; }, 0);
 
         const result = {};
-        topEntries.forEach(([key, value]) => {
-            result[key] = value;
+        topEntries.forEach(function(entry) {
+            result[entry[0]] = entry[1];
         });
 
         if (otherTotal > 0) {
@@ -341,14 +367,14 @@ class ChartManager {
         // Distribución aproximada basada en datos típicos
         const distributions = [0.15, 0.25, 0.20, 0.40]; // Mensual, Trimestral, Semestral, Anual
         
-        return distributions.map(ratio => Math.round(total * ratio));
+        return distributions.map(function(ratio) { return Math.round(total * ratio); });
     }
 
     /**
      * Muestra estado de carga en un gráfico
      */
     showChartLoading(chartId, show) {
-        const loadingElement = DOMUtils.safeQuerySelector(`#${chartId}Loading`);
+        const loadingElement = DOMUtils.safeQuerySelector('#' + chartId + 'Loading');
         if (loadingElement) {
             loadingElement.style.display = show ? 'block' : 'none';
         }
@@ -358,7 +384,7 @@ class ChartManager {
      * Muestra error en un gráfico
      */
     showChartError(chartId, message) {
-        const errorElement = DOMUtils.safeQuerySelector(`#${chartId}Error`);
+        const errorElement = DOMUtils.safeQuerySelector('#' + chartId + 'Error');
         if (errorElement) {
             errorElement.style.display = 'block';
             const messageElement = errorElement.querySelector('p');
@@ -367,14 +393,14 @@ class ChartManager {
             }
         }
 
-        console.error(`❌ Error en gráfico ${chartId}: ${message}`);
+        console.error('❌ Error en gráfico ' + chartId + ': ' + message);
     }
 
     /**
      * Oculta error en un gráfico
      */
     hideChartError(chartId) {
-        const errorElement = DOMUtils.safeQuerySelector(`#${chartId}Error`);
+        const errorElement = DOMUtils.safeQuerySelector('#' + chartId + 'Error');
         if (errorElement) {
             errorElement.style.display = 'none';
         }
@@ -384,13 +410,10 @@ class ChartManager {
      * Muestra estado vacío en un gráfico
      */
     showEmptyChart(chartId, message) {
-        const errorElement = DOMUtils.safeQuerySelector(`#${chartId}Error`);
+        const errorElement = DOMUtils.safeQuerySelector('#' + chartId + 'Error');
         if (errorElement) {
             errorElement.style.display = 'block';
-            errorElement.innerHTML = `
-                <i class="fas fa-chart-pie" style="color: var(--medium-gray);"></i>
-                <p>${message}</p>
-            `;
+            errorElement.innerHTML = '<i class="fas fa-chart-pie" style="color: var(--medium-gray);"></i><p>' + message + '</p>';
         }
     }
 
@@ -398,7 +421,8 @@ class ChartManager {
      * Redimensiona todos los gráficos
      */
     resize() {
-        Object.values(this.charts).forEach(chart => {
+        const self = this;
+        Object.values(this.charts).forEach(function(chart) {
             if (chart) {
                 chart.resize();
             }
@@ -409,7 +433,8 @@ class ChartManager {
      * Destruye todos los gráficos
      */
     destroy() {
-        Object.values(this.charts).forEach(chart => {
+        const self = this;
+        Object.values(this.charts).forEach(function(chart) {
             if (chart) {
                 chart.destroy();
             }
@@ -430,22 +455,22 @@ class ChartManager {
     exportChart(chartType, filename) {
         const chart = this.charts[chartType];
         if (!chart) {
-            console.warn(`⚠️ Gráfico ${chartType} no encontrado`);
+            console.warn('⚠️ Gráfico ' + chartType + ' no encontrado');
             return null;
         }
 
         try {
             const url = chart.toBase64Image();
             const link = document.createElement('a');
-            link.download = `${filename || chartType}_${Date.now()}.png`;
+            link.download = (filename || chartType) + '_' + Date.now() + '.png';
             link.href = url;
             link.click();
 
-            NotificationManager.show(`Gráfico ${chartType} exportado exitosamente`, 'success');
+            NotificationManager.show('Gráfico ' + chartType + ' exportado exitosamente', 'success');
             return url;
 
         } catch (error) {
-            ErrorUtils.handleError(error, `Exportación de gráfico ${chartType}`);
+            ErrorUtils.handleError(error, 'Exportación de gráfico ' + chartType);
             return null;
         }
     }
@@ -463,17 +488,17 @@ class ChartManager {
         return {
             type: chartType,
             totalItems: labels.length,
-            totalValue: data.reduce((a, b) => a + b, 0),
-            maxValue: Math.max(...data),
-            minValue: Math.min(...data),
-            averageValue: data.reduce((a, b) => a + b, 0) / data.length
+            totalValue: data.reduce(function(a, b) { return a + b; }, 0),
+            maxValue: Math.max.apply(null, data),
+            minValue: Math.min.apply(null, data),
+            averageValue: data.reduce(function(a, b) { return a + b; }, 0) / data.length
         };
     }
 }
 
 // Configurar redimensionamiento automático
-window.addEventListener('resize', PerformanceUtils.debounce(() => {
-    if (window.dashboard?.chartManager) {
+window.addEventListener('resize', PerformanceUtils.debounce(function() {
+    if (window.dashboard && window.dashboard.chartManager) {
         window.dashboard.chartManager.resize();
     }
 }, 250));
