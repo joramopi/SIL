@@ -16,12 +16,19 @@ body {
 /* Header */
 .header {
     background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-    color: var(--white);
+    color: var(--light-gray);
     padding: 1.5rem 0;
     box-shadow: var(--shadow);
     position: sticky;
     top: 0;
     z-index: 100;
+}
+
+/* Override color classes inside header to keep text light */
+.header .color-1,
+.header .color-2,
+.header .color-3 {
+    color: var(--light-gray);
 }
 
 .header-content {
