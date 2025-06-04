@@ -14,10 +14,10 @@ const CONFIG = {
     
     // Colores específicos para periodicidad
     PERIODICITY_COLORS: [
-        '#1e4c72', // Mensual - Azul oscuro
-        '#2e7d32', // Trimestral - Verde oscuro  
-        '#1565c0', // Semestral - Azul material
-        '#388e3c'  // Anual - Verde medio
+        '#1f8fff', // Mensual - Azul primario
+        '#00bfff', // Trimestral - Azul claro
+        '#89cfeb', // Semestral - Celeste
+        '#add8e6'  // Anual - Azul pastel
     ],
     
     // Data Configuration
