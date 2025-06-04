@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIL - Dashboard de Indicadores | GADPM</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <style>
-        /* (Tu CSS sigue siendo el mismo aquí) */
         * {
             margin: 0;
             padding: 0;
@@ -37,6 +37,71 @@
             color: var(--dark-gray);
             line-height: 1.6;
             min-height: 100vh;
+        }
+
+        /* Notification System */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        .notification {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-hover);
+            margin-bottom: 10px;
+            padding: 1rem;
+            border-left: 4px solid var(--primary-blue);
+            animation: slideIn 0.3s ease-out;
+            position: relative;
+        }
+
+        .notification.success {
+            border-left-color: var(--success);
+        }
+
+        .notification.error {
+            border-left-color: var(--danger);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning);
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notification-close {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+            opacity: 0.7;
+        }
+
+        .notification-close:hover {
+            opacity: 1;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         /* Header */
@@ -97,6 +162,34 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--medium-gray);
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Filters Section */
@@ -265,6 +358,7 @@
             padding: 2rem;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            position: relative;
         }
 
         .chart-header {
@@ -280,6 +374,24 @@
         .chart-container {
             position: relative;
             height: 300px;
+        }
+
+        .chart-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .chart-error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--danger);
+            display: none;
         }
 
         /* Table Section */
@@ -313,6 +425,8 @@
 
         .table-container {
             overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
         }
 
         .indicators-table {
@@ -330,6 +444,9 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 2px solid var(--medium-gray);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         .indicators-table td {
@@ -367,6 +484,19 @@
             color: #856404;
         }
 
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--dark-gray);
+            opacity: 0.7;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--medium-gray);
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
@@ -402,6 +532,12 @@
             .stat-card {
                 padding: 1.5rem;
             }
+
+            .notification-container {
+                left: 10px;
+                right: 10px;
+                max-width: none;
+            }
         }
 
         /* Accessibility */
@@ -425,13 +561,14 @@
             border: 0;
         }
 
-        /* Loading States */
-        .loading {
+        /* Loading States for Cards */
+        .loading-card {
             opacity: 0.6;
             pointer-events: none;
+            position: relative;
         }
 
-        .loading::after {
+        .loading-card::after {
             content: '';
             position: absolute;
             top: 50%;
@@ -444,14 +581,17 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
     <!-- Header -->
     <header class="header">
         <div class="header-content">
@@ -459,7 +599,6 @@
                 <div class="logo">SIL</div>
                 <div>
                     <h1>Sistema de Información Local</h1>
-                    <!-- Título corregido aquí -->
                     <div class="header-subtitle">Dashboard de Indicadores - GADPM</div>
                 </div>
             </div>
@@ -474,7 +613,7 @@
         <!-- Filters Section -->
         <section class="filters-section" role="search" aria-labelledby="filters-title">
             <div class="filters-header">
-                <span>🔍</span>
+                <i class="fas fa-search"></i>
                 <span id="filters-title">Filtros de Búsqueda</span>
             </div>
             
@@ -483,7 +622,6 @@
                     <label class="filter-label" for="component-filter">Componente</label>
                     <select class="filter-select" id="component-filter" aria-describedby="component-help">
                         <option value="">Todos los componentes</option>
-                        <!-- Opciones de componentes se llenarán dinámicamente -->
                     </select>
                     <div id="component-help" class="sr-only">Selecciona un componente para filtrar los indicadores</div>
                 </div>
@@ -492,7 +630,6 @@
                     <label class="filter-label" for="direction-filter">Dirección</label>
                     <select class="filter-select" id="direction-filter" aria-describedby="direction-help">
                         <option value="">Todas las direcciones</option>
-                        <!-- Opciones de dirección se llenarán dinámicamente -->
                     </select>
                     <div id="direction-help" class="sr-only">Selecciona una dirección para filtrar los indicadores</div>
                 </div>
@@ -501,7 +638,6 @@
                     <label class="filter-label" for="theme-filter">Temática</label>
                     <select class="filter-select" id="theme-filter" aria-describedby="theme-help">
                         <option value="">Todas las temáticas</option>
-                        <!-- Esta sección no tendrá valores por el momento, solo la opción "Todas" -->
                     </select>
                     <div id="theme-help" class="sr-only">Selecciona una temática para filtrar los indicadores</div>
                 </div>
@@ -510,7 +646,6 @@
                     <label class="filter-label" for="sector-filter">Sector Estadístico</label>
                     <select class="filter-select" id="sector-filter" aria-describedby="sector-help">
                         <option value="">Todos los sectores</option>
-                        <!-- Opciones de sector se llenarán dinámicamente -->
                     </select>
                     <div id="sector-help" class="sr-only">Selecciona un sector estadístico para filtrar los indicadores</div>
                 </div>
@@ -518,7 +653,7 @@
                 <div class="search-container">
                     <label class="filter-label" for="search-input">Buscar Indicador</label>
                     <div style="position: relative;">
-                        <span class="search-icon">🔍</span>
+                        <i class="fas fa-search search-icon"></i>
                         <input 
                             type="text" 
                             class="search-input" 
@@ -536,37 +671,37 @@
         <section class="stats-grid" role="region" aria-labelledby="stats-title">
             <h2 id="stats-title" class="sr-only">Estadísticas Generales</h2>
             
-            <div class="stat-card">
+            <div class="stat-card" id="totalIndicatorsCard">
                 <div class="stat-header">
                     <div class="stat-title">Total de Indicadores</div>
-                    <div class="stat-icon">📊</div>
+                    <div class="stat-icon"><i class="fas fa-chart-bar"></i></div>
                 </div>
-                <div class="stat-value">0</div> <!-- Se llenará con JS -->
+                <div class="stat-value">0</div>
                 <div class="stat-description">Indicadores definidos en el PDOT provincial</div>
             </div>
 
-            <div class="stat-card">
+            <div class="stat-card" id="registrosCard">
                 <div class="stat-header">
                     <div class="stat-title">Registros Administrativos</div>
-                    <div class="stat-icon">📋</div>
+                    <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
                 </div>
-                <div class="stat-value">0</div> <!-- Se llenará con JS -->
+                <div class="stat-value">0</div>
                 <div class="stat-description">Fuentes de datos administrativos disponibles</div>
             </div>
 
-            <div class="stat-card">
+            <div class="stat-card" id="componentsCard">
                 <div class="stat-header">
                     <div class="stat-title">Componentes Temáticos</div>
-                    <div class="stat-icon">🏗️</div>
+                    <div class="stat-icon"><i class="fas fa-building"></i></div>
                 </div>
-                <div class="stat-value">0</div> <!-- Se llenará con JS -->
+                <div class="stat-value">0</div>
                 <div class="stat-description">Áreas de desarrollo territorial</div>
             </div>
 
-            <div class="stat-card">
+            <div class="stat-card" id="updateCard">
                 <div class="stat-header">
                     <div class="stat-title">Última Actualización</div>
-                    <div class="stat-icon">🔄</div>
+                    <div class="stat-icon"><i class="fas fa-sync-alt"></i></div>
                 </div>
                 <div class="stat-value">Mayo</div>
                 <div class="stat-description">2025 - Datos actualizados mensualmente</div>
@@ -577,23 +712,37 @@
         <section class="charts-section" role="region" aria-labelledby="charts-title">
             <h2 id="charts-title" class="sr-only">Visualizaciones de Datos</h2>
             
-            <div class="chart-card">
+            <div class="chart-card" id="componentChartCard">
                 <div class="chart-header">
-                    <span>📈</span>
+                    <i class="fas fa-chart-pie"></i>
                     <span>Indicadores por Componente</span>
                 </div>
                 <div class="chart-container">
                     <canvas id="componentChart" aria-label="Gráfico de indicadores por componente"></canvas>
+                    <div class="chart-loading" id="componentChartLoading">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <div class="chart-error" id="componentChartError">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error al cargar el gráfico</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="chart-card">
+            <div class="chart-card" id="periodicityChartCard">
                 <div class="chart-header">
-                    <span>⏱️</span>
+                    <i class="fas fa-clock"></i>
                     <span>Distribución por Periodicidad</span>
                 </div>
                 <div class="chart-container">
                     <canvas id="periodicityChart" aria-label="Gráfico de distribución por periodicidad"></canvas>
+                    <div class="chart-loading" id="periodicityChartLoading">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <div class="chart-error" id="periodicityChartError">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error al cargar el gráfico</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -602,7 +751,7 @@
         <section class="table-section" role="region" aria-labelledby="table-title">
             <div class="table-header">
                 <div class="table-title">
-                    <span>📋</span>
+                    <i class="fas fa-table"></i>
                     <span id="table-title">Listado Detallado de Indicadores</span>
                 </div>
                 <div class="table-subtitle">
@@ -622,8 +771,13 @@
                             <th scope="col">Periodicidad</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Las filas se generarán con JavaScript -->
+                    <tbody id="indicatorsTableBody">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Cargando indicadores...</p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -631,319 +785,477 @@
     </main>
 
     <script>
-        let indicatorsData = []; // Para almacenar los datos del CSV parseados
-        let componentChartInstance = null; // Para guardar la instancia del gráfico de componentes
-        let periodicityChartInstance = null; // Para guardar la instancia del gráfico de periodicidad
+        // Configuración centralizada
+        const CONFIG = {
+            CSV_PATH: 'data/indicators.csv',
+            CHART_COLORS: ['#1e4c72', '#2d5aa0', '#4a90c2', '#87ceeb', '#a0c8e8', '#b3d9ff'],
+            PERIODICITIES: ['Mensual', 'Trimestral', 'Semestral', 'Anual'],
+            DEBOUNCE_DELAY: 300,
+            REQUIRED_COLUMNS: ['Componente', 'Direccion', 'SectorE'],
+            FALLBACK_VALUES: {
+                indicatorName: 'Sin nombre',
+                component: 'Sin categorizar',
+                direction: 'No especificado',
+                sector: 'No especificado',
+                lastUpdate: 'No disponible'
+            }
+        };
 
-        // Función para parsear el CSV
-        function parseCSV(csv) {
-    console.log("--- DEBUGGING parseCSV START ---");
-    console.log("Raw CSV length:", csv.length);
+        // Estado global de la aplicación
+        let appState = {
+            data: [],
+            filteredData: [],
+            isLoading: false,
+            error: null,
+            charts: {
+                component: null,
+                periodicity: null
+            }
+        };
 
-    // Limpiar el posible BOM del inicio del archivo, si no se eliminó antes
-    // y dividir líneas. /\r?\n/ maneja saltos de línea de Windows y Unix.
-    const lines = csv.replace(/^\uFEFF/, '').split(/\r?\n/); 
-    console.log("Total lines (after BOM removal and initial split):", lines.length);
+        // Sistema de notificaciones
+        class NotificationManager {
+            static show(message, type = 'info', duration = 5000) {
+                const container = document.getElementById('notificationContainer');
+                if (!container) return;
 
-    // Filtra las líneas completamente vacías (por ejemplo, al final del archivo)
-    const nonEmptyLines = lines.filter(line => line.trim() !== '');
-    console.log("Non-empty lines count:", nonEmptyLines.length);
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                
+                const icon = this.getIcon(type);
+                notification.innerHTML = `
+                    <div class="notification-content">
+                        <i class="${icon}"></i>
+                        <span>${message}</span>
+                    </div>
+                    <button class="notification-close" aria-label="Cerrar notificación">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
 
-    if (nonEmptyLines.length === 0) {
-        console.error("DEBUG: No hay líneas válidas después de filtrar las vacías. El CSV podría estar realmente vacío o malformado.");
-        return [];
-    }
+                container.appendChild(notification);
 
-    // La primera línea no vacía es la cabecera
-    const headerLine = nonEmptyLines[0];
-    console.log("Header Line (raw from CSV):", headerLine);
+                // Auto-remove
+                const autoRemove = setTimeout(() => this.remove(notification), duration);
 
-    // Dividir los encabezados por punto y coma.
-    const rawHeaders = headerLine.split(';');
-    console.log("Raw Headers (split by ';'):", rawHeaders);
+                // Manual remove
+                const closeBtn = notification.querySelector('.notification-close');
+                closeBtn.addEventListener('click', () => {
+                    clearTimeout(autoRemove);
+                    this.remove(notification);
+                });
 
-    // Limpiar cada encabezado: trim() y remover BOM si persiste en algún elemento
-    // Considera una limpieza más agresiva si `trim()` no funciona para todos los invisibles:
-    // .map(h => h.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim().replace(/^\uFEFF/, ''));
-    // Por ahora, nos quedamos con el trim() y BOM removal que ya tenemos.
-    const headers = rawHeaders.map(h => h.trim().replace(/^\uFEFF/, '')); 
-    console.log("Cleaned Headers (after trim & BOM removal):", headers);
+                return notification;
+            }
 
-    // --- VERIFICACIÓN CRÍTICA DE LA COLUMNA 'N' ---
-    const N_COLUMN_NAME = 'N'; // El nombre de columna que esperamos
-    const nColumnIndex = headers.indexOf(N_COLUMN_NAME);
-    console.log(`Searching for column '${N_COLUMN_NAME}'. Found at index:`, nColumnIndex);
+            static getIcon(type) {
+                const icons = {
+                    'success': 'fas fa-check-circle',
+                    'error': 'fas fa-exclamation-circle',
+                    'warning': 'fas fa-exclamation-triangle',
+                    'info': 'fas fa-info-circle'
+                };
+                return icons[type] || icons.info;
+            }
 
-    if (nColumnIndex === -1) {
-        console.error(`ERROR: La columna '${N_COLUMN_NAME}' no fue encontrada en las cabeceras parseadas. ¡Esto es crítico!`);
-        console.error("Posibles causas: Nombre incorrecto, espacios invisibles, o un delimitador de CSV diferente. Por favor, revise la primera línea del archivo CSV.");
-        console.log("--- DEBUGGING parseCSV END (Error) ---");
-        return []; // Salir si la columna 'N' no se encuentra
-    }
+            static remove(notification) {
+                if (notification && notification.parentNode) {
+                    notification.style.animation = 'slideOut 0.3s ease-out forwards';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }
+            }
+        }
 
-    const parsedData = nonEmptyLines.slice(1).map(line => {
-        const values = line.split(';');
-        const obj = {};
-        headers.forEach((header, i) => {
-            // Asegurarse de que el índice del valor exista para evitar errores
-            obj[header] = (values[i] !== undefined) ? values[i].trim().replace(/"/g, '') : ''; 
-        });
-        return obj;
-    });
+        // Utilidades para DOM seguro
+        function safeQuerySelector(selector, context = document) {
+            const element = context.querySelector(selector);
+            if (!element) {
+                console.warn(`Elemento '${selector}' no encontrado`);
+            }
+            return element;
+        }
 
-    console.log("Parsed Data (before final filter, first 5 rows):", parsedData.slice(0, Math.min(5, parsedData.length)));
+        function safeQuerySelectorAll(selector, context = document) {
+            const elements = context.querySelectorAll(selector);
+            if (elements.length === 0) {
+                console.warn(`No se encontraron elementos con selector '${selector}'`);
+            }
+            return Array.from(elements);
+        }
 
-    // Filtro final: asegura que el objeto tenga la propiedad 'N' y que su valor no sea una cadena vacía
-    const filteredData = parsedData.filter(obj => 
-        obj.hasOwnProperty(N_COLUMN_NAME) && obj[N_COLUMN_NAME].trim() !== ''
-    ); 
+        // Función mejorada para obtener el nombre del indicador
+        function getIndicatorName(indicator) {
+            return indicator.Nombre_Indicador || 
+                   indicator['Descripción IN'] || 
+                   indicator.N || 
+                   CONFIG.FALLBACK_VALUES.indicatorName;
+        }
 
-    console.log("Filtered Data length (final result):", filteredData.length);
-    console.log("--- DEBUGGING parseCSV END ---");
+        // Parser CSV robusto con validación completa
+        function parseCSVRobust(csv) {
+            console.log("🔄 Iniciando parseo de CSV...");
+            
+            try {
+                if (!csv || typeof csv !== 'string') {
+                    throw new Error('El contenido CSV está vacío o no es válido');
+                }
 
-    return filteredData;
-}
+                // Limpiar BOM y dividir líneas
+                const lines = csv.replace(/^\uFEFF/, '').split(/\r?\n/)
+                    .filter(line => line.trim() !== '');
 
-        // Dummy periodicities for the table as they are not in CSV
-        const periodicities = ['Mensual', 'Trimestral', 'Semestral', 'Anual'];
+                if (lines.length < 2) {
+                    throw new Error('El CSV debe tener al menos una fila de encabezados y una de datos');
+                }
+
+                // Procesar encabezados
+                const headers = lines[0].split(';').map(h => h.trim().replace(/"/g, ''));
+                console.log("📋 Encabezados encontrados:", headers);
+
+                // Validar columnas requeridas
+                const missingColumns = CONFIG.REQUIRED_COLUMNS.filter(col => !headers.includes(col));
+                if (missingColumns.length > 0) {
+                    console.warn(`⚠️ Columnas faltantes: ${missingColumns.join(', ')}`);
+                    NotificationManager.show(
+                        `Algunas columnas esperadas no están presentes: ${missingColumns.join(', ')}`,
+                        'warning'
+                    );
+                }
+
+                // Procesar datos
+                const data = [];
+                for (let i = 1; i < lines.length; i++) {
+                    try {
+                        const values = lines[i].split(';').map(v => v.trim().replace(/"/g, ''));
+                        const obj = {};
+                        
+                        headers.forEach((header, index) => {
+                            obj[header] = values[index] || '';
+                        });
+
+                        // Validar que tenga al menos un identificador
+                        if (getIndicatorName(obj) !== CONFIG.FALLBACK_VALUES.indicatorName) {
+                            data.push(obj);
+                        }
+                    } catch (error) {
+                        console.error(`❌ Error procesando fila ${i + 1}:`, error);
+                    }
+                }
+
+                console.log(`✅ CSV parseado exitosamente. ${data.length} registros válidos`);
+                return data;
+
+            } catch (error) {
+                console.error('💥 Error crítico en parseCSV:', error);
+                NotificationManager.show(
+                    `Error al procesar el archivo CSV: ${error.message}`,
+                    'error'
+                );
+                return [];
+            }
+        }
+
+        // Gestión de estado de carga
+        function setLoadingState(isLoading) {
+            appState.isLoading = isLoading;
+            const overlay = document.getElementById('loadingOverlay');
+            
+            if (overlay) {
+                overlay.style.display = isLoading ? 'flex' : 'none';
+            }
+
+            // Aplicar estado de carga a las tarjetas
+            const cards = safeQuerySelectorAll('.stat-card, .chart-card');
+            cards.forEach(card => {
+                card.classList.toggle('loading-card', isLoading);
+            });
+        }
 
         // Función para poblar los filtros dinámicamente
         function populateFilters(data) {
+            console.log("🎛️ Poblando filtros...");
+            
             const componentsSet = new Set();
             const directionsSet = new Set();
             const sectorsSet = new Set();
 
             data.forEach(item => {
-                if (item.Componente) componentsSet.add(item.Componente);
-                // Usar el nuevo nombre de columna "Direccion"
-                if (item.Direccion) directionsSet.add(item.Direccion.trim()); 
-                // Usar el nuevo nombre de columna "SectorE"
-                if (item.SectorE) sectorsSet.add(item.SectorE.trim());
+                if (item.Componente && item.Componente.trim()) {
+                    componentsSet.add(item.Componente.trim());
+                }
+                if (item.Direccion && item.Direccion.trim()) {
+                    directionsSet.add(item.Direccion.trim());
+                }
+                if (item.SectorE && item.SectorE.trim()) {
+                    sectorsSet.add(item.SectorE.trim());
+                }
             });
 
-            // Helper para rellenar un select
+            // Helper para rellenar un select de forma segura
             function fillSelect(selectId, values, defaultText) {
-                const selectElement = document.getElementById(selectId);
-                if (!selectElement) {
-                    console.error(`Elemento select con ID "${selectId}" no encontrado.`);
-                    return;
-                }
+                const selectElement = safeQuerySelector(`#${selectId}`);
+                if (!selectElement) return;
+
                 selectElement.innerHTML = `<option value="">${defaultText}</option>`;
                 Array.from(values).sort().forEach(value => {
-                    const option = document.createElement('option');
-                    option.value = value;
-                    option.textContent = value;
-                    selectElement.appendChild(option);
+                    if (value && value.trim()) {
+                        const option = document.createElement('option');
+                        option.value = value;
+                        option.textContent = value;
+                        selectElement.appendChild(option);
+                    }
                 });
             }
 
             fillSelect('component-filter', componentsSet, 'Todos los componentes');
             fillSelect('direction-filter', directionsSet, 'Todas las direcciones');
-            
-            const themeFilterElement = document.getElementById('theme-filter');
-            if (themeFilterElement) {
-                themeFilterElement.innerHTML = '<option value="">Todas las temáticas</option>';
-            } else {
-                console.error('Elemento select con ID "theme-filter" no encontrado.');
-            }
-            
             fillSelect('sector-filter', sectorsSet, 'Todos los sectores');
+
+            console.log(`✅ Filtros poblados: ${componentsSet.size} componentes, ${directionsSet.size} direcciones, ${sectorsSet.size} sectores`);
         }
 
-        // Función para actualizar las tarjetas de estadísticas y la tabla
-        function updateDashboard(data) {
-            const totalIndicatorsElement = document.querySelector('.stat-card:nth-child(1) .stat-value');
-            if (totalIndicatorsElement) {
-                totalIndicatorsElement.textContent = data.length;
-            } else {
-                console.error("Elemento '.stat-card:nth-child(1) .stat-value' no encontrado.");
-            }
+        // Función para actualizar las tarjetas de estadísticas
+        function updateStatsCards(data) {
+            const stats = {
+                total: data.length,
+                uniqueRAs: new Set(data.map(item => item.Id_RA).filter(Boolean)).size,
+                uniqueComponents: new Set(data.map(item => item.Componente).filter(Boolean)).size
+            };
 
-            const uniqueRAsElement = document.querySelector('.stat-card:nth-child(2) .stat-value');
-            if (uniqueRAsElement) {
-                // Asegurarse de que Id_RA es el nombre correcto
-                const uniqueRAs = new Set(data.map(item => item.Id_RA)).size; 
-                uniqueRAsElement.textContent = uniqueRAs;
-            } else {
-                console.error("Elemento '.stat-card:nth-child(2) .stat-value' no encontrado.");
-            }
+            // Actualizar cada tarjeta de forma segura
+            const totalElement = safeQuerySelector('#totalIndicatorsCard .stat-value');
+            if (totalElement) totalElement.textContent = stats.total;
 
-            const uniqueComponentsElement = document.querySelector('.stat-card:nth-child(3) .stat-value');
-            if (uniqueComponentsElement) {
-                const uniqueComponents = new Set(data.map(item => item.Componente)).size;
-                uniqueComponentsElement.textContent = uniqueComponents;
-            } else {
-                console.error("Elemento '.stat-card:nth-child(3) .stat-value' no encontrado.");
-            }
+            const rasElement = safeQuerySelector('#registrosCard .stat-value');
+            if (rasElement) rasElement.textContent = stats.uniqueRAs;
 
-            // Llenar la tabla
-            const tableBody = document.querySelector('.indicators-table tbody');
-            if (!tableBody) {
-                console.error("Elemento 'indicators-table tbody' no encontrado.");
+            const componentsElement = safeQuerySelector('#componentsCard .stat-value');
+            if (componentsElement) componentsElement.textContent = stats.uniqueComponents;
+        }
+
+        // Función para actualizar la tabla
+        function updateTable(data) {
+            const tableBody = safeQuerySelector('#indicatorsTableBody');
+            if (!tableBody) return;
+
+            if (data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <i class="fas fa-search"></i>
+                            <p>No se encontraron indicadores que coincidan con los filtros aplicados</p>
+                        </td>
+                    </tr>
+                `;
                 return;
             }
-            tableBody.innerHTML = ''; // Limpiar filas existentes
+
+            tableBody.innerHTML = '';
 
             data.forEach((indicator, index) => {
                 const row = tableBody.insertRow();
-                // Usar el nuevo nombre de columna "Nombre_Indicador" o "Descripción IN" si no lo cambiaste
-                row.insertCell().innerHTML = `<strong>${indicator.Nombre_Indicador || indicator['Descripción IN']}</strong>`; 
-                row.insertCell().innerHTML = `<span class="badge badge-primary">${indicator.Componente}</span>`;
-                // Usar el nuevo nombre de columna "Direccion"
-                row.insertCell().textContent = indicator.Direccion.trim(); 
-                // Usar el nuevo nombre de columna "SectorE"
-                row.insertCell().textContent = indicator.SectorE.trim(); 
-                row.insertCell().textContent = indicator.Id_RA; // Mostrar el ID del RA
-                row.insertCell().innerHTML = `<span class="badge badge-success">${periodicities[index % periodicities.length]}</span>`; // Periodicidad dummy
+                
+                // Nombre del indicador
+                const nameCell = row.insertCell();
+                nameCell.innerHTML = `<strong>${getIndicatorName(indicator)}</strong>`;
+
+                // Componente
+                const componentCell = row.insertCell();
+                const component = indicator.Componente || CONFIG.FALLBACK_VALUES.component;
+                componentCell.innerHTML = `<span class="badge badge-primary">${component}</span>`;
+
+                // Dirección
+                const directionCell = row.insertCell();
+                directionCell.textContent = indicator.Direccion?.trim() || CONFIG.FALLBACK_VALUES.direction;
+
+                // Sector
+                const sectorCell = row.insertCell();
+                sectorCell.textContent = indicator.SectorE?.trim() || CONFIG.FALLBACK_VALUES.sector;
+
+                // ID RA
+                const idCell = row.insertCell();
+                idCell.textContent = indicator.Id_RA || '-';
+
+                // Periodicidad (dummy)
+                const periodicityCell = row.insertCell();
+                const periodicity = CONFIG.PERIODICITIES[index % CONFIG.PERIODICITIES.length];
+                periodicityCell.innerHTML = `<span class="badge badge-success">${periodicity}</span>`;
             });
         }
 
+        // Función para actualizar todo el dashboard
+        function updateDashboard(data) {
+            console.log(`📊 Actualizando dashboard con ${data.length} registros`);
+            updateStatsCards(data);
+            updateTable(data);
+        }
+
+        // Inicialización de gráficos con manejo de errores
         function initializeCharts() {
+            console.log("📈 Inicializando gráficos...");
+            
+            try {
+                initializeComponentChart();
+                initializePeriodicityChart();
+                console.log("✅ Gráficos inicializados exitosamente");
+            } catch (error) {
+                console.error("❌ Error inicializando gráficos:", error);
+                NotificationManager.show('Error al crear los gráficos de visualización', 'error');
+            }
+        }
+
+        function initializeComponentChart() {
+            const canvas = safeQuerySelector('#componentChart');
+            if (!canvas) return;
+
+            // Destruir gráfico anterior si existe
+            if (appState.charts.component) {
+                appState.charts.component.destroy();
+            }
+
+            // Calcular datos del gráfico
             const componentCounts = {};
-            indicatorsData.forEach(item => {
-                const component = item.Componente;
+            appState.data.forEach(item => {
+                const component = item.Componente || CONFIG.FALLBACK_VALUES.component;
                 componentCounts[component] = (componentCounts[component] || 0) + 1;
             });
 
-            const chartLabels = Object.keys(componentCounts);
-            const chartData = Object.values(componentCounts);
+            const labels = Object.keys(componentCounts);
+            const data = Object.values(componentCounts);
 
-            const chartColors = [
-                '#1e4c72', '#2d5aa0', '#4a90c2', '#87ceeb', '#a0c8e8', '#b3d9ff'
-            ];
-
-            const componentCtx = document.getElementById('componentChart');
-            if (componentCtx) {
-                if (componentChartInstance) {
-                    componentChartInstance.destroy();
-                }
-                componentChartInstance = new Chart(componentCtx.getContext('2d'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: chartLabels,
-                        datasets: [{
-                            data: chartData,
-                            backgroundColor: chartLabels.map((_, i) => chartColors[i % chartColors.length]),
-                            borderWidth: 0,
-                            hoverBorderWidth: 2,
-                            hoverBorderColor: '#ffffff'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 20,
-                                    usePointStyle: true,
-                                    font: {
-                                        size: 12
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return context.label + ': ' + context.parsed + ' indicadores';
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                console.error("Elemento 'componentChart' no encontrado.");
+            if (labels.length === 0) {
+                console.warn("⚠️ No hay datos para el gráfico de componentes");
+                return;
             }
 
-            const periodicityCtx = document.getElementById('periodicityChart');
-            if (periodicityCtx) {
-                if (periodicityChartInstance) {
-                    periodicityChartInstance.destroy();
-                }
-                periodicityChartInstance = new Chart(periodicityCtx.getContext('2d'), {
-                    type: 'bar',
-                    data: {
-                        labels: ['Mensual', 'Trimestral', 'Semestral', 'Anual'],
-                        datasets: [{
-                            label: 'Número de Indicadores',
-                            data: [8, 15, 12, 41],
-                            backgroundColor: 'rgba(30, 76, 114, 0.8)',
-                            borderColor: '#1e4c72',
-                            borderWidth: 1,
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return context.parsed.y + ' indicadores';
-                                    }
-                                }
+            const ctx = canvas.getContext('2d');
+            appState.charts.component = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: labels.map((_, i) => CONFIG.CHART_COLORS[i % CONFIG.CHART_COLORS.length]),
+                        borderWidth: 0,
+                        hoverBorderWidth: 2,
+                        hoverBorderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: { size: 12 }
                             }
                         },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    stepSize: 5
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed} indicadores`;
                                 }
                             }
                         }
                     }
-                });
-            } else {
-                console.error("Elemento 'periodicityChart' no encontrado.");
-            }
-        }
-
-        function setupFilters() {
-            const filters = document.querySelectorAll('.filter-select, .filter-input');
-            filters.forEach(filter => {
-                if (filter) {
-                    filter.addEventListener('change', filterData);
-                    filter.addEventListener('input', debounce(filterData, 300));
                 }
             });
+        }
+
+        function initializePeriodicityChart() {
+            const canvas = safeQuerySelector('#periodicityChart');
+            if (!canvas) return;
+
+            // Destruir gráfico anterior si existe
+            if (appState.charts.periodicity) {
+                appState.charts.periodicity.destroy();
+            }
+
+            const ctx = canvas.getContext('2d');
+            appState.charts.periodicity = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: CONFIG.PERIODICITIES,
+                    datasets: [{
+                        label: 'Número de Indicadores',
+                        data: [8, 15, 12, 41], // Datos de ejemplo
+                        backgroundColor: 'rgba(30, 76, 114, 0.8)',
+                        borderColor: '#1e4c72',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.parsed.y} indicadores`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 5 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Sistema de filtros mejorado
+        function setupFilters() {
+            console.log("🎛️ Configurando sistema de filtros...");
+            
+            const filterElements = safeQuerySelectorAll('.filter-select, .filter-input');
+            
+            filterElements.forEach(element => {
+                if (element.type === 'text') {
+                    element.addEventListener('input', debounce(filterData, CONFIG.DEBOUNCE_DELAY));
+                } else {
+                    element.addEventListener('change', filterData);
+                }
+            });
+
+            console.log(`✅ ${filterElements.length} filtros configurados`);
         }
 
         function filterData() {
-            console.log('Filtering data...');
-            const componentFilterElement = document.getElementById('component-filter');
-            const directionFilterElement = document.getElementById('direction-filter');
-            const sectorFilterElement = document.getElementById('sector-filter');
-            const searchInputElement = document.getElementById('search-input');
+            console.log("🔍 Aplicando filtros...");
+            
+            const filters = {
+                component: safeQuerySelector('#component-filter')?.value || '',
+                direction: safeQuerySelector('#direction-filter')?.value || '',
+                sector: safeQuerySelector('#sector-filter')?.value || '',
+                search: safeQuerySelector('#search-input')?.value.toLowerCase() || ''
+            };
 
-            const componentFilter = componentFilterElement ? componentFilterElement.value : '';
-            const directionFilter = directionFilterElement ? directionFilterElement.value : '';
-            const sectorFilter = sectorFilterElement ? sectorFilterElement.value : '';
-            const searchInput = searchInputElement ? searchInputElement.value.toLowerCase() : '';
-
-            let filteredData = indicatorsData.filter(item => {
-                const matchesComponent = componentFilter === '' || item.Componente === componentFilter;
-                // Usar el nuevo nombre de columna "Direccion"
-                const matchesDirection = directionFilter === '' || item.Direccion.trim() === directionFilter;
-                // Usar el nuevo nombre de columna "SectorE"
-                const matchesSector = sectorFilter === '' || item.SectorE.trim() === sectorFilter;
-                // Usar el nuevo nombre de columna "Nombre_Indicador" para la búsqueda
-                // Si tu CSV final usa 'Descripción IN', cámbialo de nuevo aquí
-                const matchesSearch = (item.Nombre_Indicador && item.Nombre_Indicador.toLowerCase().includes(searchInput)) || 
-                                      (item['Descripción IN'] && item['Descripción IN'].toLowerCase().includes(searchInput));
+            appState.filteredData = appState.data.filter(item => {
+                const matchesComponent = !filters.component || item.Componente === filters.component;
+                const matchesDirection = !filters.direction || item.Direccion?.trim() === filters.direction;
+                const matchesSector = !filters.sector || item.SectorE?.trim() === filters.sector;
                 
+                const indicatorName = getIndicatorName(item).toLowerCase();
+                const matchesSearch = !filters.search || indicatorName.includes(filters.search);
+
                 return matchesComponent && matchesDirection && matchesSector && matchesSearch;
             });
 
-            updateDashboard(filteredData);
+            console.log(`🎯 Filtros aplicados: ${appState.filteredData.length} de ${appState.data.length} registros`);
+            updateDashboard(appState.filteredData);
         }
 
+        // Utilidad de debounce
         function debounce(func, wait) {
             let timeout;
             return function executedFunction(...args) {
@@ -956,6 +1268,72 @@
             };
         }
 
+        // Función principal de carga e inicialización
+        async function loadDataAndInitializeDashboard() {
+            console.log("🚀 Iniciando carga del dashboard...");
+            setLoadingState(true);
+
+            try {
+                NotificationManager.show('Cargando datos de indicadores...', 'info', 2000);
+
+                const response = await fetch(CONFIG.CSV_PATH);
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
+                }
+
+                const csvText = await response.text();
+                appState.data = parseCSVRobust(csvText);
+
+                if (appState.data.length === 0) {
+                    throw new Error('No se pudieron cargar datos válidos del archivo CSV');
+                }
+
+                appState.filteredData = [...appState.data];
+
+                // Inicializar componentes del dashboard
+                populateFilters(appState.data);
+                updateDashboard(appState.data);
+                initializeCharts();
+                setupFilters();
+
+                NotificationManager.show(
+                    `Dashboard cargado exitosamente con ${appState.data.length} indicadores`,
+                    'success'
+                );
+
+                console.log("✅ Dashboard inicializado completamente");
+
+            } catch (error) {
+                console.error("💥 Error fatal en la carga del dashboard:", error);
+                
+                NotificationManager.show(
+                    `Error al cargar el dashboard: ${error.message}`,
+                    'error',
+                    10000
+                );
+
+                // Mostrar estado de error en la tabla
+                const tableBody = safeQuerySelector('#indicatorsTableBody');
+                if (tableBody) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i>
+                                <p>Error al cargar los datos: ${error.message}</p>
+                                <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+                                    Verifica que el archivo 'data/indicators.csv' exista y sea accesible.
+                                </p>
+                            </td>
+                        </tr>
+                    `;
+                }
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        // Manejo de eventos de accesibilidad
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Tab') {
                 document.body.classList.add('keyboard-navigation');
@@ -966,38 +1344,33 @@
             document.body.classList.remove('keyboard-navigation');
         });
 
-        async function loadDataAndInitializeDashboard() {
-            try {
-                const response = await fetch('data/indicators.csv');
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status} ${response.statusText}. Por favor, verifica la ruta del archivo CSV y los permisos.`);
-                }
-                const csvText = await response.text();
-                
-                indicatorsData = parseCSV(csvText);
-                
-                if (indicatorsData.length === 0) {
-                    console.warn("El archivo CSV se cargó, pero no contiene datos o el parseo resultó en un array vacío.");
-                    // Muestra un mensaje al usuario si no hay datos.
-                    const errorMessage = document.createElement('p');
-                    errorMessage.textContent = "No se pudieron cargar los datos de indicadores. Por favor, intente de nuevo más tarde o contacte al soporte.";
-                    errorMessage.style.color = "var(--danger)";
-                    errorMessage.style.textAlign = "center";
-                    errorMessage.style.marginTop = "2rem";
-                    document.querySelector('.container').prepend(errorMessage);
-                }
-
-                populateFilters(indicatorsData);
-                updateDashboard(indicatorsData);
-                initializeCharts();
-                setupFilters();
-            } catch (error) {
-                console.error("Error al cargar o procesar los datos del CSV:", error);
-                alert(`Hubo un error al cargar los datos del dashboard: ${error.message}. Por favor, asegúrate de que el archivo 'data/indicators.csv' exista y sea accesible.`);
-            }
-        }
-
+        // Inicialización cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', loadDataAndInitializeDashboard);
+
+        // Manejo de errores globales
+        window.addEventListener('error', function(event) {
+            console.error('Error global capturado:', event.error);
+            NotificationManager.show(
+                'Se produjo un error inesperado. Por favor, recarga la página.',
+                'error'
+            );
+        });
+
+        // Agregar animación de slide out para notificaciones
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
