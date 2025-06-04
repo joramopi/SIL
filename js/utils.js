@@ -291,7 +291,12 @@ const DataUtils = {
             }
         }
         
-        return fallback || CONFIG.FALLBACK_VALUES[fieldMapping] || 'N/A';
+        // Usar el valor de fallback incluso si es una cadena vacía
+        if (fallback !== undefined) {
+            return fallback;
+        }
+
+        return CONFIG.FALLBACK_VALUES[fieldMapping] || 'N/A';
     },
 
     /**
