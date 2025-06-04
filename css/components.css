@@ -93,16 +93,16 @@
 }
 
 /* Clases específicas para cada tipo de componente */
-.badge-component-1 { background-color: #1e4c72; } /* Azul oscuro */
-.badge-component-2 { background-color: #2d5aa0; } /* Azul medio */
-.badge-component-3 { background-color: #4a90c2; } /* Azul claro */
-.badge-component-4 { background-color: #1565c0; } /* Azul material */
-.badge-component-5 { background-color: #1976d2; } /* Azul vibrante */
-.badge-component-6 { background-color: #42a5f5; } /* Azul cielo */
-.badge-component-7 { background-color: #2e7d32; } /* Verde oscuro */
-.badge-component-8 { background-color: #388e3c; } /* Verde medio */
-.badge-component-9 { background-color: #43a047; } /* Verde claro */
-.badge-component-10 { background-color: #4caf50; } /* Verde material */
+.badge-component-1 { background-color: var(--color-1); }
+.badge-component-2 { background-color: var(--color-2); }
+.badge-component-3 { background-color: var(--color-3); }
+.badge-component-4 { background-color: var(--color-4); }
+.badge-component-5 { background-color: var(--color-5); }
+.badge-component-6 { background-color: var(--color-1); }
+.badge-component-7 { background-color: var(--color-2); }
+.badge-component-8 { background-color: var(--color-3); }
+.badge-component-9 { background-color: var(--color-4); }
+.badge-component-10 { background-color: var(--color-5); }
 
 /* Animaciones suaves para los gráficos */
 .chart-card {
@@ -198,8 +198,8 @@
 }
 
 /* Component text color classes */
-.color-1 { color: #1f8fff; }
-.color-2 { color: #00bfff; }
-.color-3 { color: #89cfeb; }
-.color-4 { color: #add8e6; }
-.color-5 { color: #b1e0e7; }
+.color-1 { color: var(--color-1); }
+.color-2 { color: var(--color-2); }
+.color-3 { color: var(--color-3); }
+.color-4 { color: var(--color-4); }
+.color-5 { color: var(--color-5); }
