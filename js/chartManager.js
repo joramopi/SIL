@@ -146,10 +146,13 @@ class ChartManager {
                     datasets: [{
                         label: 'Número de Indicadores',
                         data: [],
-                        backgroundColor: 'rgba(30, 76, 114, 0.8)',
-                        borderColor: '#1e4c72',
-                        borderWidth: 1,
-                        borderRadius: 4,
+                        backgroundColor: CONFIG.PERIODICITY_COLORS, // Usar colores específicos
+                        borderColor: CONFIG.PERIODICITY_COLORS.map(function(color) {
+                            // Hacer el borde un poco más oscuro
+                            return color;
+                        }),
+                        borderWidth: 2,
+                        borderRadius: 6,
                         borderSkipped: false
                     }]
                 },
@@ -195,7 +198,7 @@ class ChartManager {
                 }
             });
 
-            console.log("✅ Gráfico de periodicidad inicializado");
+            console.log("✅ Gráfico de periodicidad inicializado con colores personalizados");
 
         } catch (error) {
             this.showChartError('periodicityChart', 'Error al inicializar gráfico de periodicidad');
@@ -233,10 +236,13 @@ class ChartManager {
             
             const labels = Object.keys(filteredCounts);
             const values = Object.values(filteredCounts);
-            const colors = CONFIG.getChartColors(labels.length);
+            
+            // Asignar colores únicos a cada componente de la paleta de azules y verdes
+            const colors = this.getComponentColors(labels);
 
             console.log('📊 Debug - Labels del gráfico (corregidos):', labels);
             console.log('📊 Debug - Valores del gráfico:', values);
+            console.log('🎨 Debug - Colores asignados:', colors);
 
             if (labels.length === 0) {
                 this.showEmptyChart('componentChart', 'No hay datos de componentes para mostrar');
@@ -254,7 +260,7 @@ class ChartManager {
             this.hideChartError('componentChart');
             this.showChartLoading('componentChart', false);
 
-            console.log(`✅ Gráfico de componentes actualizado con ${labels.length} categorías`);
+            console.log(`✅ Gráfico de componentes actualizado con ${labels.length} categorías y colores únicos`);
 
         } catch (error) {
             this.showChartError('componentChart', 'Error al actualizar gráfico de componentes');
@@ -262,6 +268,21 @@ class ChartManager {
             console.error('❌ Error detallado en gráfico de componentes:', error);
             throw error;
         }
+    }
+
+    /**
+     * Obtiene colores únicos para cada componente
+     */
+    getComponentColors(labels) {
+        const colors = [];
+        const availableColors = CONFIG.CHART_COLORS;
+        
+        for (let i = 0; i < labels.length; i++) {
+            // Usar el color correspondiente del array, y si se acaban, repetir
+            colors.push(availableColors[i % availableColors.length]);
+        }
+        
+        return colors;
     }
 
     /**
@@ -306,8 +327,10 @@ class ChartManager {
             const total = data.length;
             const periodicityData = this.generatePeriodicityData(total);
 
-            // Actualizar datos del gráfico
+            // Actualizar datos del gráfico con colores específicos
             this.charts.periodicity.data.datasets[0].data = periodicityData;
+            this.charts.periodicity.data.datasets[0].backgroundColor = CONFIG.PERIODICITY_COLORS;
+            this.charts.periodicity.data.datasets[0].borderColor = CONFIG.PERIODICITY_COLORS;
 
             // Actualizar el gráfico
             this.charts.periodicity.update('active');
@@ -315,7 +338,7 @@ class ChartManager {
             this.hideChartError('periodicityChart');
             this.showChartLoading('periodicityChart', false);
 
-            console.log('✅ Gráfico de periodicidad actualizado');
+            console.log('✅ Gráfico de periodicidad actualizado con colores únicos por periodo');
 
         } catch (error) {
             this.showChartError('periodicityChart', 'Error al actualizar gráfico de periodicidad');

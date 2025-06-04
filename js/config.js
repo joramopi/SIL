@@ -3,18 +3,36 @@ const CONFIG = {
     // Data Source
     CSV_PATH: 'data/indicators.csv',
     
-    // Chart Configuration
+    // Chart Configuration - Paleta de azules y verdes
     CHART_COLORS: [
-        '#1e4c72', // Primary Blue
-        '#2d5aa0', // Secondary Blue
-        '#4a90c2', // Light Blue
-        '#87ceeb', // Accent Blue
-        '#a0c8e8', // Light Accent
-        '#b3d9ff', // Lightest Blue
-        '#28a745', // Success Green
-        '#ffc107', // Warning Yellow
-        '#dc3545', // Danger Red
-        '#17a2b8'  // Info Cyan
+        '#1e4c72', // Azul oscuro (Primary Blue)
+        '#2d5aa0', // Azul medio (Secondary Blue) 
+        '#4a90c2', // Azul claro (Light Blue)
+        '#1565c0', // Azul material
+        '#1976d2', // Azul vibrante
+        '#42a5f5', // Azul cielo
+        '#2e7d32', // Verde oscuro
+        '#388e3c', // Verde medio
+        '#43a047', // Verde claro
+        '#4caf50', // Verde material
+        '#66bb6a', // Verde suave
+        '#81c784', // Verde pastel
+        '#00695c', // Verde azulado oscuro
+        '#00796b', // Verde azulado
+        '#26a69a', // Verde azulado claro
+        '#4db6ac', // Verde agua
+        '#0d47a1', // Azul marino
+        '#1e88e5', // Azul eléctrico
+        '#29b6f6', // Azul celeste
+        '#4fc3f7'  // Azul cielo claro
+    ],
+    
+    // Colores específicos para periodicidad
+    PERIODICITY_COLORS: [
+        '#1e4c72', // Mensual - Azul oscuro
+        '#2e7d32', // Trimestral - Verde oscuro  
+        '#1565c0', // Semestral - Azul material
+        '#388e3c'  // Anual - Verde medio
     ],
     
     // Data Configuration
@@ -22,7 +40,7 @@ const CONFIG = {
     
     // CSV Validation
     REQUIRED_COLUMNS: ['Componente', 'Direccion', 'SectorE'],
-    OPTIONAL_COLUMNS: ['Nombre_Indicador', 'Descripción IN', 'N', 'Id_RA', 'Tematica'],
+    OPTIONAL_COLUMNS: ['Nombre_Indicador', 'N', 'Id_RA', 'Registro_Administrativo', 'Indicador'],
     
     // Fallback Values
     FALLBACK_VALUES: {
@@ -30,7 +48,7 @@ const CONFIG = {
         component: 'Sin categorizar',
         direction: 'No especificado',
         sector: 'No especificado',
-        theme: 'No especificado',
+        registroAdmin: 'No especificado',
         lastUpdate: 'No disponible',
         periodicity: 'No definido',
         idRA: 'N/A'
@@ -117,11 +135,11 @@ const CONFIG = {
     
     // Field Mapping (for different CSV formats)
     FIELD_MAPPING: {
-        indicatorName: ['Nombre_Indicador', 'Descripción IN', 'N', 'Indicador', 'Nombre'],
+        indicatorName: ['Nombre_Indicador', 'Indicador', 'N'],
         component: ['Componente', 'Component', 'Comp'],
         direction: ['Direccion', 'Direction', 'Dir'],
         sector: ['SectorE', 'Sector', 'Sector_Estadistico'],
-        theme: ['Tematica', 'Theme', 'Tema'],
+        registroAdmin: ['Registro_Administrativo', 'RA', 'Reg_Admin'],
         idRA: ['Id_RA', 'ID_RA', 'RA_ID', 'RegistroAdministrativo']
     },
     
@@ -152,11 +170,13 @@ const CONFIG = {
 };
 
 // Función para obtener configuración específica
-CONFIG.get = function(path, defaultValue = null) {
+CONFIG.get = function(path, defaultValue) {
+    defaultValue = defaultValue || null;
     const keys = path.split('.');
     let value = this;
     
-    for (const key of keys) {
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
         if (value && typeof value === 'object' && key in value) {
             value = value[key];
         } else {
@@ -176,7 +196,9 @@ CONFIG.validate = function() {
         'FALLBACK_VALUES'
     ];
     
-    const missing = required.filter(key => !(key in this));
+    const missing = required.filter(function(key) {
+        return !(key in this);
+    }, this);
     
     if (missing.length > 0) {
         console.error('Configuración incompleta. Faltan:', missing);
