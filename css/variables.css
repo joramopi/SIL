@@ -1,10 +1,11 @@
 /* css/variables.css */
 :root {
     /* Primary Colors */
-    --primary-blue: #1e4c72;
-    --secondary-blue: #2d5aa0;
-    --light-blue: #4a90c2;
-    --accent-blue: #87ceeb;
+    /* Updated palette */
+    --primary-blue: #1f8fff;
+    --secondary-blue: #00bfff;
+    --light-blue: #89cfeb;
+    --accent-blue: #add8e6;
     
     /* Status Colors */
     --success: #28a745;
@@ -88,12 +89,12 @@
     --input-border-error: 2px solid var(--danger);
     
     /* Charts */
-    --chart-color-1: #1e4c72;
-    --chart-color-2: #2d5aa0;
-    --chart-color-3: #4a90c2;
-    --chart-color-4: #87ceeb;
-    --chart-color-5: #a0c8e8;
-    --chart-color-6: #b3d9ff;
+    --chart-color-1: #1f8fff;
+    --chart-color-2: #00bfff;
+    --chart-color-3: #89cfeb;
+    --chart-color-4: #add8e6;
+    --chart-color-5: #b1e0e7;
+    --chart-color-6: #b1e0e7;
 
     /* Component Color Palette */
     --color-1: #1f8fff;
