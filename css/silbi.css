@@ -1,0 +1,19 @@
+/* Styles for SILB\xed virtual assistant */
+#silbi-container{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:180px;
+  z-index:1000;
+  font-family:Arial, sans-serif;
+}
+#silbi-inner{position:relative;width:100%;}
+#silbi-character{width:100%;animation:bounce 3s infinite ease-in-out;cursor:pointer;display:block;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+#silbi-bubble{position:absolute;bottom:240px;right:0;background-color:#fff;color:#333;padding:12px 16px;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,0.15);font-size:14px;max-width:230px;opacity:0;transform:translateY(10px);transition:all 0.5s ease;pointer-events:none;}
+#silbi-bubble::after{content:'';position:absolute;bottom:-10px;right:30px;border-width:10px 10px 0 10px;border-style:solid;border-color:#ffffff transparent transparent transparent;}
+#silbi-bubble.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+#silbi-close{position:absolute;top:-10px;right:-10px;background:#f00;color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;cursor:pointer;z-index:10;}
+#silbi-emote{position:absolute;top:72%;left:43%;transform:translate(-50%, -50%) scale(0);font-size:40px;opacity:0;animation:zoomEffect 2s ease-in-out forwards;pointer-events:none;z-index:10;}
+@keyframes zoomEffect{0%{transform:translate(-50%, -50%) scale(0.2);opacity:0;}60%{transform:translate(-50%, -50%) scale(1.2);opacity:1;}100%{transform:translate(-50%, -50%) scale(0);opacity:0;}}
+@media(max-width:600px){#silbi-container{width:140px;bottom:10px;right:10px;}#silbi-bubble{bottom:190px;font-size:12px;max-width:180px;}#silbi-bubble::after{right:20px;}#silbi-emote{font-size:30px;top:75%;left:41%;}}
