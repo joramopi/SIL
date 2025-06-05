@@ -102,6 +102,9 @@
     --color-3: #89cfeb;
     --color-4: #add8e6;
     --color-5: #b1e0e7;
+
+    /* Highlight */
+    --highlight-orange: #ffe5b4;
     
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);

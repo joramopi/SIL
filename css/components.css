@@ -104,6 +104,21 @@
 .badge-component-9 { background-color: var(--color-4); }
 .badge-component-10 { background-color: var(--color-5); }
 
+/* Badge para periodicidad utilizando la misma paleta del gráfico */
+.badge-periodicity {
+    color: white;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+}
+
+/* Resaltado de coincidencias de búsqueda */
+.search-highlight {
+    background-color: var(--highlight-orange);
+    border-radius: 4px;
+    padding: 0 2px;
+}
+
 /* Animaciones suaves para los gráficos */
 .chart-card {
     transition: all 0.3s ease;
