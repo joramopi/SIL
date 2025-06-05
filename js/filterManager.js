@@ -384,22 +384,20 @@ class FilterManager {
      * Crea el elemento contador de resultados
      */
     createResultsCounter() {
-        const filtersSection = DOMUtils.safeQuerySelector('.filters-section');
-        if (!filtersSection) return null;
+        const searchSection = DOMUtils.safeQuerySelector('.table-search-section');
+        if (!searchSection) return null;
 
         const counter = document.createElement('div');
         counter.className = 'results-counter';
         counter.style.cssText = `
-            text-align: center;
+            text-align: right;
             font-size: 0.9rem;
             color: var(--dark-gray);
             opacity: 0.8;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--medium-gray);
+            margin-top: 0.5rem;
         `;
 
-        filtersSection.appendChild(counter);
+        searchSection.appendChild(counter);
         return counter;
     }
 

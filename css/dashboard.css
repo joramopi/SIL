@@ -321,6 +321,12 @@ body {
     font-size: 0.9rem;
 }
 
+.table-search-section {
+    background: var(--light-gray);
+    padding: 1rem 2rem;
+    border-bottom: 2px solid var(--medium-gray);
+}
+
 .table-container {
     overflow-x: auto;
     max-height: 600px;
@@ -385,7 +391,7 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .filters-section, .chart-card, .table-header {
+    .filters-section, .chart-card, .table-header, .table-search-section {
         padding: 1.5rem;
     }
 
