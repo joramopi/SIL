@@ -40,6 +40,7 @@ body {
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 1rem;
+    position: relative; /* permite posicionar elementos absolutamente */
 }
 
 .logo-section {
@@ -51,8 +52,10 @@ body {
 .header-emblem {
     height: 70px;
     object-fit: contain;
-    position: relative;
-    z-index: 1;
+    position: absolute; /* colocar sobre el listón */
+    top: -20px;
+    right: 2rem;
+    z-index: 101;
 }
 
 .logo {
