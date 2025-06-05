@@ -107,6 +107,7 @@
     --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
     --gradient-light: linear-gradient(135deg, var(--light-gray) 0%, var(--medium-gray) 100%);
     --gradient-accent: linear-gradient(90deg, var(--primary-blue), var(--light-blue));
+    --color-5-70: rgba(177, 224, 231, 0.7);
     
     /* Animation Timing */
     --animation-duration-fast: 0.15s;

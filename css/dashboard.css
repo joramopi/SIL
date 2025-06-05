@@ -15,7 +15,7 @@ body {
 
 /* Header */
 .header {
-    background: linear-gradient(90deg, var(--primary-blue) 0%, var(--color-5) 100%);
+    background: linear-gradient(90deg, var(--primary-blue) 0%, var(--color-5-70) 100%);
     color: var(--light-gray);
     padding: 1.5rem 0;
     box-shadow: var(--shadow);
@@ -51,6 +51,8 @@ body {
 .header-emblem {
     height: 70px;
     object-fit: contain;
+    position: relative;
+    z-index: 1;
 }
 
 .logo {
