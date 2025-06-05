@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/silbi.css">
 </head>
 <body>
     <!-- Loading Overlay -->
@@ -212,8 +213,21 @@
                     </tbody>
                 </table>
             </div>
-        </section>
+    </section>
     </main>
+
+    <audio id="emote-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_3c7a303b74.mp3?filename=pop-94319.mp3" preload="auto"></audio>
+
+    <div id="silbi-container">
+        <div id="silbi-inner">
+            <div id="silbi-emote">😊</div>
+            <img id="silbi-character" src="img/silbi.png" alt="SILBí personaje" />
+        </div>
+        <div id="silbi-bubble">
+            <button id="silbi-close">×</button>
+            <span id="silbi-message">¡Hola!</span>
+        </div>
+    </div>
 
     <!-- JavaScript Modules -->
     <script src="js/config.js"></script>
@@ -223,5 +237,6 @@
     <script src="js/chartManager.js"></script>
     <script src="js/filterManager.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="js/silbi.js"></script>
 </body>
 </html>
