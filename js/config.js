@@ -41,7 +41,7 @@ const CONFIG = {
     
     // Performance Settings
     DEBOUNCE_DELAY: 300,
-    SEARCH_MIN_LENGTH: 2,
+    SEARCH_MIN_LENGTH: 4,
     MAX_CHART_ITEMS: 10,
     TABLE_PAGE_SIZE: 50,
     
