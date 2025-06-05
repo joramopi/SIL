@@ -504,6 +504,10 @@ class Dashboard {
             {
                 content: `<span class="badge badge-periodicity" style="background-color: ${periodicityColor};">${periodicity}</span>`,
                 isHTML: true
+            },
+            {
+                content: this.createDashboardLink(indicator.Dashboard),
+                isHTML: true
             }
         ];
 
@@ -553,6 +557,16 @@ class Dashboard {
     }
 
     /**
+     * Crea el enlace al dashboard si existe
+     */
+    createDashboardLink(url) {
+        if (url) {
+            return `<a href="${url}" class="dashboard-btn" target="_blank" rel="noopener">Ver</a>`;
+        }
+        return '';
+    }
+
+    /**
      * Resalta coincidencias de búsqueda
      */
     highlightSearchTerm(text, term) {
@@ -570,7 +584,7 @@ class Dashboard {
         if (tableBody) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="6" class="empty-state">
+                    <td colspan="7" class="empty-state">
                         <i class="fas fa-search"></i>
                         <p>No se encontraron indicadores que coincidan con los filtros aplicados</p>
                     </td>
@@ -587,7 +601,7 @@ class Dashboard {
         if (tableBody) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="6" class="empty-state">
+                    <td colspan="7" class="empty-state">
                         <i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i>
                         <p>Error al cargar los datos de la tabla</p>
                     </td>
@@ -604,7 +618,7 @@ class Dashboard {
         if (tableBody) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="6" class="empty-state">
+                    <td colspan="7" class="empty-state">
                         <i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i>
                         <p>Error al cargar los datos: ${this.state.error?.message || 'Error desconocido'}</p>
                         <p style="font-size: 0.8rem; margin-top: 0.5rem;">

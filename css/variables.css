@@ -105,6 +105,8 @@
 
     /* Highlight */
     --highlight-orange: #ffe5b4;
+    /* Pastel purple used for dashboard links */
+    --pastel-purple: #b19cd9;
     
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);

@@ -365,6 +365,22 @@ body {
     background: var(--light-gray);
 }
 
+/* Button for dashboard links */
+.dashboard-btn {
+    display: inline-block;
+    background-color: var(--pastel-purple);
+    color: var(--white);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--border-radius-small);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+
+.dashboard-btn:hover {
+    opacity: 0.85;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
