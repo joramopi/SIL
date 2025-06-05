@@ -434,8 +434,10 @@ class Dashboard {
             tableBody.innerHTML = '';
 
             // Agregar filas
+            const searchTerm = this.filterManager?.getFilterState().search || '';
+
             data.forEach((indicator, index) => {
-                const row = this.createTableRow(indicator, index);
+                const row = this.createTableRow(indicator, index, searchTerm);
                 tableBody.appendChild(row);
             });
 
@@ -450,7 +452,7 @@ class Dashboard {
     /**
      * Crea una fila de la tabla
      */
-    createTableRow(indicator, index) {
+    createTableRow(indicator, index, searchTerm) {
         const row = document.createElement('tr');
         
         // Obtener nombre del indicador con corrección de codificación
@@ -458,14 +460,26 @@ class Dashboard {
         indicatorName = CSVParser.fixEncoding(indicatorName);
         
         // Aplicar corrección de codificación a otros campos también
-        const component = CSVParser.fixEncoding(indicator.Componente || 'Sin categorizar');
-        const direction = CSVParser.fixEncoding(indicator.Direccion || 'No especificado');
-        const sector = CSVParser.fixEncoding(indicator.SectorE || 'No especificado');
+        let component = CSVParser.fixEncoding(indicator.Componente || 'Sin categorizar');
+        let direction = CSVParser.fixEncoding(indicator.Direccion || 'No especificado');
+        let sector = CSVParser.fixEncoding(indicator.SectorE || 'No especificado');
         
         // Obtener color del componente basado en el índice del componente en la lista de componentes únicos
         const componentColor = this.getComponentColor(component);
         
         // Datos de la fila con corrección de codificación y colores dinámicos
+        let idRA = indicator.Id_RA || 'N/A';
+        const periodicity = this.getPeriodicityForIndex(index);
+        const periodicityColor = this.getPeriodicityColor(periodicity);
+
+        if (searchTerm) {
+            indicatorName = this.highlightSearchTerm(indicatorName, searchTerm);
+            component = this.highlightSearchTerm(component, searchTerm);
+            direction = this.highlightSearchTerm(direction, searchTerm);
+            sector = this.highlightSearchTerm(sector, searchTerm);
+            idRA = this.highlightSearchTerm(idRA, searchTerm);
+        }
+
         const rowData = [
             {
                 content: `<strong>${indicatorName}</strong>`,
@@ -476,16 +490,19 @@ class Dashboard {
                 isHTML: true
             },
             {
-                content: direction
+                content: direction,
+                isHTML: true
             },
             {
-                content: sector
+                content: sector,
+                isHTML: true
             },
             {
-                content: indicator.Id_RA || 'N/A'
+                content: idRA,
+                isHTML: true
             },
             {
-                content: `<span class="badge badge-success">${this.getPeriodicityForIndex(index)}</span>`,
+                content: `<span class="badge badge-periodicity" style="background-color: ${periodicityColor};">${periodicity}</span>`,
                 isHTML: true
             }
         ];
@@ -525,6 +542,24 @@ class Dashboard {
      */
     getPeriodicityForIndex(index) {
         return CONFIG.PERIODICITIES[index % CONFIG.PERIODICITIES.length];
+    }
+
+    /**
+     * Obtiene el color asociado a una periodicidad
+     */
+    getPeriodicityColor(periodicity) {
+        const index = CONFIG.PERIODICITIES.indexOf(periodicity);
+        return CONFIG.PERIODICITY_COLORS[index >= 0 ? index % CONFIG.PERIODICITY_COLORS.length : 0];
+    }
+
+    /**
+     * Resalta coincidencias de búsqueda
+     */
+    highlightSearchTerm(text, term) {
+        if (!term) return text;
+        const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${escaped})`, 'gi');
+        return text.replace(regex, '<span class="search-highlight">$1</span>');
     }
 
     /**
