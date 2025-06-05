@@ -82,20 +82,6 @@
                     <div id="sector-help" class="sr-only">Selecciona un sector estadístico para filtrar los indicadores</div>
                 </div>
 
-                <div class="search-container">
-                    <label class="filter-label" for="search-input">Buscar Indicador</label>
-                    <div style="position: relative;">
-                        <i class="fas fa-search search-icon"></i>
-                        <input 
-                            type="text" 
-                            class="search-input" 
-                            id="search-input"
-                            placeholder="Escribe el nombre del indicador que buscas..."
-                            aria-describedby="search-help"
-                        >
-                    </div>
-                    <div id="search-help" class="sr-only">Escribe para buscar indicadores por nombre</div>
-                </div>
             </div>
         </section>
 
@@ -190,7 +176,24 @@
                     Explora todos los indicadores disponibles con información detallada
                 </div>
             </div>
-            
+
+            <div class="table-search-section">
+                <div class="search-container">
+                    <label class="filter-label" for="search-input">Buscar Indicador</label>
+                    <div style="position: relative;">
+                        <i class="fas fa-search search-icon"></i>
+                        <input
+                            type="text"
+                            class="search-input"
+                            id="search-input"
+                            placeholder="Escribe el nombre del indicador que buscas..."
+                            aria-describedby="search-help"
+                        >
+                    </div>
+                    <div id="search-help" class="sr-only">Escribe para buscar indicadores por nombre</div>
+                </div>
+            </div>
+
             <div class="table-container">
                 <table class="indicators-table" role="table" aria-labelledby="table-title">
                     <thead>
