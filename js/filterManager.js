@@ -88,10 +88,16 @@ class FilterManager {
             }
         });
 
-        // Filtro de búsqueda con debounce
+        // Filtro de búsqueda con debounce y longitud mínima
         if (this.elements.search) {
             const debouncedSearch = PerformanceUtils.debounce(
-                (value) => this.handleFilterChange('search', value),
+                (value) => {
+                    if (value.length >= CONFIG.SEARCH_MIN_LENGTH) {
+                        this.handleFilterChange('search', value);
+                    } else if (value.length === 0) {
+                        this.handleFilterChange('search', '');
+                    }
+                },
                 CONFIG.DEBOUNCE_DELAY
             );
 
