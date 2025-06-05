@@ -769,11 +769,12 @@
                             <th scope="col">Sector Estadístico</th>
                             <th scope="col">ID RA</th>
                             <th scope="col">Periodicidad</th>
+                            <th scope="col">Dashboard</th>
                         </tr>
                     </thead>
                     <tbody id="indicatorsTableBody">
                         <tr>
-                            <td colspan="6" class="empty-state">
+                            <td colspan="7" class="empty-state">
                                 <i class="fas fa-spinner fa-spin"></i>
                                 <p>Cargando indicadores...</p>
                             </td>
@@ -1043,7 +1044,7 @@
             if (data.length === 0) {
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="6" class="empty-state">
+                        <td colspan="7" class="empty-state">
                             <i class="fas fa-search"></i>
                             <p>No se encontraron indicadores que coincidan con los filtros aplicados</p>
                         </td>
@@ -1318,7 +1319,7 @@
                 if (tableBody) {
                     tableBody.innerHTML = `
                         <tr>
-                            <td colspan="6" class="empty-state">
+                            <td colspan="7" class="empty-state">
                                 <i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i>
                                 <p>Error al cargar los datos: ${error.message}</p>
                                 <p style="font-size: 0.8rem; margin-top: 0.5rem;">
