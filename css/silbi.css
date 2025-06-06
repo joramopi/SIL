@@ -9,7 +9,12 @@
 }
 #silbi-inner{position:relative;width:100%;}
 #silbi-character{width:100%;animation:bounce 3s infinite ease-in-out;cursor:pointer;display:block;}
-@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+@keyframes bounce{
+  0%,100%{transform:translate(0,0);}
+  25%{transform:translate(-5px,-5px);}
+  50%{transform:translate(5px,-10px);}
+  75%{transform:translate(-5px,-5px);}
+}
 #silbi-bubble{position:absolute;bottom:240px;right:0;background-color:#fff;color:#333;padding:12px 16px;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,0.15);font-size:14px;max-width:230px;opacity:0;transform:translateY(10px);transition:all 0.5s ease;pointer-events:none;}
 #silbi-bubble::after{content:'';position:absolute;bottom:-10px;right:30px;border-width:10px 10px 0 10px;border-style:solid;border-color:#ffffff transparent transparent transparent;}
 #silbi-bubble.show{opacity:1;transform:translateY(0);pointer-events:auto;}

@@ -455,6 +455,11 @@ class ChartManager {
             this.charts.periodicity.data.datasets[0].backgroundColor = CONFIG.PERIODICITY_COLORS;
             this.charts.periodicity.data.datasets[0].borderColor = CONFIG.PERIODICITY_COLORS;
 
+            // Ajustar la escala Y para dejar espacio a las etiquetas
+            const maxValue = Math.max.apply(null, periodicityData);
+            const suggested = Math.ceil(maxValue * 1.2);
+            this.charts.periodicity.options.scales.y.max = suggested > 0 ? suggested : 1;
+
             // Actualizar la función de animación para mostrar valores y porcentajes
             this.charts.periodicity.options.animation.onComplete = function(context) {
                 const chart = context.chart;

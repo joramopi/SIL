@@ -74,13 +74,13 @@ body {
 }
 
 .header h1 {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     font-weight: 600;
     margin: 0;
 }
 
 .header-subtitle {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     opacity: 0.9;
     margin-top: 0.25rem;
 }
@@ -394,7 +394,7 @@ body {
     }
 
     .header h1 {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
     }
 
     .filters-grid {
