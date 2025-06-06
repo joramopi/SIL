@@ -368,15 +368,6 @@ class FilterManager {
         if (counter) {
             const total = this.originalData.length;
             counter.textContent = `Mostrando ${FormatUtils.formatNumber(count)} de ${FormatUtils.formatNumber(total)} indicadores`;
-            
-            // Estilo dinámico basado en cantidad de resultados
-            if (count === 0) {
-                counter.style.color = 'var(--danger)';
-            } else if (count < total * 0.1) {
-                counter.style.color = 'var(--warning)';
-            } else {
-                counter.style.color = 'var(--dark-gray)';
-            }
         }
     }
 
@@ -389,13 +380,6 @@ class FilterManager {
 
         const counter = document.createElement('div');
         counter.className = 'results-counter';
-        counter.style.cssText = `
-            text-align: right;
-            font-size: 0.9rem;
-            color: var(--dark-gray);
-            opacity: 0.8;
-            margin-top: 0.5rem;
-        `;
 
         searchSection.appendChild(counter);
         return counter;
