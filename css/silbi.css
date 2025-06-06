@@ -8,6 +8,8 @@
   font-family:Arial, sans-serif;
 }
 #silbi-inner{position:relative;width:100%;}
+.silbi-settings{position:absolute;top:-10px;left:-10px;background:#fff;border:none;border-radius:50%;width:28px;height:28px;box-shadow:0 2px 6px rgba(0,0,0,0.2);cursor:pointer;}
+.silbi-settings i{color:#333;}
 #silbi-character{width:100%;animation:bounce 3s infinite ease-in-out;cursor:pointer;display:block;}
 @keyframes bounce{
   0%,100%{transform:translate(0,0);}

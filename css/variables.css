@@ -7,6 +7,9 @@
     --light-blue: #89cfeb;
     --accent-blue: #add8e6;
     --dark-blue: #003366;
+    /* New natural palette */
+    --manabi-green: #4caf50;
+    --beach-beige: #f5deb3;
     
     /* Status Colors */
     --success: #28a745;
@@ -46,6 +49,7 @@
     
     /* Typography */
     --font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-family-display: 'Poppins', Arial, sans-serif;
     --font-family-mono: 'Courier New', monospace;
     
     --font-size-xs: 0.75rem;
@@ -90,19 +94,19 @@
     --input-border-error: 2px solid var(--danger);
     
     /* Charts */
-    --chart-color-1: #1f8fff;
-    --chart-color-2: #00bfff;
-    --chart-color-3: #89cfeb;
-    --chart-color-4: #add8e6;
-    --chart-color-5: #b1e0e7;
-    --chart-color-6: #b1e0e7;
+    --chart-color-1: #04724D;
+    --chart-color-2: #8DB600;
+    --chart-color-3: #FFBC42;
+    --chart-color-4: #E9967A;
+    --chart-color-5: #114B5F;
+    --chart-color-6: #8DB600;
 
     /* Component Color Palette */
-    --color-1: #1f8fff;
-    --color-2: #00bfff;
-    --color-3: #89cfeb;
-    --color-4: #add8e6;
-    --color-5: #b1e0e7;
+    --color-1: var(--chart-color-1);
+    --color-2: var(--chart-color-2);
+    --color-3: var(--chart-color-3);
+    --color-4: var(--chart-color-4);
+    --color-5: var(--chart-color-5);
 
     /* Highlight */
     --highlight-orange: #ffe5b4;
@@ -141,6 +145,19 @@
         --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.4);
         --shadow-light: 0 1px 5px rgba(0, 0, 0, 0.2);
     }
+}
+
+/* Manual dark mode toggle */
+body.dark-mode {
+    --white: #1a1a1a;
+    --light-gray: #2d2d2d;
+    --medium-gray: #404040;
+    --dark-gray: #e0e0e0;
+    --black: #ffffff;
+
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --shadow-light: 0 1px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* High contrast mode support */
