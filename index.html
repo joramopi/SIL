@@ -9,6 +9,7 @@
     <!-- External Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
     
     <!-- CSS Modules -->
     <link rel="stylesheet" href="css/variables.css">
@@ -38,6 +39,9 @@
                 </div>
             </div>
             <img class="header-emblem" src="img/manabi.png" alt="Escudo de Manabí">
+            <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo oscuro">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </header>
 
@@ -49,6 +53,7 @@
                 <i class="fas fa-search"></i>
                 <span id="filters-title">Filtros de Búsqueda</span>
             </div>
+            <div id="activeFiltersCount" class="filters-count"></div>
             
             <div class="filters-grid">
                 <div class="filter-group">
@@ -205,7 +210,7 @@
                             <th scope="col">Sector Estadístico</th>
                             <th scope="col">ID RA</th>
                             <th scope="col">Periodicidad</th>
-                            <th scope="col">Dashboard</th>
+                            <th scope="col">Dashboard <i class="fas fa-question-circle" title="Panel de visualización resumido"></i></th>
                         </tr>
                     </thead>
                     <tbody id="indicatorsTableBody">
@@ -225,6 +230,9 @@
 
     <div id="silbi-container">
         <div id="silbi-inner">
+            <button id="silbi-settings" class="silbi-settings" aria-label="Configurar asistente" title="Configurar">
+                <i class="fas fa-volume-mute"></i>
+            </button>
             <div id="silbi-emote">😊</div>
             <img id="silbi-character" src="img/silbi.png" alt="SILBí personaje" />
         </div>
@@ -242,6 +250,7 @@
     <script src="js/chartManager.js"></script>
     <script src="js/filterManager.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="js/themeToggle.js"></script>
     <script src="js/silbi.js"></script>
 </body>
 </html>

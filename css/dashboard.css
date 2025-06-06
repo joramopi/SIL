@@ -60,6 +60,19 @@ body {
     box-shadow: var(--shadow-light);
 }
 
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--light-gray);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.theme-toggle:hover {
+    color: var(--white);
+}
+
 .logo {
     width: 50px;
     height: 50px;
@@ -74,6 +87,7 @@ body {
 }
 
 .header h1 {
+    font-family: var(--font-family-display);
     font-size: 2.2rem;
     font-weight: 600;
     margin: 0;
@@ -110,6 +124,13 @@ body {
     color: var(--primary-blue);
     font-weight: 600;
     font-size: 1.1rem;
+}
+
+.filters-count {
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--dark-gray);
+    margin-bottom: 1rem;
 }
 
 .filters-grid {
@@ -181,8 +202,8 @@ body {
 
 .stat-card {
     background: var(--white);
-    border-radius: var(--border-radius);
-    padding: 2rem;
+    border-radius: var(--border-radius-large);
+    padding: 2.5rem 2rem;
     box-shadow: var(--shadow);
     transition: var(--transition);
     position: relative;
@@ -363,14 +384,15 @@ body {
     z-index: 10;
 }
 
+
 .indicators-table td {
     padding: 1rem;
     border-bottom: 1px solid var(--medium-gray);
-    font-size: 0.95rem;
+    font-size: 1rem;
 }
 
 .indicators-table tr:hover {
-    background: var(--light-gray);
+    background: var(--beach-beige);
 }
 
 /* Button for dashboard links */
@@ -402,6 +424,7 @@ body {
     }
 
     .header h1 {
+        font-family: var(--font-family-display);
         font-size: 1.8rem;
     }
 

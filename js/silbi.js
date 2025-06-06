@@ -20,8 +20,11 @@ const closeButton = document.getElementById("silbi-close");
 const silbi = document.getElementById("silbi-character");
 const emote = document.getElementById("silbi-emote");
 const sound = document.getElementById("emote-sound");
+const settingsBtn = document.getElementById("silbi-settings");
+let silbiEnabled = true;
 let index = 0;
 let hideTimeout;
+let messageInterval;
 
 function showMessage() {
   messageSpan.textContent = messages[index];
@@ -34,7 +37,7 @@ function showMessage() {
 }
 function cycleMessages() {
   showMessage();
-  setInterval(showMessage, 8000);
+  messageInterval = setInterval(showMessage, 8000);
 }
 function showRandomEmote() {
   const random = emoticons[Math.floor(Math.random() * emoticons.length)];
@@ -51,3 +54,17 @@ closeButton.addEventListener("click", () => {
 });
 silbi.addEventListener("click", showRandomEmote);
 window.addEventListener("load", cycleMessages);
+
+if (settingsBtn) {
+  settingsBtn.addEventListener("click", () => {
+    silbiEnabled = !silbiEnabled;
+    if (!silbiEnabled) {
+      clearInterval(messageInterval);
+      bubble.classList.remove("show");
+      settingsBtn.querySelector("i").className = "fas fa-volume-off";
+    } else {
+      cycleMessages();
+      settingsBtn.querySelector("i").className = "fas fa-volume-mute";
+    }
+  });
+}

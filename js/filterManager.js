@@ -121,9 +121,9 @@ class FilterManager {
         // Placeholder dinámico para búsqueda
         if (this.elements.search) {
             const placeholders = [
-                'Escribe el nombre del indicador...',
-                'Buscar por descripción...',
-                'Ejemplo: población, educación, salud...'
+                'Ejemplo: Mortalidad infantil',
+                'Busca por tema o palabra clave',
+                'Filtra indicadores aquí...'
             ];
             
             let currentIndex = 0;
@@ -209,8 +209,9 @@ class FilterManager {
                 console.warn('⚠️ No hay callback configurado para onFilterChange');
             }
 
-            // Actualizar contador de resultados
+            // Actualizar contador de resultados y filtros activos
             this.updateResultsCounter(filteredData.length);
+            this.updateActiveFilterCount();
 
             // Anunciar cambios para accesibilidad
             AccessibilityUtils.announceToScreenReader(
@@ -372,6 +373,17 @@ class FilterManager {
     }
 
     /**
+     * Actualiza el número de filtros activos
+     */
+    updateActiveFilterCount() {
+        const countElem = DOMUtils.safeQuerySelector('#activeFiltersCount');
+        if (!countElem) return;
+
+        const active = this.getFilterStats().activeFilters;
+        countElem.textContent = active > 0 ? `${active} filtro(s) activo(s)` : 'Sin filtros activos';
+    }
+
+    /**
      * Crea el elemento contador de resultados
      */
     createResultsCounter() {
@@ -420,6 +432,7 @@ class FilterManager {
 
             // Aplicar filtros (que ahora están vacíos)
             this.applyFilters();
+            this.updateActiveFilterCount();
 
             // Limpiar UI de búsqueda
             this.updateSearchUI('');

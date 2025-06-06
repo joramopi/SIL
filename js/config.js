@@ -5,19 +5,19 @@ const CONFIG = {
     
     // Chart Configuration - Paleta de colores para componentes
     CHART_COLORS: [
-        '#1f8fff',
-        '#00bfff',
-        '#89cfeb',
-        '#add8e6',
-        '#b1e0e7'
+        '#04724D',
+        '#8DB600',
+        '#FFBC42',
+        '#E9967A',
+        '#114B5F'
     ],
     
     // Colores específicos para periodicidad
     PERIODICITY_COLORS: [
-        '#1f8fff', // Mensual - Azul primario
-        '#00bfff', // Trimestral - Azul claro
-        '#89cfeb', // Semestral - Celeste
-        '#add8e6'  // Anual - Azul pastel
+        '#04724D', // Mensual
+        '#8DB600', // Trimestral
+        '#FFBC42', // Semestral
+        '#E9967A'  // Anual
     ],
     
     // Data Configuration
