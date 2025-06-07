@@ -49,36 +49,55 @@ body {
     gap: 1rem;
 }
 
+.header-right {
+    position: absolute;
+    top: 50%;
+    right: 2rem;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .header-emblem {
     height: 70px;
     object-fit: contain;
-    position: absolute; /* colocar sobre el listón */
-    top: 50%;
-    transform: translateY(-50%);
-    right: 2rem;
-    z-index: 101;
     transition: var(--transition);
 }
 
 .header-emblem:hover {
-    transform: translateY(-50%) scale(1.05);
+    transform: scale(1.05);
 }
 
 .theme-toggle {
-    background: none;
+    width: 50px;
+    height: 24px;
+    background: var(--dark-blue);
     border: none;
-    color: var(--light-gray);
-    font-size: 1.4rem;
+    border-radius: 12px;
+    position: relative;
     cursor: pointer;
     transition: var(--transition);
+}
+
+.theme-toggle::after {
+    content: '';
     position: absolute;
-    top: 50%;
-    right: 6rem;
-    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: var(--white);
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: var(--transition);
+}
+
+body.dark-mode .theme-toggle::after {
+    transform: translateX(26px);
 }
 
 .theme-toggle:hover {
-    color: var(--white);
+    box-shadow: var(--shadow-hover);
 }
 
 .logo {
