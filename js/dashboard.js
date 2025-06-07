@@ -281,7 +281,7 @@ class Dashboard {
             const themeFilter = DOMUtils.safeQuerySelector('#theme-filter');
             if (themeFilter) {
                 // Para el filtro de temática, podemos usar los registros administrativos
-                this.fillSelect('theme-filter', uniqueValues.registrosAdmin, 'Todos los registros administrativos');
+                this.fillSelect('theme-filter', uniqueValues.registrosAdmin, 'Todos los RA');
             }
 
             console.log(`✅ Filtros poblados exitosamente`);
