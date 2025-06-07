@@ -69,36 +69,6 @@ body {
     transform: scale(1.05);
 }
 
-.theme-toggle {
-    width: 50px;
-    height: 24px;
-    background: var(--dark-blue);
-    border: none;
-    border-radius: 12px;
-    position: relative;
-    cursor: pointer;
-    transition: var(--transition);
-}
-
-.theme-toggle::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: var(--white);
-    border-radius: 50%;
-    top: 2px;
-    left: 2px;
-    transition: var(--transition);
-}
-
-body.dark-mode .theme-toggle::after {
-    transform: translateX(26px);
-}
-
-.theme-toggle:hover {
-    box-shadow: var(--shadow-hover);
-}
 
 .logo {
     width: 50px;
@@ -123,7 +93,7 @@ body.dark-mode .theme-toggle::after {
 .header-subtitle {
     font-size: 1.3rem;
     opacity: 0.9;
-    margin-top: 0.25rem;
+    margin-top: 0;
 }
 
 /* Main Container */
