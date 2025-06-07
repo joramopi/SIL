@@ -499,15 +499,63 @@ body {
     color: var(--dark-gray);
     padding: 2rem;
     position: relative;
+    font-size: var(--font-size-lg);
+}
+
+.info-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-blue), var(--light-blue));
+    border-top-left-radius: var(--border-radius-large);
+    border-top-right-radius: var(--border-radius-large);
 }
 
 .info-close {
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    background: none;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
     border: none;
-    font-size: 1.5rem;
-    color: var(--dark-gray);
+    border-radius: 50%;
+    color: var(--white);
+    font-size: 1.2rem;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.info-header h2 {
+    margin: 0;
+    font-size: var(--font-size-xl);
+}
+
+.info-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.info-logo img {
+    width: 70%;
+    height: 70%;
 }
