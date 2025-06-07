@@ -468,3 +468,57 @@ body {
     outline: 3px solid var(--light-blue);
     outline-offset: 2px;
 }
+
+/* Info icon next to filter labels */
+.info-btn {
+    background: none;
+    border: none;
+    color: var(--primary-blue);
+    cursor: pointer;
+    margin-left: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.info-btn i {
+    pointer-events: none;
+}
+
+/* Glass morphism overlay for extra info */
+.info-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: var(--z-overlay);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.info-content {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--shadow-hover);
+    max-width: 600px;
+    color: var(--dark-gray);
+    padding: 2rem;
+    position: relative;
+}
+
+.info-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--dark-gray);
+    cursor: pointer;
+}

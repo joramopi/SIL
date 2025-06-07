@@ -56,7 +56,11 @@
             
             <div class="filters-grid">
                 <div class="filter-group">
-                    <label class="filter-label" for="component-filter">Componente</label>
+                    <label class="filter-label" for="component-filter">Componente
+                        <button id="componentInfoBtn" class="info-btn" type="button" aria-label="Más información">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </label>
                     <select class="filter-select" id="component-filter" aria-describedby="component-help">
                         <option value="">Todos los componentes</option>
                     </select>
@@ -227,6 +231,17 @@
 
     <audio id="emote-sound" src="audio/pop.mp3" preload="auto"></audio>
 
+    <div id="componentInfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="componentInfoTitle">
+        <div class="info-content">
+            <button id="componentInfoClose" class="info-close" aria-label="Cerrar">×</button>
+            <h2 id="componentInfoTitle" class="sr-only">Más información</h2>
+            <p><strong>Territorial:</strong> Nodo que concentrará toda la información estadística y geográfica del ámbito territorial que se derive de la producción de información generada en las direcciones que aportan con datos al componente Territorial.</p>
+            <p><strong>Atención Ciudadana:</strong> Nodo que concentrará toda la información relacionada con las actividades y medios para facilitar el ejercicio de derechos ciudadanos: protección de grupos de atención prioritaria, seguridad y temas de cooperación internacional.</p>
+            <p><strong>Administrativo Financiero:</strong> Nodo que concentrará toda la información Administrativa Financiera institucional.</p>
+            <p><strong>Institucional:</strong> Nodo que concentrará toda la información derivada de la Gestión Interna y Externa de la Institución y que incluye el Marco Regulatorio Institucional.</p>
+        </div>
+    </div>
+
     <div id="silbi-container">
         <div id="silbi-inner">
             <div id="silbi-emote">😊</div>
@@ -248,6 +263,7 @@
     <script src="js/filterManager.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/themeToggle.js"></script>
+    <script src="js/componentInfo.js"></script>
     <script src="js/silbi.js"></script>
 </body>
 </html>
