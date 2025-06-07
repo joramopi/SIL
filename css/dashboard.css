@@ -17,7 +17,7 @@ body {
 .header {
     background: linear-gradient(90deg, var(--primary-blue) 0%, var(--color-5-70) 100%);
     color: var(--light-gray);
-    padding: 1.5rem 0;
+    padding: 0.8rem 0;
     box-shadow: var(--shadow);
     position: sticky;
     top: 0;
@@ -57,7 +57,11 @@ body {
     transform: translateY(-50%);
     right: 2rem;
     z-index: 101;
-    box-shadow: var(--shadow-light);
+    transition: var(--transition);
+}
+
+.header-emblem:hover {
+    transform: translateY(-50%) scale(1.05);
 }
 
 .theme-toggle {
@@ -67,6 +71,10 @@ body {
     font-size: 1.4rem;
     cursor: pointer;
     transition: var(--transition);
+    position: absolute;
+    top: 50%;
+    right: 6rem;
+    transform: translateY(-50%);
 }
 
 .theme-toggle:hover {
@@ -94,7 +102,7 @@ body {
 }
 
 .header-subtitle {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     opacity: 0.9;
     margin-top: 0.25rem;
 }
