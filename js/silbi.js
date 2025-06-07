@@ -20,8 +20,7 @@ const closeButton = document.getElementById("silbi-close");
 const silbi = document.getElementById("silbi-character");
 const emote = document.getElementById("silbi-emote");
 const sound = document.getElementById("emote-sound");
-const settingsBtn = document.getElementById("silbi-settings");
-let silbiEnabled = true;
+let silbiEnabled = true; // assistant always active; settings removed
 let index = 0;
 let hideTimeout;
 let messageInterval;
@@ -54,17 +53,3 @@ closeButton.addEventListener("click", () => {
 });
 silbi.addEventListener("click", showRandomEmote);
 window.addEventListener("load", cycleMessages);
-
-if (settingsBtn) {
-  settingsBtn.addEventListener("click", () => {
-    silbiEnabled = !silbiEnabled;
-    if (!silbiEnabled) {
-      clearInterval(messageInterval);
-      bubble.classList.remove("show");
-      settingsBtn.querySelector("i").className = "fas fa-volume-off";
-    } else {
-      cycleMessages();
-      settingsBtn.querySelector("i").className = "fas fa-volume-mute";
-    }
-  });
-}
