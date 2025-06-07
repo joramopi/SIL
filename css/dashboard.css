@@ -15,20 +15,13 @@ body {
 
 /* Header */
 .header {
-    background: linear-gradient(90deg, var(--primary-blue) 0%, var(--color-5-70) 100%);
-    color: var(--light-gray);
+    background: var(--white);
+    color: var(--dark-gray);
     padding: 1.5rem 0;
     box-shadow: var(--shadow);
     position: sticky;
     top: 0;
     z-index: 100;
-}
-
-/* Override color classes inside header to keep text light */
-.header .color-1,
-.header .color-2,
-.header .color-3 {
-    color: var(--light-gray);
 }
 
 .header-content {
@@ -49,28 +42,18 @@ body {
     gap: 1rem;
 }
 
-.header-emblem {
-    height: 70px;
-    object-fit: contain;
-    position: absolute; /* colocar sobre el listón */
-    top: 50%;
-    transform: translateY(-50%);
-    right: 2rem;
-    z-index: 101;
-    box-shadow: var(--shadow-light);
-}
 
 .theme-toggle {
     background: none;
     border: none;
-    color: var(--light-gray);
+    color: var(--dark-gray);
     font-size: 1.4rem;
     cursor: pointer;
     transition: var(--transition);
 }
 
 .theme-toggle:hover {
-    color: var(--white);
+    color: var(--dark-blue);
 }
 
 .logo {
