@@ -6,7 +6,9 @@
 class FilterManager {
     constructor() {
         this.filters = {
+        periodicity: '',
             component: '',
+            periodicity: "Filtra por periodicidad de actualización",
             direction: '',
             sector: '',
             search: ''
@@ -52,6 +54,8 @@ class FilterManager {
     getFilterElements() {
         this.elements = {
             component: DOMUtils.safeQuerySelector('#component-filter'),
+            periodicity: "Filtra por periodicidad de actualización",
+            periodicity: DOMUtils.safeQuerySelector('#periodicity-filter'),
             direction: DOMUtils.safeQuerySelector('#direction-filter'),
             sector: DOMUtils.safeQuerySelector('#sector-filter'),
             search: DOMUtils.safeQuerySelector('#search-input')
@@ -79,7 +83,7 @@ class FilterManager {
      */
     setupEventListeners() {
         // Filtros select
-        ['component', 'direction', 'sector', 'theme'].forEach(filterType => {
+        ['component','periodicity','direction','sector','theme'].forEach(filterType => {
             const element = this.elements[filterType];
             if (element) {
                 element.addEventListener('change', (e) => {
@@ -145,6 +149,7 @@ class FilterManager {
     addFilterTooltips() {
         const tooltips = {
             component: 'Filtra indicadores por componente del PDOT',
+            periodicity: "Filtra por periodicidad de actualización",
             direction: 'Filtra por dirección responsable',
             sector: 'Filtra por sector estadístico',
             theme: 'Filtra por temática',
@@ -231,6 +236,11 @@ class FilterManager {
     filterData(data, filters) {
         return data.filter(item => {
             // Filtro de componente
+            // Filtro de periodicidad
+            if (filters.periodicity && filters.periodicity !== "") {
+                const itemPer = item.periodicity || "";
+                if (itemPer !== filters.periodicity) return false;
+            }
             if (filters.component && filters.component !== '') {
                 const itemComponent = DataUtils.getFieldValue(item, 'component');
                 if (itemComponent !== filters.component) return false;
@@ -541,6 +551,7 @@ class FilterManager {
 
         // Limpiar estado
         this.filters = {};
+        periodicity: '',
         this.originalData = [];
         this.onFilterChange = null;
         this.elements = {};
