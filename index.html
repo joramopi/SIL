@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/notifications.css">
     <link rel="stylesheet" href="css/silbi.css">
-    <link rel="stylesheet" href="css/sidebar.css">
 </head>
 <body>
     <!-- Loading Overlay -->
@@ -31,50 +30,20 @@
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <button id="sidebarToggle" class="sidebar-toggle" aria-label="Mostrar menú">
-                <i class="fas fa-bars"></i>
+            <div class="logo-section">
+                <!-- <div class="logo">SIL</div> -->
+                <div>
+                    <h1 class="color-1">Sistema de Información Local [SIL]</h1>
+                    <div class="header-subtitle color-2">Dashboard de Indicadores</div>
+                    <div class="header-subtitle color-2">Gobierno Autónomo Descentralizado Provincial de Manabí</div>
+                </div>
+            </div>
+            <img class="header-emblem" src="img/manabi.png" alt="Escudo de Manabí">
+            <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo oscuro">
+                <i class="fas fa-moon"></i>
             </button>
         </div>
     </header>
-
-    <aside id="sidebar" class="sidebar">
-        <img src="img/logosil.png" alt="Logo SIL" class="sidebar-logo">
-        <div class="sidebar-title">Sistema de Información Local [SIL]</div>
-        <div class="sidebar-subtitle">Dashboard de Indicadores</div>
-        <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo oscuro">
-            <i class="fas fa-moon"></i>
-        </button>
-        <div class="sidebar-section">
-            <label for="component-filter">Componentes</label>
-            <select id="component-filter" class="filter-select">
-                <option value="">Todos los componentes</option>
-            </select>
-        </div>
-        <div class="sidebar-section">
-            <label for="periodicity-filter">Periodicidad</label>
-            <select id="periodicity-filter" class="filter-select">
-                <option value="">Todas</option>
-            </select>
-        </div>
-        <div class="sidebar-footer">
-            
-    <div id="silbi-container">
-        <div id="silbi-inner">
-            <button id="silbi-settings" class="silbi-settings" aria-label="Configurar asistente" title="Configurar">
-                <i class="fas fa-volume-mute"></i>
-            </button>
-            <div id="silbi-emote">😊</div>
-            <img id="silbi-character" src="img/silbi.png" alt="SILBí personaje" />
-        </div>
-        <div id="silbi-bubble">
-            <button id="silbi-close">×</button>
-            <span id="silbi-message">¡Hola!</span>
-        </div>
-    </div>
-
-            <div class="gov-text">Gobierno Autónomo Descentralizado Provincial de Manabí</div>
-        </div>
-    </aside>
 
     <!-- Main Container -->
     <main class="container">
@@ -87,6 +56,14 @@
             <div id="activeFiltersCount" class="filters-count"></div>
             
             <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label" for="component-filter">Componente</label>
+                    <select class="filter-select" id="component-filter" aria-describedby="component-help">
+                        <option value="">Todos los componentes</option>
+                    </select>
+                    <div id="component-help" class="sr-only">Selecciona un componente para filtrar los indicadores</div>
+                </div>
+
                 <div class="filter-group">
                     <label class="filter-label" for="direction-filter">Dirección</label>
                     <select class="filter-select" id="direction-filter" aria-describedby="direction-help">
@@ -249,6 +226,21 @@
     </section>
     </main>
 
+    <audio id="emote-sound" src="audio/pop.mp3" preload="auto"></audio>
+
+    <div id="silbi-container">
+        <div id="silbi-inner">
+            <button id="silbi-settings" class="silbi-settings" aria-label="Configurar asistente" title="Configurar">
+                <i class="fas fa-volume-mute"></i>
+            </button>
+            <div id="silbi-emote">😊</div>
+            <img id="silbi-character" src="img/silbi.png" alt="SILBí personaje" />
+        </div>
+        <div id="silbi-bubble">
+            <button id="silbi-close">×</button>
+            <span id="silbi-message">¡Hola!</span>
+        </div>
+    </div>
 
     <!-- JavaScript Modules -->
     <script src="js/config.js"></script>
@@ -258,7 +250,6 @@
     <script src="js/chartManager.js"></script>
     <script src="js/filterManager.js"></script>
     <script src="js/dashboard.js"></script>
-    <script src="js/sidebar.js"></script>
     <script src="js/themeToggle.js"></script>
     <script src="js/silbi.js"></script>
 </body>
