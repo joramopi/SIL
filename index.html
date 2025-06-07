@@ -27,23 +27,43 @@
     <!-- Notification Container -->
     <div id="notificationContainer" class="notification-container"></div>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo-section">
-                <!-- <div class="logo">SIL</div> -->
-                <div>
-                    <h1 class="color-1">Sistema de Información Local [SIL]</h1>
-                    <div class="header-subtitle color-2">Dashboard de Indicadores</div>
-                    <div class="header-subtitle color-2">Gobierno Autónomo Descentralizado Provincial de Manabí</div>
+    <div class="layout">
+        <nav class="sidebar">
+            <div class="logo">SIL</div>
+            <ul class="nav-links">
+                <li><a href="#stats-title"><i class="fas fa-th-large"></i><span>Resumen</span></a></li>
+                <li><a href="#charts-title"><i class="fas fa-chart-pie"></i><span>Gráficas</span></a></li>
+                <li><a href="#table-title"><i class="fas fa-table"></i><span>Tabla</span></a></li>
+                <li><a href="#tasks-section"><i class="fas fa-check-square"></i><span>Tareas</span></a></li>
+                <li><a href="#calendar-section"><i class="fas fa-calendar"></i><span>Calendario</span></a></li>
+            </ul>
+        </nav>
+        <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <!-- <div class="logo">SIL</div> -->
+                    <div>
+                        <h1 class="color-1">Sistema de Información Local [SIL]</h1>
+                        <div class="header-subtitle color-2">Dashboard de Indicadores</div>
+                        <div class="header-subtitle color-2">Gobierno Autónomo Descentralizado Provincial de Manabí</div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <input type="search" placeholder="Buscar...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <button class="icon-btn" aria-label="Notificaciones"><i class="fas fa-bell"></i></button>
+                    <button class="icon-btn" aria-label="Configuración"><i class="fas fa-cog"></i></button>
+                    <img src="img/silbico.png" alt="Usuario" class="avatar">
+                    <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo oscuro">
+                        <i class="fas fa-moon"></i>
+                    </button>
                 </div>
             </div>
-            <img class="header-emblem" src="img/manabi.png" alt="Escudo de Manabí">
-            <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo oscuro">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
-    </header>
+        </header>
 
     <!-- Main Container -->
     <main class="container">
@@ -200,8 +220,8 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <table class="indicators-table" role="table" aria-labelledby="table-title">
+        <div class="table-container">
+            <table class="indicators-table" role="table" aria-labelledby="table-title">
                     <thead>
                         <tr>
                             <th scope="col">Nombre del Indicador</th>
@@ -222,9 +242,22 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+        </div>
+    </section>
+
+    <section class="tasks-calendar">
+        <div class="tasks-section" id="tasks-section">
+            <h2><i class="fas fa-check-circle"></i> Tareas</h2>
+            <ul id="taskList" class="task-list"></ul>
+        </div>
+        <div class="calendar-section" id="calendar-section">
+            <h2><i class="fas fa-calendar"></i> Calendario</h2>
+            <div id="calendarContainer" class="calendar"></div>
+        </div>
     </section>
     </main>
+        </div> <!-- end main-content -->
+    </div> <!-- end layout -->
 
     <audio id="emote-sound" src="audio/pop.mp3" preload="auto"></audio>
 
@@ -251,6 +284,7 @@
     <script src="js/filterManager.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/themeToggle.js"></script>
+    <script src="js/tasksCalendar.js"></script>
     <script src="js/silbi.js"></script>
 </body>
 </html>
