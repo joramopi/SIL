@@ -27,3 +27,8 @@ Run the CSV parser test with:
 
 ```bash
 node tests/test-csv-parser.js
+```
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
