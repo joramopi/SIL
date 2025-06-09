@@ -88,34 +88,23 @@
                             <i class="fas fa-info-circle"></i>
                         </button>
                     </label>
-                    <select class="filter-select" id="component-filter" aria-describedby="component-help">
-                        <option value="">Todos los componentes</option>
-                    </select>
+                    <input class="filter-input" id="component-filter" list="component-options" placeholder="Todos los componentes" aria-describedby="component-help">
+                    <datalist id="component-options"></datalist>
                     <div id="component-help" class="sr-only">Selecciona un componente para filtrar los indicadores</div>
                 </div>
 
                 <div class="filter-group">
                     <label class="filter-label" for="direction-filter"><i class="fas fa-sitemap"></i> Direcciones</label>
-                    <select class="filter-select" id="direction-filter" aria-describedby="direction-help">
-                        <option value="">Todas las direcciones</option>
-                    </select>
+                    <input class="filter-input" id="direction-filter" list="direction-options" placeholder="Todas las direcciones" aria-describedby="direction-help">
+                    <datalist id="direction-options"></datalist>
                     <div id="direction-help" class="sr-only">Selecciona una dirección para filtrar los indicadores</div>
                 </div>
 
                 <div class="filter-group">
                     <label class="filter-label" for="theme-filter"><i class="fas fa-folder-open"></i> Registros Administrativos</label>
-                    <select class="filter-select" id="theme-filter" aria-describedby="theme-help">
-                        <option value="">Todos los RA</option>
-                    </select>
+                    <input class="filter-input" id="theme-filter" list="theme-options" placeholder="Todos los RA" aria-describedby="theme-help">
+                    <datalist id="theme-options"></datalist>
                     <div id="theme-help" class="sr-only">Selecciona un registro administrativo para filtrar los indicadores</div>
-                </div>
-
-                <div class="filter-group">
-                    <label class="filter-label" for="sector-filter"><i class="fas fa-chart-pie"></i> Sector Estadístico (INEC)</label>
-                    <select class="filter-select" id="sector-filter" aria-describedby="sector-help">
-                        <option value="">Todos los sectores</option>
-                    </select>
-                    <div id="sector-help" class="sr-only">Selecciona un sector estadístico para filtrar los indicadores</div>
                 </div>
 
             </div>

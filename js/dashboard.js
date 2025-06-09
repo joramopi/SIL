@@ -15,6 +15,7 @@ class Dashboard {
         
         this.chartManager = new ChartManager();
         this.filterManager = new FilterManager();
+        window.filterManagerInstance = this.filterManager;
         
         this.init();
     }
@@ -278,20 +279,24 @@ class Dashboard {
             const uniqueValues = {
                 components: this.getUniqueValues(data, 'component'),
                 directions: this.getUniqueValues(data, 'direction'),
-                sectors: this.getUniqueValues(data, 'sector'),
                 registrosAdmin: this.getUniqueValues(data, 'registroAdmin')
             };
 
-            // Llenar cada select
-            this.fillSelect('component-filter', uniqueValues.components, 'Todos los componentes');
-            this.fillSelect('direction-filter', uniqueValues.directions, 'Todas las direcciones');
-            this.fillSelect('sector-filter', uniqueValues.sectors, 'Todos los sectores');
-            
+            // Llenar datalists para los filtros con búsqueda
+            this.fillDatalist('component-options', uniqueValues.components);
+            this.fillDatalist('direction-options', uniqueValues.directions);
+
             // Solo llenar el filtro de temática si existe el elemento en el HTML
             const themeFilter = DOMUtils.safeQuerySelector('#theme-filter');
             if (themeFilter) {
-                // Para el filtro de temática, podemos usar los registros administrativos
-                this.fillSelect('theme-filter', uniqueValues.registrosAdmin, 'Todos los RA');
+                this.fillDatalist('theme-options', uniqueValues.registrosAdmin);
+            }
+
+            // Proveer opciones originales al FilterManager para la búsqueda
+            if (window.filterManagerInstance) {
+                window.filterManagerInstance.setFilterOptions('component', uniqueValues.components);
+                window.filterManagerInstance.setFilterOptions('direction', uniqueValues.directions);
+                window.filterManagerInstance.setFilterOptions('theme', uniqueValues.registrosAdmin);
             }
 
             console.log(`✅ Filtros poblados exitosamente`);
@@ -353,6 +358,24 @@ class Dashboard {
                 option.value = value;
                 option.textContent = value;
                 selectElement.appendChild(option);
+            }
+        });
+    }
+
+    /**
+     * Llena un datalist con opciones
+     */
+    fillDatalist(listId, values) {
+        const listElement = DOMUtils.safeQuerySelector(`#${listId}`);
+        if (!listElement) return;
+
+        listElement.innerHTML = '';
+
+        values.forEach(value => {
+            if (ValidationUtils.isNotEmpty(value)) {
+                const option = document.createElement('option');
+                option.value = value;
+                listElement.appendChild(option);
             }
         });
     }

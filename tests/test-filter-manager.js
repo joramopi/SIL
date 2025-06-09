@@ -14,7 +14,6 @@ global.CONFIG = {
     FIELD_MAPPING: {
         component: ['Componente'],
         direction: ['Direccion'],
-        sector: ['SectorE'],
         registroAdmin: ['Registro_Administrativo'],
         idRA: ['Id_RA'],
         indicatorName: ['Nombre_Indicador']
@@ -43,21 +42,21 @@ const fm = new FilterManager();
 fm.originalData = records;
 
 // No filters
-let result = fm.filterData(records, { component: '', direction: '', sector: '', search: '' });
+let result = fm.filterData(records, { component: '', direction: '', search: '' });
 assert.strictEqual(result.length, 2, 'No filters should return all records');
 
 // Component filter
-result = fm.filterData(records, { component: 'Comp1', direction: '', sector: '', search: '' });
+result = fm.filterData(records, { component: 'Comp1', direction: '', search: '' });
 assert.strictEqual(result.length, 1, 'Component filter should match one record');
 assert.strictEqual(result[0].Componente, 'Comp1');
 
 // Direction filter
-result = fm.filterData(records, { component: '', direction: 'Dir2', sector: '', search: '' });
+result = fm.filterData(records, { component: '', direction: 'Dir2', search: '' });
 assert.strictEqual(result.length, 1, 'Direction filter should match one record');
 assert.strictEqual(result[0].Direccion, 'Dir2');
 
 // Search filter
-result = fm.filterData(records, { component: '', direction: '', sector: '', search: 'eñe' });
+result = fm.filterData(records, { component: '', direction: '', search: 'eñe' });
 assert.strictEqual(result.length, 1, 'Search filter should match by indicator name');
 assert.strictEqual(result[0].Nombre_Indicador, 'Indicador con eñe ñ');
 
