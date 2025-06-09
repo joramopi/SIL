@@ -45,6 +45,34 @@
 
     <!-- Main Container -->
     <main class="container">
+        <div class="dashboard-layout">
+            <aside class="ods-panel" aria-labelledby="ods-panel-title">
+                <h2 id="ods-panel-title">Objetivos de Desarrollo Sostenible</h2>
+                <div class="ods-grid">
+                    <div class="ods-item" data-num="1"><img src="img/ods1.png" alt="ODS 1"></div>
+                    <div class="ods-item" data-num="2"><img src="img/ods2.png" alt="ODS 2"></div>
+                    <div class="ods-item" data-num="3"><img src="img/ods3.png" alt="ODS 3"></div>
+                    <div class="ods-item" data-num="4"><img src="img/ods4.png" alt="ODS 4"></div>
+                    <div class="ods-item" data-num="5"><img src="img/ods5.png" alt="ODS 5"></div>
+                    <div class="ods-item" data-num="6"><img src="img/ods6.png" alt="ODS 6"></div>
+                    <div class="ods-item" data-num="7"><img src="img/ods7.png" alt="ODS 7"></div>
+                    <div class="ods-item" data-num="8"><img src="img/ods8.png" alt="ODS 8"></div>
+                    <div class="ods-item" data-num="9"><img src="img/ods9.png" alt="ODS 9"></div>
+                    <div class="ods-item" data-num="10"><img src="img/ods10.png" alt="ODS 10"></div>
+                    <div class="ods-item" data-num="11"><img src="img/ods11.png" alt="ODS 11"></div>
+                    <div class="ods-item" data-num="12"><img src="img/ods12.png" alt="ODS 12"></div>
+                    <div class="ods-item" data-num="13"><img src="img/ods13.png" alt="ODS 13"></div>
+                    <div class="ods-item" data-num="14"><img src="img/ods14.png" alt="ODS 14"></div>
+                    <div class="ods-item" data-num="15"><img src="img/ods15.png" alt="ODS 15"></div>
+                    <div class="ods-item" data-num="16"><img src="img/ods16.png" alt="ODS 16"></div>
+                    <div class="ods-item" data-num="17"><img src="img/ods17.png" alt="ODS 17"></div>
+                </div>
+                <div class="ods-info">
+                    <h3 id="ods-title"></h3>
+                    <p id="ods-description"></p>
+                </div>
+            </aside>
+            <div class="dashboard-main">
         <!-- Filters Section -->
         <section class="filters-section" role="search" aria-labelledby="filters-title">
             <div class="filters-header">
@@ -225,7 +253,9 @@
                     </tbody>
                 </table>
             </div>
-    </section>
+        </section>
+        </div><!-- dashboard-main -->
+        </div><!-- dashboard-layout -->
     </main>
 
     <audio id="emote-sound" src="audio/pop.mp3" preload="auto"></audio>
@@ -265,6 +295,7 @@
     <script src="js/csvParser.js"></script>
     <script src="js/chartManager.js"></script>
     <script src="js/filterManager.js"></script>
+    <script src="js/odsPanel.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/componentInfo.js"></script>
     <script src="js/silbi.js"></script>

@@ -215,6 +215,11 @@ class Dashboard {
             
             // Inicializar gráficos
             this.chartManager.initialize();
+
+            // Inicializar panel ODS
+            if (window.ODSPanel) {
+                ODSPanel.init(this.state.data);
+            }
             
             // Actualizar dashboard inicial
             this.updateDashboard();
@@ -242,6 +247,11 @@ class Dashboard {
             
             // Actualizar gráficos
             this.chartManager.updateCharts(data);
+
+            // Resaltar ODS relacionados
+            if (window.ODSPanel) {
+                ODSPanel.highlightForData(data);
+            }
             
             // Anunciar cambios para accesibilidad
             AccessibilityUtils.announceToScreenReader(
