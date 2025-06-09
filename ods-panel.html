@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIL - Panel ODS</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    min-height: 100vh;
+}
+.ods-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+.ods-panel h2 {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+.ods-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+.ods-item {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.ods-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+}
+.ods-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.ods-item.selected {
+    background: #d0e8ff;
+    transform: translateY(-8px);
+}
+.ods-item::after {
+    content: attr(data-num);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #fff;
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.ods-item.img-error::after {
+    opacity: 1;
+}
+main {
+    margin-left: 280px;
+    padding: 20px;
+    color: #fff;
+    flex: 1;
+    transition: all 0.3s ease;
+}
+#ods-title {
+    margin-top: 0;
+    font-size: 2rem;
+}
+@media (max-width: 600px) {
+    .ods-panel {
+        width: 100%;
+        position: relative;
+        height: auto;
+        display: block;
+    }
+    main {
+        margin-left: 0;
+    }
+    .ods-item {
+        width: 50px;
+        height: 50px;
+    }
+}
+</style>
+</head>
+<body>
+<aside class="ods-panel">
+    <h2>ODS</h2>
+    <div class="ods-grid" id="odsGrid"></div>
+</aside>
+<main>
+    <h1 id="ods-title"></h1>
+    <p id="ods-description"></p>
+    <div id="ods-indicators">&nbsp;</div>
+</main>
+<script>
+const odsData = [
+  { num:1, color:'#e5243b', title:'Fin de la Pobreza', desc:'Fin de la pobreza en todas sus formas en todo el mundo.' },
+  { num:2, color:'#dda63a', title:'Hambre Cero', desc:'Poner fin al hambre, lograr la seguridad alimentaria y la mejora de la nutrición.' },
+  { num:3, color:'#4c9f38', title:'Salud y Bienestar', desc:'Garantizar una vida sana y promover el bienestar para todos.' },
+  { num:4, color:'#c5192d', title:'Educación de Calidad', desc:'Garantizar una educación inclusiva y equitativa de calidad.' },
+  { num:5, color:'#ff3a21', title:'Igualdad de Género', desc:'Lograr la igualdad entre los géneros y empoderar a todas las mujeres y niñas.' },
+  { num:6, color:'#26bde2', title:'Agua Limpia y Saneamiento', desc:'Garantizar la disponibilidad de agua y su gestión sostenible.' },
+  { num:7, color:'#fcc30b', title:'Energía Asequible', desc:'Garantizar el acceso a una energía asequible, segura, sostenible y moderna.' },
+  { num:8, color:'#a21942', title:'Trabajo Decente', desc:'Promover el crecimiento económico sostenido y el trabajo decente.' },
+  { num:9, color:'#fd6925', title:'Industria e Innovación', desc:'Construir infraestructuras resilientes y fomentar la innovación.' },
+  { num:10, color:'#dd1367', title:'Reducción de Desigualdades', desc:'Reducir la desigualdad en y entre los países.' },
+  { num:11, color:'#fd9d24', title:'Ciudades Sostenibles', desc:'Lograr que las ciudades sean inclusivas, seguras y sostenibles.' },
+  { num:12, color:'#bf8b2e', title:'Producción Responsable', desc:'Garantizar modalidades de consumo y producción sostenibles.' },
+  { num:13, color:'#3f7e44', title:'Acción por el Clima', desc:'Adoptar medidas urgentes para combatir el cambio climático.' },
+  { num:14, color:'#0a97d9', title:'Vida Submarina', desc:'Conservar y utilizar sosteniblemente los océanos y mares.' },
+  { num:15, color:'#56c02b', title:'Vida Terrestre', desc:'Gestionar sosteniblemente los bosques, luchar contra la desertificación.' },
+  { num:16, color:'#00689d', title:'Paz y Justicia', desc:'Promover sociedades pacíficas e inclusivas.' },
+  { num:17, color:'#19486a', title:'Alianzas', desc:'Fortalecer los medios de implementación y revitalizar la alianza global.' }
+];
+
+function buildGrid() {
+  const grid = document.getElementById('odsGrid');
+  odsData.forEach(ods => {
+    const div = document.createElement('div');
+    div.className = 'ods-item';
+    div.dataset.num = ods.num;
+    div.style.backgroundColor = ods.color;
+    const img = document.createElement('img');
+    img.src = `img/ods-${ods.num}.png`;
+    img.alt = `ODS ${ods.num} ${ods.title}`;
+    img.onerror = function(){
+      this.style.display = 'none';
+      div.classList.add('img-error');
+    };
+    div.appendChild(img);
+    div.title = ods.title;
+    div.addEventListener('click', () => selectODS(ods.num));
+    grid.appendChild(div);
+  });
+}
+
+function selectODS(num) {
+  document.querySelectorAll('.ods-item').forEach(el => el.classList.remove('selected'));
+  const item = document.querySelector(`.ods-item[data-num="${num}"]`);
+  if(item) item.classList.add('selected');
+  const ods = odsData.find(o => o.num === num);
+  if(ods){
+    document.getElementById('ods-title').textContent = `ODS ${ods.num}: ${ods.title}`;
+    document.getElementById('ods-description').textContent = ods.desc;
+  }
+}
+
+buildGrid();
+selectODS(1);
+</script>
+</body>
+</html>
