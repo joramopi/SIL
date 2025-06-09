@@ -124,10 +124,10 @@ body {
 }
 
 .filters-count {
-    text-align: right;
+    text-align: left;
     font-size: 0.85rem;
     color: var(--dark-gray);
-    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 .filters-grid {
