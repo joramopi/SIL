@@ -8,8 +8,13 @@ class FilterManager {
         this.filters = {
             component: '',
             direction: '',
-            sector: '',
             search: ''
+        };
+
+        this.datalistOptions = {
+            component: [],
+            direction: [],
+            theme: []
         };
         
         this.originalData = [];
@@ -53,7 +58,6 @@ class FilterManager {
         this.elements = {
             component: DOMUtils.safeQuerySelector('#component-filter'),
             direction: DOMUtils.safeQuerySelector('#direction-filter'),
-            sector: DOMUtils.safeQuerySelector('#sector-filter'),
             search: DOMUtils.safeQuerySelector('#search-input')
         };
 
@@ -78,12 +82,16 @@ class FilterManager {
      * Configura los event listeners para todos los filtros
      */
     setupEventListeners() {
-        // Filtros select
-        ['component', 'direction', 'sector', 'theme'].forEach(filterType => {
+        // Filtros con búsqueda mediante datalist
+        ['component', 'direction', 'theme'].forEach(filterType => {
             const element = this.elements[filterType];
             if (element) {
-                element.addEventListener('change', (e) => {
-                    this.handleFilterChange(filterType, e.target.value);
+                element.addEventListener('input', (e) => {
+                    const value = e.target.value;
+                    this.filterDatalistOptions(filterType, value);
+                    if (value.length === 0 || value.length >= CONFIG.SEARCH_MIN_LENGTH) {
+                        this.handleFilterChange(filterType, value);
+                    }
                 });
             }
         });
@@ -146,7 +154,6 @@ class FilterManager {
         const tooltips = {
             component: 'Filtra indicadores por componente del PDOT',
             direction: 'Filtra por dirección responsable',
-            sector: 'Filtra por sector estadístico',
             theme: 'Filtra por temática',
             search: 'Busca en nombres y descripciones de indicadores'
         };
@@ -157,6 +164,36 @@ class FilterManager {
                 element.title = tooltip;
                 element.setAttribute('aria-describedby', `${filterType}-tooltip`);
             }
+        });
+    }
+
+    /**
+     * Establece las opciones completas para un filtro
+     */
+    setFilterOptions(filterType, options) {
+        this.datalistOptions[filterType] = Array.isArray(options) ? options : [];
+    }
+
+    /**
+     * Filtra las opciones mostradas en el datalist según el término ingresado
+     */
+    filterDatalistOptions(filterType, query) {
+        const list = DOMUtils.safeQuerySelector(`#${filterType}-options`);
+        if (!list) return;
+
+        list.innerHTML = '';
+        let options = this.datalistOptions[filterType] || [];
+
+        if (query.length >= CONFIG.SEARCH_MIN_LENGTH) {
+            options = options.filter(opt => opt.toLowerCase().includes(query.toLowerCase()));
+        } else if (query.length > 0) {
+            options = [];
+        }
+
+        options.forEach(value => {
+            const option = document.createElement('option');
+            option.value = value;
+            list.appendChild(option);
         });
     }
 
@@ -248,11 +285,6 @@ class FilterManager {
                 if (itemTheme !== filters.theme) return false;
             }
 
-            // Filtro de sector
-            if (filters.sector && filters.sector !== '') {
-                const itemSector = DataUtils.getFieldValue(item, 'sector');
-                if (itemSector !== filters.sector) return false;
-            }
 
             // Filtro de búsqueda
             if (filters.search && filters.search.trim() !== '') {
@@ -263,7 +295,6 @@ class FilterManager {
                     DataUtils.getIndicatorName(item),
                     DataUtils.getFieldValue(item, 'component'),
                     DataUtils.getFieldValue(item, 'direction'),
-                    DataUtils.getFieldValue(item, 'sector'),
                     DataUtils.getFieldValue(item, 'registroAdmin'),
                     DataUtils.getFieldValue(item, 'idRA')
                 ];
