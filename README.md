@@ -13,7 +13,6 @@ The dashboard provides interactive charts and tables that summarize local indica
 3. Open `index.html` with your preferred web browser. You can open the file directly or start a simple HTTP server and navigate to it.
 
 The application has no build step because all dependencies are loaded from public CDNs:
-
 - **Chart.js** – handles all chart rendering.
 - **FontAwesome** – provides interface icons.
 
@@ -24,7 +23,6 @@ The CSV data used by the dashboard is located under `data/indicators.csv` and co
 ## Running tests
 
 Run the CSV parser test with:
-
 ```bash
 node tests/test-csv-parser.js
 ```
