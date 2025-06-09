@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargando Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-container {
+            text-align: center;
+            color: white;
+            z-index: 100;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #fff, #f0f8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3)); }
+            to { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6)); }
+        }
+
+        .progress-container {
+            width: 400px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            overflow: hidden;
+            margin: 2rem auto;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #091a7a, #00d4ff);
+            background-size: 200% 100%;
+            border-radius: 50px;
+            width: 0%;
+            transition: width 0.3s ease;
+            animation: shimmer 2s linear infinite;
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transform: translateX(-100%);
+            animation: slide 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .percentage {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin: 1rem 0;
+            min-height: 1.5rem;
+        }
+
+        .dots {
+            display: inline-block;
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .dashboard {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f8fafc;
+            display: none;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.5s ease;
+        }
+
+        .dashboard.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .dashboard-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .dashboard-content {
+            padding: 2rem;
+            color: #2d3748;
+        }
+
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s ease forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(1.1); }
+        }
+
+        @media (max-width: 768px) {
+            .progress-container {
+                width: 300px;
+            }
+            .logo {
+                font-size: 2rem;
+            }
+            .percentage {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="loading-container" id="loadingContainer">
+        <div class="logo">Dashboard</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="percentage" id="percentage">0%</div>
+        <div class="loading-text" id="loadingText">Iniciando sistema<span class="dots"></span></div>
+    </div>
+
+    <div class="dashboard" id="dashboard">
+        <div class="dashboard-header">
+            <div class="dashboard-title">Panel de Control</div>
+        </div>
+        <div class="dashboard-content">
+            <div class="card">
+                <h3>¡Bienvenido al Dashboard!</h3>
+                <p>El sistema se ha cargado correctamente. Aquí puedes gestionar toda tu información.</p>
+            </div>
+            <div class="card">
+                <h3>Estadísticas</h3>
+                <p>Visualiza métricas y datos importantes en tiempo real.</p>
+            </div>
+            <div class="card">
+                <h3>Configuración</h3>
+                <p>Personaliza tu experiencia y ajusta las preferencias del sistema.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class LoadingScreen {
+            constructor() {
+                this.progress = 0;
+                this.progressBar = document.getElementById('progressBar');
+                this.percentage = document.getElementById('percentage');
+                this.loadingText = document.getElementById('loadingText');
+                this.loadingContainer = document.getElementById('loadingContainer');
+                this.dashboard = document.getElementById('dashboard');
+                
+                this.loadingMessages = [
+                    'Iniciando sistema',
+                    'Cargando componentes',
+                    'Conectando base de datos',
+                    'Verificando permisos',
+                    'Configurando interfaz',
+                    'Optimizando rendimiento',
+                    'Preparando dashboard',
+                    'Finalizando carga'
+                ];
+                
+                this.init();
+            }
+
+            init() {
+                this.createParticles();
+                this.startLoading();
+            }
+
+            createParticles() {
+                const particlesContainer = document.getElementById('particles');
+                const particleCount = 50;
+
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    
+                    const size = Math.random() * 4 + 2;
+                    const leftPosition = Math.random() * 100;
+                    const animationDelay = Math.random() * 6;
+                    const animationDuration = Math.random() * 3 + 3;
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${leftPosition}%`;
+                    particle.style.animationDelay = `${animationDelay}s`;
+                    particle.style.animationDuration = `${animationDuration}s`;
+                    
+                    particlesContainer.appendChild(particle);
+                }
+            }
+
+            updateProgress(newProgress) {
+                this.progress = Math.min(newProgress, 100);
+                this.progressBar.style.width = `${this.progress}%`;
+                this.percentage.textContent = `${Math.floor(this.progress)}%`;
+                
+                // Actualizar mensaje según el progreso
+                const messageIndex = Math.floor((this.progress / 100) * (this.loadingMessages.length - 1));
+                const currentMessage = this.loadingMessages[messageIndex] || this.loadingMessages[0];
+                
+                if (this.progress < 100) {
+                    this.loadingText.innerHTML = `${currentMessage}<span class="dots"></span>`;
+                } else {
+                    this.loadingText.innerHTML = '¡Completado!';
+                }
+            }
+
+            startLoading() {
+                const duration = 4000; // 4 segundos
+                const startTime = Date.now();
+                
+                const animate = () => {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min((elapsed / duration) * 100, 100);
+                    
+                    // Efecto de carga más realista con pausas ocasionales
+                    let adjustedProgress = progress;
+                    if (progress > 20 && progress < 30) {
+                        adjustedProgress = 20 + (progress - 20) * 0.3; // Ralentizar en 20-30%
+                    } else if (progress > 60 && progress < 80) {
+                        adjustedProgress = 60 + (progress - 60) * 0.5; // Ralentizar en 60-80%
+                    }
+                    
+                    this.updateProgress(adjustedProgress);
+                    
+                    if (progress < 100) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        // Pequeña pausa antes de mostrar el dashboard
+                        setTimeout(() => {
+                            this.showDashboard();
+                        }, 500);
+                    }
+                };
+                
+                animate();
+            }
+
+            showDashboard() {
+                this.loadingContainer.classList.add('fade-out');
+                
+                setTimeout(() => {
+                    this.loadingContainer.style.display = 'none';
+                    this.dashboard.classList.add('show');
+                }, 500);
+            }
+        }
+
+        // Inicializar cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', () => {
+            new LoadingScreen();
+        });
+
+        // Agregar estilos dinámicos para la animación de puntos
+        const style = document.createElement('style');
+        style.textContent = `
+            .dots::after {
+                content: '';
+                animation: dots 1.5s steps(4, end) infinite;
+            }
+            
+            @keyframes dots {
+                0%, 20% { content: ''; }
+                40% { content: '.'; }
+                60% { content: '..'; }
+                80%, 100% { content: '...'; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
