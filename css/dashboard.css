@@ -565,3 +565,71 @@ body {
     width: 90%;
     height: 90%;
 }
+
+/* Layout with ODS sidebar */
+.dashboard-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-lg);
+}
+
+.dashboard-main {
+    flex: 1;
+}
+
+.ods-panel {
+    width: var(--sidebar-width);
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: var(--spacing-lg) var(--spacing-md);
+    position: sticky;
+    top: calc(var(--header-height) + var(--spacing-md));
+}
+
+.ods-panel h2 {
+    text-align: center;
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+.ods-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+    justify-items: center;
+}
+
+.ods-item {
+    width: 70px;
+    height: 70px;
+    border-radius: var(--border-radius-small);
+    overflow: hidden;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.ods-item:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-hover);
+}
+
+.ods-item.inactive {
+    filter: grayscale(100%) brightness(70%);
+}
+
+.ods-item.highlight {
+    outline: 3px solid var(--primary-blue);
+}
+
+.ods-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.ods-info {
+    margin-top: var(--spacing-md);
+    text-align: center;
+    font-size: var(--font-size-sm);
+}
