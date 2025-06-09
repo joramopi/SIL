@@ -107,8 +107,8 @@ body {
 .filters-section {
     background: var(--white);
     border-radius: var(--border-radius);
-    padding: 2rem;
-    margin-bottom: 2rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
     box-shadow: var(--shadow);
     transition: var(--transition);
 }
@@ -117,7 +117,7 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     color: var(--primary-blue);
     font-weight: 600;
     font-size: 1.1rem;
@@ -127,20 +127,20 @@ body {
     text-align: left;
     font-size: 0.85rem;
     color: var(--dark-gray);
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 .filters-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .filter-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
 }
 
 .filter-label {
@@ -151,11 +151,11 @@ body {
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.2rem;
 }
 
 .filter-select, .filter-input {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.75rem;
     border: 2px solid var(--medium-gray);
     border-radius: var(--border-radius);
     font-size: 1rem;
@@ -176,7 +176,7 @@ body {
 
 .search-input {
     width: 100%;
-    padding: 1rem 1rem 1rem 3rem;
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
     border: 2px solid var(--medium-gray);
     border-radius: var(--border-radius);
     font-size: 1.1rem;
@@ -441,7 +441,7 @@ body {
     }
 
     .filters-section, .chart-card, .table-header, .table-search-section {
-        padding: 1.5rem;
+        padding: 1rem;
     }
 
     .stat-card {
@@ -467,7 +467,7 @@ body {
     border: none;
     color: var(--primary-blue);
     cursor: pointer;
-    margin-left: 0.25rem;
+    margin-left: 0.1rem;
     font-size: 0.9rem;
 }
 
