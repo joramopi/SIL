@@ -9,25 +9,29 @@
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <style>
-        .ods-sidebar {
-            width: 220px;
-            height: 100vh;
-            overflow-y: auto;
-            padding: var(--spacing-md);
+        .ods-panel {
             background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem auto;
             box-shadow: var(--shadow);
+            max-width: 1000px;
         }
         .ods-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 4px;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            justify-items: center;
         }
         .ods-item {
-            width: 60px;
-            height: 60px;
+            width: 100px;
+            height: 100px;
             border-radius: var(--border-radius-small);
             overflow: hidden;
             cursor: pointer;
+        }
+        .ods-item.inactive {
+            filter: grayscale(100%) brightness(70%);
         }
         .ods-item img {
             width: 100%;
@@ -36,6 +40,7 @@
         }
         .ods-info {
             margin-top: var(--spacing-md);
+            text-align: center;
         }
         .ods-info h3 {
             margin-bottom: var(--spacing-xs);
@@ -47,8 +52,9 @@
     </style>
 </head>
 <body>
-<aside class="ods-sidebar">
-    <h2>Objetivos de Desarrollo Sostenible</h2>
+<main class="container">
+<section class="ods-panel">
+    <h2 style="text-align:center">Objetivos de Desarrollo Sostenible</h2>
     <div class="ods-grid">
         <div class="ods-item" data-num="1"><img src="img/ods1.png" alt="ODS 1"></div>
         <div class="ods-item" data-num="2"><img src="img/ods2.png" alt="ODS 2"></div>
@@ -72,7 +78,8 @@
         <h3 id="ods-title"></h3>
         <p id="ods-description"></p>
     </div>
-</aside>
+</section>
+</main>
 <script>
 const odsData = [
   { num:1, title:'Fin de la Pobreza', desc:'Fin de la pobreza en todas sus formas en todo el mundo.' },
@@ -104,9 +111,32 @@ document.querySelectorAll('.ods-item').forEach(item => {
     }
   });
 });
-// Mostrar información inicial
-const first = document.querySelector('.ods-item');
-if (first) first.click();
+
+async function markInactiveODS() {
+  try {
+    const resp = await fetch('data/indicators.csv');
+    const text = await resp.text();
+    const lines = text.trim().split(/\r?\n/).slice(1);
+    const odsSet = new Set();
+    lines.forEach(l => {
+      const parts = l.split(';');
+      for (let i = 13; i < parts.length; i++) {
+        const match = parts[i].match(/ODS\s*(\d+)/i);
+        if (match) odsSet.add(parseInt(match[1], 10));
+      }
+    });
+    document.querySelectorAll('.ods-item').forEach(item => {
+      const num = parseInt(item.dataset.num, 10);
+      if (!odsSet.has(num)) item.classList.add('inactive');
+    });
+    const firstActive = document.querySelector('.ods-item:not(.inactive)');
+    if (firstActive) firstActive.click();
+  } catch (e) {
+    console.error('Error al procesar indicadores ODS', e);
+  }
+}
+
+markInactiveODS();
 </script>
 </body>
 </html>
