@@ -500,7 +500,7 @@ class Dashboard {
         const componentColor = this.getComponentColor(component);
         
         // Datos de la fila con corrección de codificación y colores dinámicos
-        let idRA = indicator.Id_RA || 'N/A';
+        let registroAdmin = CSVParser.fixEncoding(indicator.Registro_Administrativo || 'N/A');
         const periodicity = this.getPeriodicityForIndex(index);
         const periodicityColor = this.getPeriodicityColor(periodicity);
 
@@ -509,7 +509,7 @@ class Dashboard {
             component = this.highlightSearchTerm(component, searchTerm);
             direction = this.highlightSearchTerm(direction, searchTerm);
             sector = this.highlightSearchTerm(sector, searchTerm);
-            idRA = this.highlightSearchTerm(idRA, searchTerm);
+            registroAdmin = this.highlightSearchTerm(registroAdmin, searchTerm);
         }
 
         const rowData = [
@@ -530,7 +530,7 @@ class Dashboard {
                 isHTML: true
             },
             {
-                content: idRA,
+                content: registroAdmin,
                 isHTML: true
             },
             {

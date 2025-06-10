@@ -31,9 +31,9 @@ const ODSPanel = {
         const num = parseInt(item.dataset.num, 10);
         if (num === 7 && !this.extractODSSet(this.data).has(7)) {
           this.showBubble('ODS sin indicador relacionado', item);
-          if (this.filterManager) {
-            this.filterManager.clearAllFilters();
-          }
+          DOMUtils.safeSetContent('#totalIndicatorsCard .stat-value', '0');
+          DOMUtils.safeSetContent('#registrosCard .stat-value', '0');
+          DOMUtils.safeSetContent('#componentsCard .stat-value', '0');
           this.activeODS = null;
           this.highlightForData(this.data);
           this.showInfo(num);
