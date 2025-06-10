@@ -63,10 +63,13 @@ class ProgressLoader {
     finish() {
         this.setProgress(this.totalItems);
         if (this.overlay) {
-            this.overlay.classList.add('fade-out');
+            // Add delay so the loading card remains visible a bit longer
             setTimeout(() => {
-                this.overlay.style.display = 'none';
-            }, 500);
+                this.overlay.classList.add('fade-out');
+                setTimeout(() => {
+                    this.overlay.style.display = 'none';
+                }, 500);
+            }, 3000); // extra 3 seconds to appreciate progress bar
         }
     }
 }
