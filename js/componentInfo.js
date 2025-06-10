@@ -3,14 +3,16 @@
 // Muestra información adicional sobre los componentes
 
 document.addEventListener('DOMContentLoaded', () => {
-  const infoBtn = document.getElementById('componentInfoBtn');
+  const infoBtns = document.querySelectorAll('#componentInfoBtn, .component-info-btn');
   const overlay = document.getElementById('componentInfoOverlay');
   const closeBtn = document.getElementById('componentInfoClose');
 
-  if (!infoBtn || !overlay || !closeBtn) return;
+  if (!overlay || !closeBtn || infoBtns.length === 0) return;
 
-  infoBtn.addEventListener('click', () => {
-    overlay.style.display = 'flex';
+  infoBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      overlay.style.display = 'flex';
+    });
   });
 
   closeBtn.addEventListener('click', () => {
