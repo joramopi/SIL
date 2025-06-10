@@ -744,10 +744,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         function moveCardBubble(evt) {
             if (!cardBubble) return;
+            const arrowHeight = 8;
+            const transformOffset = 20; // matches #card-bubble.show translateY
             const left = evt.pageX + 15;
-            const top = evt.pageY - cardBubble.offsetHeight / 2;
+            const top = evt.pageY - cardBubble.offsetHeight - arrowHeight + transformOffset;
             cardBubble.style.left = `${left}px`;
             cardBubble.style.top = `${top}px`;
+
+            // Update arrow position to align with cursor
+            const rect = cardBubble.getBoundingClientRect();
+            const arrowLeft = evt.clientX - rect.left;
+            cardBubble.style.setProperty('--arrow-left', `${arrowLeft}px`);
         }
 
         function hideCardBubble() {
