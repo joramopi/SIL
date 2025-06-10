@@ -89,8 +89,6 @@ class ProgressLoader {
                 this.overlay.classList.add('fade-out');
                 setTimeout(() => {
                     this.overlay.style.display = 'none';
-                    const container = document.getElementById('notificationContainer');
-                    if (container) container.style.display = 'block';
                 }, 500);
             }, 3000); // extra time to read messages
         }
