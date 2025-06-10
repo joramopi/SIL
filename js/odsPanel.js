@@ -5,6 +5,7 @@ const ODSPanel = {
     this.items = Array.from(document.querySelectorAll('.ods-item'));
     this.titleEl = document.getElementById('ods-title');
     this.descEl = document.getElementById('ods-description');
+    this.bubbleEl = document.getElementById('ods-bubble');
     this.activeODS = null;
     this.odsInfo = [
       { num:1, title:'Fin de la Pobreza', desc:'Fin de la pobreza en todas sus formas en todo el mundo.' },
@@ -28,12 +29,31 @@ const ODSPanel = {
     this.items.forEach(item => {
       item.addEventListener('click', () => {
         const num = parseInt(item.dataset.num, 10);
+        if (num === 7 && !this.extractODSSet(this.data).has(7)) {
+          this.showBubble('ODS sin indicador relacionado');
+          if (this.filterManager) {
+            this.filterManager.clearAllFilters();
+          }
+          this.activeODS = null;
+          this.highlightForData(this.data);
+          this.showInfo(num);
+          return;
+        }
         this.toggleODS(num);
         this.showInfo(num);
       });
     });
     this.markInactive();
     this.highlightForData(this.data);
+  },
+  showBubble(message) {
+    if (!this.bubbleEl) return;
+    this.bubbleEl.textContent = message;
+    this.bubbleEl.classList.add('show');
+    clearTimeout(this.bubbleTimeout);
+    this.bubbleTimeout = setTimeout(() => {
+      this.bubbleEl.classList.remove('show');
+    }, 3000);
   },
   extractODSSet(dataset) {
     const set = new Set();

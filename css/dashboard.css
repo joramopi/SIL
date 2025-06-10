@@ -666,3 +666,37 @@ body {
     font-size: var(--font-size-xs);
     line-height: var(--line-height-tight);
 }
+
+.ods-bubble {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    background: var(--white);
+    color: var(--dark-gray);
+    padding: 6px 10px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: var(--font-size-xs);
+    max-width: 160px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: var(--z-notification);
+}
+
+.ods-bubble.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-20px);
+}
+
+.ods-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px 10px 0 10px;
+    border-style: solid;
+    border-color: var(--white) transparent transparent transparent;
+}
