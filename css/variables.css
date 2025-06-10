@@ -108,6 +108,25 @@
     --color-4: var(--chart-color-4);
     --color-5: var(--chart-color-5);
 
+    /* Official ODS color palette */
+    --ods-color-1: #E5243B;
+    --ods-color-2: #DDA63A;
+    --ods-color-3: #4C9F38;
+    --ods-color-4: #C5192D;
+    --ods-color-5: #FF3A21;
+    --ods-color-6: #26BDE2;
+    --ods-color-7: #FCC30B;
+    --ods-color-8: #A21942;
+    --ods-color-9: #FD6925;
+    --ods-color-10: #DD1367;
+    --ods-color-11: #FD9D24;
+    --ods-color-12: #BF8B2E;
+    --ods-color-13: #3F7E44;
+    --ods-color-14: #0A97D9;
+    --ods-color-15: #56C02B;
+    --ods-color-16: #00689D;
+    --ods-color-17: #19486A;
+
     /* Highlight */
     --highlight-orange: #ffe5b4;
     /* Pastel purple used for dashboard links */
