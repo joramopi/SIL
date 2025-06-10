@@ -670,9 +670,9 @@ body {
 
 .ods-bubble {
     position: absolute;
-    bottom: 100%;
+    top: 0;
     left: 50%;
-    transform: translateX(-50%) translateY(-10px);
+    transform: translate(-50%, -10px);
     background: var(--white);
     color: var(--dark-gray);
     padding: 6px 10px;
@@ -688,7 +688,7 @@ body {
 
 .ods-bubble.show {
     opacity: 1;
-    transform: translateX(-50%) translateY(-20px);
+    transform: translate(-50%, -20px);
 }
 
 .ods-bubble::after {
