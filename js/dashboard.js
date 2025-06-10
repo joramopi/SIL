@@ -225,6 +225,11 @@ class Dashboard {
             if (window.ODSPanel) {
                 ODSPanel.init(this.state.data, this.filterManager);
             }
+
+            // Inicializar panel 5P
+            if (window.FivePPanel) {
+                FivePPanel.init(this.state.data, this.filterManager);
+            }
             
             // Actualizar dashboard inicial
             this.updateDashboard();
@@ -256,6 +261,11 @@ class Dashboard {
             // Resaltar ODS relacionados
             if (window.ODSPanel) {
                 ODSPanel.highlightForData(data);
+            }
+
+            // Resaltar 5P relacionados
+            if (window.FivePPanel) {
+                FivePPanel.highlightForData(data);
             }
             
             // Anunciar cambios para accesibilidad
@@ -723,16 +733,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Hacer la instancia disponible globalmente para debugging
         window.dashboard = dashboardInstance;
 
-        const footer = DOMUtils.safeQuerySelector('#fivepFooter');
-        const imgs = DOMUtils.safeQuerySelectorAll('#fivepCard img');
-        imgs.forEach(img => {
-            img.addEventListener('click', () => {
-                const label = img.getAttribute('data-label') || img.alt || '';
-                if (footer) {
-                    footer.textContent = label;
-                }
-            });
-        });
+
 
         const cardBubble = DOMUtils.safeQuerySelector('#card-bubble');
 
