@@ -611,6 +611,7 @@ body {
     overflow: hidden;
     cursor: pointer;
     transition: var(--transition);
+    border: 3px solid var(--ods-color, transparent);
 }
 
 .ods-item:hover {
@@ -623,8 +624,27 @@ body {
 }
 
 .ods-item.highlight {
-    outline: 3px solid var(--primary-blue);
+    outline: 3px solid var(--ods-color, var(--primary-blue));
 }
+
+/* Official ODS colors */
+.ods-item[data-num="1"] { --ods-color: #E5243B; }
+.ods-item[data-num="2"] { --ods-color: #DDA63A; }
+.ods-item[data-num="3"] { --ods-color: #4C9F38; }
+.ods-item[data-num="4"] { --ods-color: #C5192D; }
+.ods-item[data-num="5"] { --ods-color: #FF3A21; }
+.ods-item[data-num="6"] { --ods-color: #26BDE2; }
+.ods-item[data-num="7"] { --ods-color: #FCC30B; }
+.ods-item[data-num="8"] { --ods-color: #A21942; }
+.ods-item[data-num="9"] { --ods-color: #FD6925; }
+.ods-item[data-num="10"] { --ods-color: #DD1367; }
+.ods-item[data-num="11"] { --ods-color: #FD9D24; }
+.ods-item[data-num="12"] { --ods-color: #BF8B2E; }
+.ods-item[data-num="13"] { --ods-color: #3F7E44; }
+.ods-item[data-num="14"] { --ods-color: #0A97D9; }
+.ods-item[data-num="15"] { --ods-color: #56C02B; }
+.ods-item[data-num="16"] { --ods-color: #00689D; }
+.ods-item[data-num="17"] { --ods-color: #19486A; }
 
 .ods-item img {
     width: 100%;
