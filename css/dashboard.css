@@ -611,7 +611,7 @@ body {
     overflow: hidden;
     cursor: pointer;
     transition: var(--transition);
-    border: 3px solid var(--ods-color, transparent);
+    border: 3px solid transparent;
 }
 
 .ods-item:hover {
@@ -628,7 +628,8 @@ body {
 }
 
 .ods-item.highlight {
-    outline: 3px solid var(--ods-color, var(--primary-blue));
+    outline: none;
+    border-color: var(--ods-color, var(--primary-blue));
 }
 
 /* Official ODS colors */
