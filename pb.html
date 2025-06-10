@@ -1,108 +1,186 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cargando Dashboard</title>
-    <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <style>
-        body {
-            background: var(--gradient-primary);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: var(--font-family-display);
-            color: var(--white);
-            margin: 0;
-        }
-        .loader {
-            text-align: center;
-            position: relative;
-        }
-        .ring {
-            width: 150px;
-            height: 150px;
-        }
-        .ring circle {
-            fill: none;
-            stroke-width: 12;
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-            stroke-linecap: round;
-        }
-        .ring-bg {
-            stroke: rgba(255,255,255,0.2);
-        }
-        .ring-bar {
-            stroke: url(#grad);
-            stroke-dasharray: 472;
-            stroke-dashoffset: 472;
-        }
-        .value {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2rem;
-            font-weight: 600;
-        }
-        .message {
-            margin-top: 1.5rem;
-            font-size: 1.1rem;
-            animation: pulse 1.2s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%,100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cargando Dashboard</title>
+  <style>
+    :root {
+      --gradient-primary: linear-gradient(45deg, #2196F3, #03A9F4);
+      --font-family-display: 'Segoe UI', sans-serif;
+      --white: #ffffff;
+      --primary-blue: #0d47a1;
+      --light-blue: #29b6f6;
+    }
+
+    body {
+      background: var(--gradient-primary);
+      height: 100vh;
+      margin: 0;
+      font-family: var(--font-family-display);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .loader, #dashboard {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.8s ease;
+    }
+
+    .loader {
+      z-index: 10;
+      background: var(--gradient-primary);
+    }
+
+    .fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .fade-in {
+      opacity: 1;
+    }
+
+    .ring {
+      width: 150px;
+      height: 150px;
+    }
+
+    .ring circle {
+      fill: none;
+      stroke-width: 12;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      stroke-linecap: round;
+    }
+
+    .ring-bg {
+      stroke: rgba(255, 255, 255, 0.2);
+    }
+
+    .ring-bar {
+      stroke: url(#grad);
+      stroke-dasharray: 472;
+      stroke-dashoffset: 472;
+    }
+
+    .value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2rem;
+      font-weight: 600;
+    }
+
+    .message {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.6;
+      }
+    }
+
+    #dashboard {
+      opacity: 0;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      padding: 2rem;
+      box-sizing: border-box;
+      max-width: 90%;
+      max-height: 90%;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-    <div class="loader">
-        <svg class="ring" viewBox="0 0 150 150">
-            <defs>
-                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="var(--primary-blue)"/>
-                    <stop offset="100%" stop-color="var(--light-blue)"/>
-                </linearGradient>
-            </defs>
-            <circle class="ring-bg" cx="75" cy="75" r="70" />
-            <circle class="ring-bar" cx="75" cy="75" r="70" />
-        </svg>
-        <div id="percentage" class="value">0%</div>
-        <div id="loadingText" class="message">Iniciando...</div>
-    </div>
+  <div class="loader" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <h1 style="margin-bottom: 1rem; font-size: 2rem;">Dashboard SIL</h1>
+    <svg class="ring" viewBox="0 0 150 150">
+      <defs>
+        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="var(--primary-blue)" />
+          <stop offset="100%" stop-color="var(--light-blue)" />
+        </linearGradient>
+      </defs>
+      <circle class="ring-bg" cx="75" cy="75" r="70" />
+      <circle class="ring-bar" cx="75" cy="75" r="70" />
+    </svg>
+    <div id="percentage" class="value">0%</div>
+    <div id="loadingText" class="message">Iniciando...</div>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const circle = document.querySelector('.ring-bar');
-            const percentEl = document.getElementById('percentage');
-            const textEl = document.getElementById('loadingText');
-            const total = circle.getTotalLength();
-            const messages = [
-                'Iniciando...',
-                'Cargando m\u00f3dulos...',
-                'Preparando datos...',
-                'Listo para iniciar'
-            ];
-            circle.style.strokeDasharray = total;
-            circle.style.strokeDashoffset = total;
-            let start = null;
-            function animate(ts){
-                if(!start) start = ts;
-                const progress = Math.min((ts - start)/3000, 1);
-                circle.style.strokeDashoffset = total * (1 - progress);
-                percentEl.textContent = Math.floor(progress*100) + '%';
-                const idx = Math.min(Math.floor(progress * messages.length), messages.length - 1);
-                textEl.textContent = messages[idx];
-                if(progress < 1){
-                    requestAnimationFrame(animate);
-                }
-            }
-            requestAnimationFrame(animate);
-        });
-    </script>
+  <div id="dashboard">
+    <h1>Bienvenido al Dashboard de Indicadores</h1>
+    <p>Aquí se mostrarán las métricas clave y visualizaciones interactivas.</p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const circle = document.querySelector('.ring-bar');
+      const percentEl = document.getElementById('percentage');
+      const textEl = document.getElementById('loadingText');
+      const loader = document.querySelector('.loader');
+      const dashboard = document.getElementById('dashboard');
+      const total = circle?.getTotalLength?.() || 472;
+      const DURATION = 3000;
+
+      const messages = [
+        'Inicializando panel de control...',
+        'Recopilando información estadística...',
+        'Validando fuentes institucionales...',
+        'Renderizando visualizaciones...',
+        'Dashboard listo para explorar'
+      ];
+
+      if (!circle || !percentEl || !textEl) return;
+
+      circle.style.strokeDasharray = total;
+      circle.style.strokeDashoffset = total;
+
+      let start = null;
+
+      function animate(ts) {
+        if (!start) start = ts;
+        const progress = Math.min((ts - start) / DURATION, 1);
+        const percent = Math.floor(progress * 100);
+
+        circle.style.strokeDashoffset = total * (1 - progress);
+        percentEl.textContent = percent + '%';
+        loader.setAttribute('aria-valuenow', percent);
+
+        const idx = Math.min(Math.floor(progress * messages.length), messages.length - 1);
+        textEl.textContent = messages[idx];
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          setTimeout(() => {
+            loader.classList.add('fade-out');
+            dashboard.classList.add('fade-in');
+          }, 500);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    });
+  </script>
 </body>
 </html>
