@@ -96,12 +96,21 @@ const ODSPanel = {
     const set = this.extractODSSet(dataset);
     this.items.forEach(el => {
       const num = parseInt(el.dataset.num, 10);
+      const img = el.querySelector('img');
       if (set.has(num)) {
         el.classList.add('highlight');
         el.classList.remove('inactive');
+        if (img) {
+          img.classList.add('encendido');
+          img.classList.remove('apagado');
+        }
       } else {
         el.classList.remove('highlight');
         el.classList.add('inactive');
+        if (img) {
+          img.classList.remove('encendido');
+          img.classList.add('apagado');
+        }
       }
       if (this.activeODS === num) {
         el.classList.add('highlight');

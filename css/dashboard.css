@@ -657,6 +657,17 @@ body {
     object-fit: contain;
 }
 
+/* Border toggles for ODS icons */
+.ods-item img.encendido {
+    border: 3px solid var(--ods-color, var(--primary-blue));
+    box-sizing: border-box;
+}
+
+.ods-item img.apagado {
+    border: 3px solid transparent;
+    box-sizing: border-box;
+}
+
 .ods-info {
     margin-top: var(--spacing-md);
     text-align: center;
