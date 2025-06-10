@@ -1,7 +1,8 @@
 class ProgressLoader {
-    constructor(totalItems) {
-        this.totalItems = totalItems || 0;
-        this.current = 0;
+    constructor(duration = 8000) {
+        this.duration = duration;
+        this.progress = 0;
+        this.animationFrame = null;
         this.progressBar = DOMUtils.safeQuerySelector('#progressBar');
         this.percentage = DOMUtils.safeQuerySelector('#percentage');
         this.loadingText = DOMUtils.safeQuerySelector('#loadingText');
@@ -41,8 +42,7 @@ class ProgressLoader {
     }
 
     setProgress(value) {
-        this.current = Math.min(value, this.totalItems);
-        const percent = this.totalItems > 0 ? Math.floor((this.current / this.totalItems) * 100) : 0;
+        const percent = Math.min(Math.floor(value), 100);
         if (this.progressBar) this.progressBar.style.width = `${percent}%`;
         if (this.percentage) this.percentage.textContent = `${percent}%`;
         const index = Math.floor((percent / 100) * (this.messages.length - 1));
@@ -54,22 +54,45 @@ class ProgressLoader {
                 this.loadingText.textContent = '¡Completado!';
             }
         }
+        this.progress = percent;
     }
 
-    increment() {
-        this.setProgress(this.current + 1);
+    start() {
+        const startTime = Date.now();
+        const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min((elapsed / this.duration) * 100, 100);
+
+            let adjusted = progress;
+            if (progress > 20 && progress < 30) {
+                adjusted = 20 + (progress - 20) * 0.3;
+            } else if (progress > 60 && progress < 80) {
+                adjusted = 60 + (progress - 60) * 0.5;
+            }
+
+            this.setProgress(adjusted);
+
+            if (progress < 100) {
+                this.animationFrame = requestAnimationFrame(animate);
+            }
+        };
+
+        animate();
     }
 
     finish() {
-        this.setProgress(this.totalItems);
+        if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
+        this.setProgress(100);
         if (this.overlay) {
             // Add delay so the loading card remains visible a bit longer
             setTimeout(() => {
                 this.overlay.classList.add('fade-out');
                 setTimeout(() => {
                     this.overlay.style.display = 'none';
+                    const container = document.getElementById('notificationContainer');
+                    if (container) container.style.display = 'block';
                 }, 500);
-            }, 2000); // extra 2 seconds to appreciate progress bar
+            }, 3000); // extra time to read messages
         }
     }
 }
