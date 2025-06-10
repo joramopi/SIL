@@ -23,4 +23,4 @@
 @keyframes zoomEffect{0%{transform:translate(-50%, -50%) scale(0.2);opacity:0;}60%{transform:translate(-50%, -50%) scale(1.2);opacity:1;}100%{transform:translate(-50%, -50%) scale(0);opacity:0;}}
 @media(max-width:600px){#silbi-container{width:140px;bottom:10px;right:10px;}#silbi-bubble{bottom:160px;font-size:10px;max-width:150px;}#silbi-bubble::after{right:16px;}#silbi-emote{font-size:30px;top:75%;left:51%;}}
 
-#gadpm-phrase{margin-top:4px;text-align:center;font-weight:bold;font-size:1rem;color:var(--dark-gray);}
+#gadpm-phrase{margin-top:4px;text-align:center;font-size:0.85rem;color:var(--dark-gray);}
