@@ -68,7 +68,11 @@ class Dashboard {
         this.setLoadingState(true);
 
         try {
-            NotificationManager.show('Cargando datos de indicadores...', 'info', 2000);
+            // Iniciar barra de progreso basada en tiempo
+            if (typeof ProgressLoader !== 'undefined') {
+                this.progressLoader = new ProgressLoader();
+                this.progressLoader.start();
+            }
 
             // Intentar cargar con diferentes codificaciones
             let csvText = await this.fetchCSVWithEncoding(CONFIG.CSV_PATH);
@@ -77,19 +81,8 @@ class Dashboard {
                 throw new Error(CONFIG.ERROR_MESSAGES.csvEmpty);
             }
 
-            // Calcular total de indicadores y crear barra de progreso
-            const lines = csvText.replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim() !== '');
-            const totalIndicators = lines.length - 1;
-            if (typeof ProgressLoader !== 'undefined') {
-                this.progressLoader = new ProgressLoader(totalIndicators);
-            }
-
-            // Parsear datos con corrección de codificación y actualizar progreso
-            this.state.data = CSVParser.parse(csvText, (current) => {
-                if (this.progressLoader) {
-                    this.progressLoader.setProgress(current);
-                }
-            });
+            // Parsear datos con corrección de codificación
+            this.state.data = CSVParser.parse(csvText);
             
             console.log('🔍 Debug - Primeros 3 registros parseados:', this.state.data.slice(0, 3));
             console.log('🔍 Debug - Columnas detectadas:', Object.keys(this.state.data[0] || {}));
