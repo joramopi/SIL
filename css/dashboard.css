@@ -593,6 +593,8 @@ body {
     font-size: var(--font-size-lg);
     margin-bottom: var(--spacing-md);
     color: var(--primary-blue);
+    border-bottom: 1px solid var(--medium-gray);
+    padding-bottom: var(--spacing-xs);
 }
 
 .ods-grid {
