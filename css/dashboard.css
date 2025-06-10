@@ -280,6 +280,21 @@ body {
     cursor: pointer;
 }
 
+/* 5E PDOT container */
+.epdot-images {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.epdot-images img {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+}
+
 .stat-footer {
     text-align: center;
     font-size: 0.9rem;

@@ -734,6 +734,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
+        const epdotFooter = DOMUtils.safeQuerySelector('#fiveepdotFooter');
+        const epdotImgs = DOMUtils.safeQuerySelectorAll('#fiveepdotCard img');
+        epdotImgs.forEach(img => {
+            img.addEventListener('click', () => {
+                const label = img.getAttribute('data-label') || img.alt || '';
+                if (epdotFooter) {
+                    epdotFooter.textContent = label;
+                }
+            });
+        });
+
     } catch (error) {
         ErrorUtils.handleError(error, 'Inicialización del Sistema');
     }
