@@ -86,6 +86,8 @@ const ODSPanel = {
         this.showInfo(odsToClear);
       }, 0);
     }
+
+    this.updateSelectedStyles();
   },
 
   toggleODS(num) {
@@ -108,8 +110,14 @@ const ODSPanel = {
       const num = parseInt(el.dataset.num, 10);
       if (this.activeODS === num) {
         el.classList.add('highlight');
+        el.classList.remove('dimmed');
       } else {
         el.classList.remove('highlight');
+        if (this.activeODS !== null) {
+          el.classList.add('dimmed');
+        } else {
+          el.classList.remove('dimmed');
+        }
       }
     });
   },

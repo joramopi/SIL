@@ -622,6 +622,10 @@ body {
     filter: grayscale(100%) brightness(70%);
 }
 
+.ods-item.dimmed {
+    filter: grayscale(60%) brightness(80%);
+}
+
 .ods-item.highlight {
     outline: 3px solid var(--primary-blue);
 }
