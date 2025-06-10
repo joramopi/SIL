@@ -299,10 +299,20 @@ body {
     margin-bottom: 0.5rem;
 }
 
-.fivep-images img {
+.fivep-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fivep-item img {
     width: 64px;
     height: 48px;
     cursor: pointer;
+}
+
+.component-info-btn {
+    margin-top: 0.25rem;
 }
 
 /* 5E PDOT container */
