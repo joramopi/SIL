@@ -99,11 +99,6 @@ class Dashboard {
             }
 
             this.state.filteredData = [...this.state.data];
-            
-            NotificationManager.show(
-                `${CONFIG.SUCCESS_MESSAGES.dataLoaded}: ${this.state.data.length} indicadores`,
-                'success'
-            );
 
             timer.end();
 
