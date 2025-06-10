@@ -9,7 +9,8 @@ class FilterManager {
             component: '',
             direction: '',
             search: '',
-            ods: ''
+            ods: '',
+            fivep: ''
         };
 
         this.datalistOptions = {
@@ -304,6 +305,14 @@ class FilterManager {
                     }
                 }
                 if (!hasODS) return false;
+            }
+
+            // Filtro 5P
+            if (filters.fivep && filters.fivep !== '') {
+                const pVal = filters.fivep.toLowerCase();
+                const p1 = DataUtils.getFieldValue(item, '5P1', '').toLowerCase();
+                const p2 = DataUtils.getFieldValue(item, '5P2', '').toLowerCase();
+                if (p1 !== pVal && p2 !== pVal) return false;
             }
 
 

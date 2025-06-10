@@ -311,6 +311,22 @@ body {
     cursor: pointer;
 }
 
+.fivep-item img.encendido {
+    border: 3px solid var(--primary-blue);
+    box-sizing: border-box;
+    filter: none;
+}
+
+.fivep-item img.apagado {
+    border: 3px solid transparent;
+    box-sizing: border-box;
+    filter: grayscale(100%) brightness(80%);
+}
+
+.fivep-item img.dimmed {
+    filter: grayscale(60%) brightness(85%);
+}
+
 .component-info-btn {
     margin-top: 0.25rem;
 }
