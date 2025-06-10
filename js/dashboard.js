@@ -744,8 +744,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         function moveCardBubble(evt) {
             if (!cardBubble) return;
-            const left = evt.pageX + 10;
-            const top = evt.pageY + 10;
+            const left = evt.pageX + 15;
+            const top = evt.pageY - cardBubble.offsetHeight / 2;
             cardBubble.style.left = `${left}px`;
             cardBubble.style.top = `${top}px`;
         }
