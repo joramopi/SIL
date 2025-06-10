@@ -8,7 +8,7 @@
   font-family:Arial, sans-serif;
 }
 #silbi-inner{position:relative;width:100%;}
-#silbi-character{width:80%;animation:bounce 3s infinite ease-in-out;cursor:pointer;display:block;}
+#silbi-character{width:80%;animation:bounce 3s infinite ease-in-out;cursor:pointer;display:block;margin-left:auto;}
 @keyframes bounce{
   0%,100%{transform:translate(0,0);}
   25%{transform:translate(-3px,-3px);}

@@ -582,7 +582,8 @@ body {
     background: var(--white);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
-    padding: var(--spacing-lg) var(--spacing-md);
+    /* Reduced padding for a more compact sidebar */
+    padding: var(--spacing-md) var(--spacing-sm);
     position: sticky;
     top: calc(var(--header-height) + var(--spacing-md));
 }
@@ -591,6 +592,7 @@ body {
     text-align: center;
     font-size: var(--font-size-lg);
     margin-bottom: var(--spacing-md);
+    color: var(--primary-blue);
 }
 
 .ods-grid {
