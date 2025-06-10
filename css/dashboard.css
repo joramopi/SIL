@@ -507,7 +507,17 @@ body {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1199.98px) {
+    .header-emblem { height: 60px; }
+}
+@media (max-width: 991.98px) {
+    .dashboard-layout { flex-direction: column; }
+    .ods-panel { width: 100%; top: auto; position: relative; }
+    .ods-grid { grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); }
+    .header-right { position: static; transform: none; margin-top: var(--spacing-sm); }
+}
+
+@media (max-width: 767.98px) {
     .container {
         padding: 1rem;
     }
@@ -548,6 +558,11 @@ body {
         right: 10px;
         max-width: none;
     }
+}
+@media (max-width: 575.98px) {
+    .header h1 { font-size: 1.5rem; }
+    .header-subtitle { font-size: 1rem; }
+    .header-emblem { height: 50px; }
 }
 
 /* Keyboard Navigation */
