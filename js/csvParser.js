@@ -1,6 +1,6 @@
 // js/csvParser.js
 class CSVParser {
-    static parse(csv) {
+    static parse(csv, progressCallback) {
         console.log("🔄 Iniciando parseo de CSV...");
         
         try {
@@ -60,6 +60,9 @@ class CSVParser {
                     // Validar que tenga al menos un identificador
                     if (this.getIndicatorName(obj) !== CONFIG.FALLBACK_VALUES.indicatorName) {
                         data.push(obj);
+                    }
+                    if (typeof progressCallback === 'function') {
+                        progressCallback(i, lines.length - 1);
                     }
                 } catch (error) {
                     console.error(`❌ Error procesando fila ${i + 1}:`, error);

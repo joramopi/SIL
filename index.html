@@ -17,11 +17,26 @@
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/notifications.css">
     <link rel="stylesheet" href="css/silbi.css">
+    <link rel="stylesheet" href="css/loader.css">
 </head>
 <body>
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
         <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Progress Bar Overlay -->
+    <div id="progressOverlay" class="progress-overlay">
+        <div class="particles" id="particles"></div>
+        <div class="loading-container" id="loadingContainer">
+            <img src="img/silbico.png" alt="SIL" class="loader-logo">
+            <div class="logo">Cargando el dashboard SIL</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="percentage" id="percentage">0%</div>
+            <div class="loading-text" id="loadingText">Iniciando sistema<span class="dots"></span></div>
+        </div>
     </div>
 
     <!-- Notification Container -->
@@ -273,6 +288,7 @@
     <script src="js/utils.js"></script>
     <script src="js/notificationManager.js"></script>
     <script src="js/csvParser.js"></script>
+    <script src="js/progressLoader.js"></script>
     <script src="js/chartManager.js"></script>
     <script src="js/filterManager.js"></script>
     <script src="js/odsPanel.js"></script>

@@ -10,6 +10,20 @@ body.loading-screen {
     align-items: center;
 }
 
+/* Overlay version used inside index.html */
+.progress-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--gradient-primary);
+    z-index: 1000;
+}
+
 .loading-container {
     text-align: center;
     color: var(--white);
@@ -20,6 +34,13 @@ body.loading-screen {
     backdrop-filter: blur(10px);
     background: rgba(255, 255, 255, 0.15);
     box-shadow: var(--shadow-light);
+}
+
+/* Logo image shown in the progress panel */
+.loading-container .loader-logo {
+    width: 80px;
+    margin: 0 auto 1rem;
+    display: block;
 }
 
 .loading-container .logo {
@@ -153,3 +174,4 @@ body.loading-screen {
         font-size: 2rem;
     }
 }
+

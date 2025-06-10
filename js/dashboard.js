@@ -12,6 +12,8 @@ class Dashboard {
             isLoading: false,
             error: null
         };
+
+        this.progressLoader = null;
         
         this.chartManager = new ChartManager();
         this.filterManager = new FilterManager();
@@ -75,8 +77,19 @@ class Dashboard {
                 throw new Error(CONFIG.ERROR_MESSAGES.csvEmpty);
             }
 
-            // Parsear datos con corrección de codificación
-            this.state.data = CSVParser.parse(csvText);
+            // Calcular total de indicadores y crear barra de progreso
+            const lines = csvText.replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim() !== '');
+            const totalIndicators = lines.length - 1;
+            if (typeof ProgressLoader !== 'undefined') {
+                this.progressLoader = new ProgressLoader(totalIndicators);
+            }
+
+            // Parsear datos con corrección de codificación y actualizar progreso
+            this.state.data = CSVParser.parse(csvText, (current) => {
+                if (this.progressLoader) {
+                    this.progressLoader.setProgress(current);
+                }
+            });
             
             console.log('🔍 Debug - Primeros 3 registros parseados:', this.state.data.slice(0, 3));
             console.log('🔍 Debug - Columnas detectadas:', Object.keys(this.state.data[0] || {}));
@@ -114,6 +127,9 @@ class Dashboard {
             this.showErrorState();
             
         } finally {
+            if (this.progressLoader) {
+                this.progressLoader.finish();
+            }
             this.setLoadingState(false);
         }
     }
