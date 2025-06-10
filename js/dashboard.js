@@ -734,6 +734,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
+        const cardBubble = DOMUtils.safeQuerySelector('#card-bubble');
+
+        function showCardBubble(message, targetEl) {
+            if (!cardBubble || !targetEl) return;
+            cardBubble.textContent = message;
+            const containerRect = cardBubble.parentElement.getBoundingClientRect();
+            const targetRect = targetEl.getBoundingClientRect();
+            const left = targetRect.left - containerRect.left + targetRect.width / 2;
+            const top = targetRect.top - containerRect.top;
+            cardBubble.style.left = `${left}px`;
+            cardBubble.style.top = `${top}px`;
+            cardBubble.classList.add('show');
+        }
+
+        function hideCardBubble() {
+            if (cardBubble) cardBubble.classList.remove('show');
+        }
+
+        const fivepCard = DOMUtils.safeQuerySelector('#fivepCard');
+        if (fivepCard) {
+            fivepCard.addEventListener('mouseenter', () => showCardBubble('Espacio destinado a las 5P', fivepCard));
+            fivepCard.addEventListener('mouseleave', hideCardBubble);
+        }
+
         const epdotFooter = DOMUtils.safeQuerySelector('#fiveepdotFooter');
         const epdotImgs = DOMUtils.safeQuerySelectorAll('#fiveepdotCard img');
         epdotImgs.forEach(img => {
@@ -744,6 +768,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
         });
+
+        const fiveepdotCard = DOMUtils.safeQuerySelector('#fiveepdotCard');
+        if (fiveepdotCard) {
+            fiveepdotCard.addEventListener('mouseenter', () => showCardBubble('Cinco Ejes del PDOT', fiveepdotCard));
+            fiveepdotCard.addEventListener('mouseleave', hideCardBubble);
+        }
 
     } catch (error) {
         ErrorUtils.handleError(error, 'Inicialización del Sistema');
