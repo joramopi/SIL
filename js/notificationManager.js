@@ -4,6 +4,10 @@ class NotificationManager {
         const container = document.getElementById('notificationContainer');
         if (!container) return;
 
+        if (container.style.display === 'none') {
+            container.style.display = 'block';
+        }
+
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         
@@ -47,7 +51,11 @@ class NotificationManager {
         if (notification && notification.parentNode) {
             notification.style.animation = 'slideOut 0.3s ease-out forwards';
             setTimeout(() => {
+                const container = notification.parentNode;
                 notification.remove();
+                if (container.children.length === 0) {
+                    container.style.display = 'none';
+                }
             }, 300);
         }
     }
