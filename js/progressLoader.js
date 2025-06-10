@@ -1,5 +1,5 @@
 class ProgressLoader {
-    constructor(duration = 8000) {
+    constructor(duration = 12000) {
         this.duration = duration;
         this.progress = 0;
         this.animationFrame = null;
