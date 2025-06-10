@@ -635,3 +635,8 @@ body {
     text-align: center;
     font-size: var(--font-size-sm);
 }
+
+#ods-description {
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-tight);
+}
