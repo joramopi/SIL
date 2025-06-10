@@ -19,8 +19,8 @@
 #silbi-bubble::after{content:'';position:absolute;bottom:-8px;right:20px;border-width:10px 10px 0 10px;border-style:solid;border-color:#ffffff transparent transparent transparent;}
 #silbi-bubble.show{opacity:1;transform:translateY(0);pointer-events:auto;}
 #silbi-close{position:absolute;top:-10px;right:-10px;background:#f00;color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;z-index:10;}
-#silbi-emote{position:absolute;top:72%;left:48%;transform:translate(-50%, -50%) scale(0);font-size:40px;opacity:0;animation:zoomEffect 2s ease-in-out forwards;pointer-events:none;z-index:10;}
+#silbi-emote{position:absolute;top:72%;left:58%;transform:translate(-50%, -50%) scale(0);font-size:40px;opacity:0;animation:zoomEffect 2s ease-in-out forwards;pointer-events:none;z-index:10;}
 @keyframes zoomEffect{0%{transform:translate(-50%, -50%) scale(0.2);opacity:0;}60%{transform:translate(-50%, -50%) scale(1.2);opacity:1;}100%{transform:translate(-50%, -50%) scale(0);opacity:0;}}
-@media(max-width:600px){#silbi-container{width:140px;bottom:10px;right:10px;}#silbi-bubble{bottom:160px;font-size:10px;max-width:150px;}#silbi-bubble::after{right:16px;}#silbi-emote{font-size:30px;top:75%;left:41%;}}
+@media(max-width:600px){#silbi-container{width:140px;bottom:10px;right:10px;}#silbi-bubble{bottom:160px;font-size:10px;max-width:150px;}#silbi-bubble::after{right:16px;}#silbi-emote{font-size:30px;top:75%;left:51%;}}
 
 #gadpm-phrase{margin-top:4px;text-align:center;font-weight:bold;font-size:1rem;color:var(--dark-gray);}
