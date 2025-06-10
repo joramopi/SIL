@@ -265,6 +265,40 @@ body {
     opacity: 0.8;
 }
 
+/* Five P container */
+.fivep-images {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.fivep-images img {
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+}
+
+.stat-footer {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+    opacity: 0.8;
+}
+
+.epdot-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+}
+
+.epdot-list li {
+    margin: 0.2rem 0;
+}
+
 /* Charts Section */
 .charts-section {
     display: grid;

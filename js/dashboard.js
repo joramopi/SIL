@@ -719,14 +719,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     try {
         dashboardInstance = new Dashboard();
-        
+
         // Hacer la instancia disponible globalmente para debugging
         window.dashboard = dashboardInstance;
-        
+
+        const footer = DOMUtils.safeQuerySelector('#fivepFooter');
+        const imgs = DOMUtils.safeQuerySelectorAll('#fivepCard img');
+        imgs.forEach(img => {
+            img.addEventListener('click', () => {
+                const label = img.getAttribute('data-label') || img.alt || '';
+                if (footer) {
+                    footer.textContent = label;
+                }
+            });
+        });
+
     } catch (error) {
         ErrorUtils.handleError(error, 'Inicialización del Sistema');
     }
 });
 
 // Exportar para uso en otros módulos
-window.Dashboard = Dashboard;
+window.Dashboard = Dashboard
