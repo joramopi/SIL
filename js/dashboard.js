@@ -395,13 +395,8 @@ class Dashboard {
             DOMUtils.safeSetContent('#totalIndicatorsCard .stat-value', FormatUtils.formatNumber(stats.total));
             DOMUtils.safeSetContent('#registrosCard .stat-value', FormatUtils.formatNumber(stats.uniqueRAs));
             DOMUtils.safeSetContent('#componentsCard .stat-value', FormatUtils.formatNumber(stats.uniqueComponents));
+            console.log("✅ Tarjetas de estadísticas actualizadas");
             
-            // Actualizar fecha de actualización
-            const currentDate = new Date();
-            const monthName = FormatUtils.formatDate(currentDate, { month: 'long' });
-            DOMUtils.safeSetContent('#updateCard .stat-value', FormatUtils.capitalizeWords(monthName));
-            
-            console.log('✅ Tarjetas de estadísticas actualizadas');
             
         } catch (error) {
             ErrorUtils.handleError(error, 'Actualización de Estadísticas');
