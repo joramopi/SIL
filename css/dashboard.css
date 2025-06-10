@@ -807,3 +807,11 @@ body {
     border-style: solid;
     border-color: var(--white) transparent transparent transparent;
 }
+
+#card-bubble {
+    transform: translateY(-10px);
+}
+
+#card-bubble.show {
+    transform: translateY(-20px);
+}
