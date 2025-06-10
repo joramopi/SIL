@@ -50,11 +50,12 @@ body.loading-screen {
     display: block;
 }
 
-.loading-container .logo {
-    font-size: 2.5rem;
+.loading-title {
+    font-size: 3rem;
     font-weight: var(--font-weight-semibold);
     margin-bottom: 2rem;
-    color: var(--white);
+    color: var(--color-1);
+    text-align: center;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
     animation: glow 2s ease-in-out infinite alternate;
 }
@@ -212,7 +213,7 @@ body.loading-screen {
     .progress-container {
         width: 300px;
     }
-    .loading-container .logo {
+    .loading-title {
         font-size: 2rem;
     }
     .percentage {
