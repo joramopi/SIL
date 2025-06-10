@@ -30,7 +30,7 @@ const ODSPanel = {
       item.addEventListener('click', () => {
         const num = parseInt(item.dataset.num, 10);
         if (num === 7 && !this.extractODSSet(this.data).has(7)) {
-          this.showBubble('ODS sin indicador relacionado');
+          this.showBubble('ODS sin indicador relacionado', item);
           if (this.filterManager) {
             this.filterManager.clearAllFilters();
           }
@@ -46,9 +46,22 @@ const ODSPanel = {
     this.markInactive();
     this.highlightForData(this.data);
   },
-  showBubble(message) {
+  showBubble(message, targetEl) {
     if (!this.bubbleEl) return;
     this.bubbleEl.textContent = message;
+
+    if (targetEl) {
+      const panelRect = this.bubbleEl.parentElement.getBoundingClientRect();
+      const targetRect = targetEl.getBoundingClientRect();
+      const left = targetRect.left - panelRect.left + targetRect.width / 2;
+      const top = targetRect.top - panelRect.top;
+      this.bubbleEl.style.left = `${left}px`;
+      this.bubbleEl.style.top = `${top}px`;
+    } else {
+      this.bubbleEl.style.left = '50%';
+      this.bubbleEl.style.top = '';
+    }
+
     this.bubbleEl.classList.add('show');
     clearTimeout(this.bubbleTimeout);
     this.bubbleTimeout = setTimeout(() => {
