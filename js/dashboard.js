@@ -736,9 +736,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const cardBubble = DOMUtils.safeQuerySelector('#card-bubble');
 
-        function showCardBubble(message) {
+        function showCardBubble(message, noArrow = false) {
             if (!cardBubble) return;
             cardBubble.textContent = message;
+            cardBubble.classList.toggle('no-arrow', noArrow);
             cardBubble.classList.add('show');
         }
 
@@ -758,14 +759,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         function hideCardBubble() {
-            if (cardBubble) cardBubble.classList.remove('show');
+            if (!cardBubble) return;
+            cardBubble.classList.remove('show');
+            cardBubble.classList.remove('no-arrow');
         }
 
         const fivepCard = DOMUtils.safeQuerySelector('#fivepCard');
         if (fivepCard) {
             const moveHandler = evt => moveCardBubble(evt);
             fivepCard.addEventListener('mouseenter', evt => {
-                showCardBubble('Espacio destinado a las 5P');
+                showCardBubble('Espacio destinado a las 5P', true);
                 moveCardBubble(evt);
                 fivepCard.addEventListener('mousemove', moveHandler);
             });
@@ -790,7 +793,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (fiveepdotCard) {
             const moveEpdotHandler = evt => moveCardBubble(evt);
             fiveepdotCard.addEventListener('mouseenter', evt => {
-                showCardBubble('Cinco Ejes del PDOT');
+                showCardBubble('Cinco Ejes del PDOT', true);
                 moveCardBubble(evt);
                 fiveepdotCard.addEventListener('mousemove', moveEpdotHandler);
             });

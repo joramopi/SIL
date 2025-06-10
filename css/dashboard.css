@@ -823,6 +823,10 @@ body {
     border-color: var(--white) transparent transparent transparent;
 }
 
+.ods-bubble.no-arrow::after {
+    display: none;
+}
+
 #card-bubble {
     transform: translateY(-10px);
 }
