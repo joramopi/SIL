@@ -196,14 +196,14 @@ body {
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .stat-card {
     background: var(--white);
     border-radius: var(--border-radius-large);
-    padding: 2.5rem 2rem;
+    padding: 1.5rem;
     box-shadow: var(--shadow);
     transition: var(--transition);
     position: relative;
@@ -229,7 +229,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .stat-title {
@@ -256,7 +256,7 @@ body {
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--primary-blue);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .stat-description {
@@ -445,7 +445,7 @@ body {
     }
 
     .stat-card {
-        padding: 1.5rem;
+        padding: 1rem;
     }
 
     .notification-container {
