@@ -26,6 +26,14 @@ body.loading-screen {
     z-index: 1000;
 }
 
+.glass-morphism {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-light);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .loading-container {
     text-align: center;
     color: var(--white);
@@ -33,9 +41,6 @@ body.loading-screen {
     z-index: 100;
     padding: 2rem 3rem;
     border-radius: var(--border-radius-large);
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: var(--shadow-light);
 }
 
 /* Logo image shown in the progress panel */

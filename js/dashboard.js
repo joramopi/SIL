@@ -667,11 +667,6 @@ class Dashboard {
      */
     setLoadingState(isLoading) {
         this.state.isLoading = isLoading;
-        
-        const overlay = DOMUtils.safeQuerySelector('#loadingOverlay');
-        if (overlay) {
-            overlay.style.display = isLoading ? 'flex' : 'none';
-        }
 
         // Aplicar estado de carga a las tarjetas
         const cards = DOMUtils.safeQuerySelectorAll('.stat-card, .chart-card');
