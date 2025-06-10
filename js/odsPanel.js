@@ -1,9 +1,11 @@
 const ODSPanel = {
-  init(data) {
+  init(data, filterManager = window.filterManagerInstance) {
     this.data = data || [];
+    this.filterManager = filterManager;
     this.items = Array.from(document.querySelectorAll('.ods-item'));
     this.titleEl = document.getElementById('ods-title');
     this.descEl = document.getElementById('ods-description');
+    this.activeODS = null;
     this.odsInfo = [
       { num:1, title:'Fin de la Pobreza', desc:'Fin de la pobreza en todas sus formas en todo el mundo.' },
       { num:2, title:'Hambre Cero', desc:'Poner fin al hambre, lograr la seguridad alimentaria y la mejora de la nutrición.' },
@@ -26,6 +28,7 @@ const ODSPanel = {
     this.items.forEach(item => {
       item.addEventListener('click', () => {
         const num = parseInt(item.dataset.num, 10);
+        this.toggleODS(num);
         this.showInfo(num);
       });
     });
@@ -49,7 +52,11 @@ const ODSPanel = {
     const activeSet = this.extractODSSet(this.data);
     this.items.forEach(el => {
       const num = parseInt(el.dataset.num, 10);
-      if (!activeSet.has(num)) el.classList.add('inactive');
+      if (!activeSet.has(num)) {
+        el.classList.add('inactive');
+      } else {
+        el.classList.remove('inactive');
+      }
     });
   },
   highlightForData(dataset) {
@@ -57,6 +64,49 @@ const ODSPanel = {
     this.items.forEach(el => {
       const num = parseInt(el.dataset.num, 10);
       if (set.has(num)) {
+        el.classList.add('highlight');
+        el.classList.remove('inactive');
+      } else {
+        el.classList.remove('highlight');
+        el.classList.add('inactive');
+      }
+      if (this.activeODS === num) {
+        el.classList.add('highlight');
+      }
+    });
+
+    if (this.activeODS && !set.has(this.activeODS)) {
+      const odsToClear = this.activeODS;
+      this.activeODS = null;
+      // Clear ODS filter asynchronously to avoid recursion
+      setTimeout(() => {
+        if (this.filterManager) {
+          this.filterManager.handleFilterChange('ods', '');
+        }
+        this.showInfo(odsToClear);
+      }, 0);
+    }
+  },
+
+  toggleODS(num) {
+    if (this.activeODS === num) {
+      this.activeODS = null;
+      if (this.filterManager) {
+        this.filterManager.handleFilterChange('ods', '');
+      }
+    } else {
+      this.activeODS = num;
+      if (this.filterManager) {
+        this.filterManager.handleFilterChange('ods', String(num));
+      }
+    }
+    this.updateSelectedStyles();
+  },
+
+  updateSelectedStyles() {
+    this.items.forEach(el => {
+      const num = parseInt(el.dataset.num, 10);
+      if (this.activeODS === num) {
         el.classList.add('highlight');
       } else {
         el.classList.remove('highlight');

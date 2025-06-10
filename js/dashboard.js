@@ -223,7 +223,7 @@ class Dashboard {
 
             // Inicializar panel ODS
             if (window.ODSPanel) {
-                ODSPanel.init(this.state.data);
+                ODSPanel.init(this.state.data, this.filterManager);
             }
             
             // Actualizar dashboard inicial
