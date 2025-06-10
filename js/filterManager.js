@@ -121,6 +121,11 @@ class FilterManager {
                 }
             });
         }
+
+        const resetBtn = DOMUtils.safeQuerySelector('#resetFiltersBtn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => this.clearAllFilters());
+        }
     }
 
     /**
@@ -250,6 +255,7 @@ class FilterManager {
             // Actualizar contador de resultados y filtros activos
             this.updateResultsCounter(filteredData.length);
             this.updateActiveFilterCount();
+            this.updateDatalistOptions();
 
             // Anunciar cambios para accesibilidad
             AccessibilityUtils.announceToScreenReader(
@@ -430,6 +436,32 @@ class FilterManager {
     }
 
     /**
+     * Actualiza las opciones de los datalist en función de los filtros activos
+     */
+    updateDatalistOptions() {
+        const mapping = { component: 'component', direction: 'direction', theme: 'registroAdmin' };
+        ['component', 'direction', 'theme'].forEach(type => {
+            if (!this.elements[type]) return;
+            const filters = { ...this.filters };
+            delete filters[type];
+            const data = this.filterData(this.originalData, filters);
+            const values = Array.from(new Set(data.map(item => DataUtils.getFieldValue(item, mapping[type], ''))))
+                .filter(v => v)
+                .sort();
+            this.datalistOptions[type] = values;
+            const list = DOMUtils.safeQuerySelector(`#${type}-options`);
+            if (list) {
+                list.innerHTML = '';
+                values.forEach(val => {
+                    const opt = document.createElement('option');
+                    opt.value = val;
+                    list.appendChild(opt);
+                });
+            }
+        });
+    }
+
+    /**
      * Crea el elemento contador de resultados
      */
     createResultsCounter() {
@@ -496,6 +528,8 @@ class FilterManager {
     setData(data) {
         this.originalData = data;
         console.log(`📊 Datos establecidos para filtros: ${data.length} registros`);
+
+        this.updateDatalistOptions();
         
         // Aplicar filtros iniciales (sin filtros activos, debería devolver todos los datos)
         if (this.isSetup && this.onFilterChange) {

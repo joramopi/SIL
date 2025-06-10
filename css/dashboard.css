@@ -130,6 +130,26 @@ body {
     margin-top: 0.5rem;
 }
 
+.filters-footer {
+    text-align: right;
+    margin-top: 0.5rem;
+}
+
+.flat-btn {
+    background: none;
+    border: none;
+    color: var(--primary-blue);
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+    transition: var(--transition-fast);
+}
+
+.flat-btn:hover {
+    text-decoration: underline;
+}
+
 .filters-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -420,11 +440,11 @@ body {
 
 .indicators-table th {
     background: var(--light-gray);
-    padding: 1rem;
+    padding: 0.5rem;
     text-align: left;
     font-weight: 600;
     color: var(--dark-gray);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     border-bottom: 2px solid var(--medium-gray);
@@ -435,9 +455,9 @@ body {
 
 
 .indicators-table td {
-    padding: 1rem;
+    padding: 0.5rem;
     border-bottom: 1px solid var(--medium-gray);
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 .indicators-table tr:hover {
