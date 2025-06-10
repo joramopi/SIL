@@ -8,7 +8,8 @@ class FilterManager {
         this.filters = {
             component: '',
             direction: '',
-            search: ''
+            search: '',
+            ods: ''
         };
 
         this.datalistOptions = {
@@ -283,6 +284,20 @@ class FilterManager {
             if (filters.theme && filters.theme !== '' && this.elements.theme) {
                 const itemTheme = DataUtils.getFieldValue(item, 'registroAdmin');
                 if (itemTheme !== filters.theme) return false;
+            }
+
+            // Filtro de ODS
+            if (filters.ods && filters.ods !== '') {
+                const odsNum = parseInt(filters.ods, 10);
+                let hasODS = false;
+                for (let i = 1; i <= 6; i++) {
+                    const val = DataUtils.getFieldValue(item, `ODS${i}`, '');
+                    if (val && val.match(new RegExp(`ODS\\s*${odsNum}`, 'i'))) {
+                        hasODS = true;
+                        break;
+                    }
+                }
+                if (!hasODS) return false;
             }
 
 
