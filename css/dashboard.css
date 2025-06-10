@@ -130,24 +130,29 @@ body {
     margin-top: 0.5rem;
 }
 
+
 .filters-footer {
-    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-top: 0.5rem;
 }
 
 .flat-btn {
-    background: none;
+    background: var(--primary-blue);
     border: none;
-    color: var(--primary-blue);
+    color: var(--white);
     cursor: pointer;
     font-weight: 600;
-    padding: 0.25rem 0.5rem;
+    padding: 0.35rem 0.75rem;
     font-size: 0.9rem;
+    border-radius: var(--border-radius-small);
     transition: var(--transition-fast);
 }
 
 .flat-btn:hover {
-    text-decoration: underline;
+    background: var(--secondary-blue);
+    text-decoration: none;
 }
 
 .filters-grid {
@@ -351,6 +356,11 @@ body {
     position: relative;
 }
 
+#componentChartCard,
+#periodicityChartCard {
+    padding: 1rem;
+}
+
 .chart-header {
     display: flex;
     align-items: center;
@@ -393,7 +403,7 @@ body {
 }
 
 .table-header {
-    padding: 2rem 2rem 1rem;
+    padding: 1rem 1rem 0.5rem;
     border-bottom: 2px solid var(--medium-gray);
 }
 
@@ -415,7 +425,7 @@ body {
 
 .table-search-section {
     background: var(--medium-gray);
-    padding: 1rem 2rem;
+    padding: 0.75rem 1.25rem;
     border-bottom: 2px solid var(--medium-gray);
 }
 
@@ -440,11 +450,11 @@ body {
 
 .indicators-table th {
     background: var(--light-gray);
-    padding: 0.5rem;
+    padding: 0.35rem;
     text-align: left;
     font-weight: 600;
     color: var(--dark-gray);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     border-bottom: 2px solid var(--medium-gray);
@@ -455,9 +465,9 @@ body {
 
 
 .indicators-table td {
-    padding: 0.5rem;
+    padding: 0.35rem;
     border-bottom: 1px solid var(--medium-gray);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .indicators-table tr:hover {
