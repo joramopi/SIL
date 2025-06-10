@@ -24,11 +24,20 @@
     <div id="progressOverlay" class="progress-overlay">
         <div class="particles" id="particles"></div>
         <div class="loading-container glass-morphism" id="loadingContainer">
-            <div class="logo">Cargando dashboard SIL</div>
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar"></div>
+            <div class="logo">Dashboard SIL</div>
+            <div class="ring-container">
+                <svg class="ring" viewBox="0 0 150 150">
+                    <defs>
+                        <linearGradient id="loader-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="var(--primary-blue)" />
+                            <stop offset="100%" stop-color="var(--light-blue)" />
+                        </linearGradient>
+                    </defs>
+                    <circle class="ring-bg" cx="75" cy="75" r="70" />
+                    <circle class="ring-bar" cx="75" cy="75" r="70" />
+                </svg>
+                <div class="percentage" id="percentage">0%</div>
             </div>
-            <div class="percentage" id="percentage">0%</div>
             <div class="loading-text" id="loadingText">Iniciando sistema<span class="dots"></span></div>
         </div>
     </div>

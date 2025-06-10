@@ -4,6 +4,7 @@ class ProgressLoader {
         this.progress = 0;
         this.animationFrame = null;
         this.progressBar = DOMUtils.safeQuerySelector('#progressBar');
+        this.ringBar = DOMUtils.safeQuerySelector('.ring-bar');
         this.percentage = DOMUtils.safeQuerySelector('#percentage');
         this.loadingText = DOMUtils.safeQuerySelector('#loadingText');
         this.overlay = DOMUtils.safeQuerySelector('#progressOverlay');
@@ -17,6 +18,11 @@ class ProgressLoader {
             'Preparando dashboard',
             'Finalizando carga'
         ];
+        if (this.ringBar) {
+            this.ringTotal = this.ringBar.getTotalLength();
+            this.ringBar.style.strokeDasharray = this.ringTotal;
+            this.ringBar.style.strokeDashoffset = this.ringTotal;
+        }
         this.setProgress(0);
         this.createParticles();
     }
@@ -44,6 +50,10 @@ class ProgressLoader {
     setProgress(value) {
         const percent = Math.min(Math.floor(value), 100);
         if (this.progressBar) this.progressBar.style.width = `${percent}%`;
+        if (this.ringBar) {
+            const offset = this.ringTotal * (1 - percent / 100);
+            this.ringBar.style.strokeDashoffset = offset;
+        }
         if (this.percentage) this.percentage.textContent = `${percent}%`;
         const index = Math.floor((percent / 100) * (this.messages.length - 1));
         const msg = this.messages[index] || this.messages[0];
