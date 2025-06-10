@@ -69,7 +69,7 @@ class ProgressLoader {
                 setTimeout(() => {
                     this.overlay.style.display = 'none';
                 }, 500);
-            }, 1000); // extra 1 seconds to appreciate progress bar
+            }, 2000); // extra 2 seconds to appreciate progress bar
         }
     }
 }
