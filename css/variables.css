@@ -52,13 +52,13 @@
     --font-family-display: 'Poppins', Arial, sans-serif;
     --font-family-mono: 'Courier New', monospace;
     
-    --font-size-xs: clamp(0.7rem, 0.65rem + 0.25vw, 0.75rem);
-    --font-size-sm: clamp(0.8rem, 0.75rem + 0.3vw, 0.875rem);
-    --font-size-base: clamp(1rem, 0.95rem + 0.4vw, 1.125rem);
-    --font-size-lg: clamp(1.125rem, 1rem + 0.5vw, 1.25rem);
-    --font-size-xl: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
-    --font-size-xxl: clamp(1.5rem, 1.3rem + 0.8vw, 1.8rem);
-    --font-size-xxxl: clamp(2rem, 1.6rem + 1vw, 2.5rem);
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-xxl: 1.5rem;
+    --font-size-xxxl: 2rem;
     
     --font-weight-light: 300;
     --font-weight-normal: 400;
@@ -142,7 +142,6 @@
     --animation-duration-fast: 0.15s;
     --animation-duration-normal: 0.3s;
     --animation-duration-slow: 0.5s;
-    --animation-ease: cubic-bezier(0.4, 0, 0.2, 1);
     
     /* Breakpoints (for use in JavaScript) */
     --breakpoint-sm: 576px;
