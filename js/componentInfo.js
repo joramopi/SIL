@@ -4,7 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const configs = [
-    { btn: '#componentInfoBtn, .component-info-btn', overlay: 'componentInfoOverlay', close: 'componentInfoClose' },
+    { btn: '#componentInfoBtn', overlay: 'componentInfoOverlay', close: 'componentInfoClose' },
     { btn: '#directionInfoBtn', overlay: 'directionInfoOverlay', close: 'directionInfoClose' },
     { btn: '#themeInfoBtn', overlay: 'themeInfoOverlay', close: 'themeInfoClose' }
   ];
@@ -22,6 +22,20 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    closeBtn.addEventListener('click', () => {
+      overlay.style.display = 'none';
+    });
+  });
+
+  document.querySelectorAll('.component-info-btn').forEach(btn => {
+    const target = btn.dataset.target || 'componentInfoOverlay';
+    const overlay = document.getElementById(target);
+    if (!overlay) return;
+    const closeBtn = overlay.querySelector('.info-close');
+    if (!closeBtn) return;
+    btn.addEventListener('click', () => {
+      overlay.style.display = 'flex';
+    });
     closeBtn.addEventListener('click', () => {
       overlay.style.display = 'none';
     });
