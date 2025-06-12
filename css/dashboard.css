@@ -554,8 +554,16 @@ body {
     .header-emblem { height: 60px; }
 }
 @media (max-width: 991.98px) {
-    .dashboard-layout { flex-direction: column; }
-    .ods-panel { width: 100%; top: auto; position: relative; }
+    .dashboard-layout {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    .ods-panel {
+        width: 100%;
+        position: relative;
+        top: auto;
+        padding: var(--spacing-md);
+    }
     .ods-grid { grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); }
     .header-right { position: static; transform: none; margin-top: var(--spacing-sm); }
 }
@@ -876,4 +884,22 @@ body {
 
 #card-bubble.show {
     transform: translateY(-20px);
+}
+
+@media (max-width: 575.98px) {
+    .ods-panel {
+        padding: var(--spacing-sm);
+    }
+    .ods-grid {
+        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+        gap: var(--spacing-xs);
+    }
+    .ods-item {
+        width: 50px;
+        height: 50px;
+    }
+    .ods-info {
+        margin-top: var(--spacing-sm);
+        font-size: var(--font-size-xs);
+    }
 }
