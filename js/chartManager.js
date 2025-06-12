@@ -70,6 +70,11 @@ class ChartManager {
 
         try {
             const ctx = canvas.getContext('2d');
+
+            const width = window.innerWidth;
+            const legendFontSize = width <= 575 ? 10 : (width <= 991 ? 11 : 12);
+            const legendLabelLimit = width <= 575 ? 10 : (width <= 991 ? 15 : 50);
+            const tooltipFontSize = width <= 575 ? 10 : (width <= 991 ? 12 : 14);
             
             this.charts.component = new Chart(ctx, {
                 type: 'doughnut',
@@ -93,7 +98,7 @@ class ChartManager {
                             labels: {
                                 padding: 20,
                                 usePointStyle: true,
-                                font: { size: 12 },
+                                font: { size: legendFontSize },
                                 // Función personalizada para mostrar valores y porcentajes en la leyenda
                                 generateLabels: function(chart) {
                                     const data = chart.data;
@@ -102,13 +107,14 @@ class ChartManager {
                                         const total = dataset.data.reduce(function(sum, value) {
                                             return sum + value;
                                         }, 0);
-                                        
+
                                         return data.labels.map(function(label, index) {
                                             const value = dataset.data[index];
                                             const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                            
+                                            const displayLabel = label.length > legendLabelLimit ? label.slice(0, legendLabelLimit) + '…' : label;
+
                                             return {
-                                                text: label + ' (' + value + ' - ' + percentage + '%)',
+                                                text: displayLabel + ' (' + value + ' - ' + percentage + '%)',
                                                 fillStyle: dataset.backgroundColor[index],
                                                 strokeStyle: dataset.backgroundColor[index],
                                                 lineWidth: 0,
@@ -123,6 +129,8 @@ class ChartManager {
                             }
                         },
                         tooltip: {
+                            titleFont: { size: tooltipFontSize + 2 },
+                            bodyFont: { size: tooltipFontSize },
                             callbacks: {
                                 label: function(context) {
                                     const total = context.dataset.data.reduce(function(a, b) { return a + b; }, 0);
