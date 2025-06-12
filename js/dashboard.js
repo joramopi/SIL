@@ -230,6 +230,11 @@ class Dashboard {
             if (window.FivePPanel) {
                 FivePPanel.init(this.state.data, this.filterManager);
             }
+
+            // Inicializar panel 5E PDOT
+            if (window.FiveEPDOTPanel) {
+                FiveEPDOTPanel.init(this.state.data, this.filterManager);
+            }
             
             // Actualizar dashboard inicial
             this.updateDashboard();
@@ -266,6 +271,11 @@ class Dashboard {
             // Resaltar 5P relacionados
             if (window.FivePPanel) {
                 FivePPanel.highlightForData(data);
+            }
+
+            // Resaltar 5E PDOT relacionados
+            if (window.FiveEPDOTPanel) {
+                FiveEPDOTPanel.highlightForData(data);
             }
             
             // Anunciar cambios para accesibilidad
@@ -778,17 +788,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 fivepCard.removeEventListener('mousemove', moveHandler);
             });
         }
-
-        const epdotFooter = DOMUtils.safeQuerySelector('#fiveepdotFooter');
-        const epdotImgs = DOMUtils.safeQuerySelectorAll('#fiveepdotCard img');
-        epdotImgs.forEach(img => {
-            img.addEventListener('click', () => {
-                const label = img.getAttribute('data-label') || img.alt || '';
-                if (epdotFooter) {
-                    epdotFooter.textContent = label;
-                }
-            });
-        });
 
         const fiveepdotCard = DOMUtils.safeQuerySelector('#fiveepdotCard');
         if (fiveepdotCard) {
