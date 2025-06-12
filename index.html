@@ -149,23 +149,23 @@
                 <div class="fivep-images">
                     <div class="fivep-item">
                         <img src="img/p1.png" alt="Personas" data-label="Personas">
-                        <button class="info-btn component-info-btn" type="button" aria-label="Más información">+</button>
+                        <button class="info-btn component-info-btn" data-target="p1InfoOverlay" type="button" aria-label="Más información">+</button>
                     </div>
                     <div class="fivep-item">
                         <img src="img/p2.png" alt="Paz" data-label="Paz">
-                        <button class="info-btn component-info-btn" type="button" aria-label="Más información">+</button>
+                        <button class="info-btn component-info-btn" data-target="p2InfoOverlay" type="button" aria-label="Más información">+</button>
                     </div>
                     <div class="fivep-item">
                         <img src="img/p3.png" alt="Pactos/Alianzas" data-label="Pactos/Alianzas">
-                        <button class="info-btn component-info-btn" type="button" aria-label="Más información">+</button>
+                        <button class="info-btn component-info-btn" data-target="p3InfoOverlay" type="button" aria-label="Más información">+</button>
                     </div>
                     <div class="fivep-item">
                         <img src="img/p4.png" alt="Planeta" data-label="Planeta">
-                        <button class="info-btn component-info-btn" type="button" aria-label="Más información">+</button>
+                        <button class="info-btn component-info-btn" data-target="p4InfoOverlay" type="button" aria-label="Más información">+</button>
                     </div>
                     <div class="fivep-item">
                         <img src="img/p5.png" alt="Prosperidad" data-label="Prosperidad">
-                        <button class="info-btn component-info-btn" type="button" aria-label="Más información">+</button>
+                        <button class="info-btn component-info-btn" data-target="p5InfoOverlay" type="button" aria-label="Más información">+</button>
                     </div>
                 </div>
                 <div class="stat-footer" id="fivepFooter"></div>
@@ -368,6 +368,71 @@
                 <h2 id="themeInfoTitle">Registros Administrativos</h2>
             </div>
             <p>Registros Administrativos: Fuente de Información oficial del SIL que contiene la mayor desagregación posible de las intervenciones ejecutadas, así como su territorialización, para el cálculo del indicador.</p>
+        </div>
+    </div>
+
+    <div id="p1InfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="p1InfoTitle">
+        <div class="info-content">
+            <button id="p1InfoClose" class="info-close" aria-label="Cerrar">×</button>
+            <div class="info-header">
+                <div class="info-logo">
+                    <img src="img/silbico.png" alt="SILBico">
+                </div>
+                <h2 id="p1InfoTitle">Personas</h2>
+            </div>
+            <p>Personas (People): Este pilar se centra en el bienestar de las personas, garantizando que todos puedan alcanzar su máximo potencial con dignidad e igualdad. Esto incluye erradicar la pobreza, garantizar la salud y el bienestar, y promover una educación de calidad para todos.</p>
+        </div>
+    </div>
+
+    <div id="p2InfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="p2InfoTitle">
+        <div class="info-content">
+            <button id="p2InfoClose" class="info-close" aria-label="Cerrar">×</button>
+            <div class="info-header">
+                <div class="info-logo">
+                    <img src="img/silbico.png" alt="SILBico">
+                </div>
+                <h2 id="p2InfoTitle">Planeta</h2>
+            </div>
+            <p>Planeta (Planet): Este pilar se enfoca en proteger el planeta y sus recursos naturales, así como en abordar el cambio climático. Se busca un consumo y producción sostenibles, la gestión de recursos naturales y la protección de la biodiversidad.</p>
+        </div>
+    </div>
+
+    <div id="p3InfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="p3InfoTitle">
+        <div class="info-content">
+            <button id="p3InfoClose" class="info-close" aria-label="Cerrar">×</button>
+            <div class="info-header">
+                <div class="info-logo">
+                    <img src="img/silbico.png" alt="SILBico">
+                </div>
+                <h2 id="p3InfoTitle">Prosperidad</h2>
+            </div>
+            <p>Prosperidad (Prosperity): Este pilar se centra en el crecimiento económico sostenible, el desarrollo de infraestructura y la reducción de las desigualdades. Se busca un crecimiento que sea inclusivo y que promueva el progreso social y tecnológico en armonía con la naturaleza.</p>
+        </div>
+    </div>
+
+    <div id="p4InfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="p4InfoTitle">
+        <div class="info-content">
+            <button id="p4InfoClose" class="info-close" aria-label="Cerrar">×</button>
+            <div class="info-header">
+                <div class="info-logo">
+                    <img src="img/silbico.png" alt="SILBico">
+                </div>
+                <h2 id="p4InfoTitle">Paz</h2>
+            </div>
+            <p>Paz (Peace): Este pilar busca construir sociedades pacíficas e inclusivas, libres de violencia y temor. Esto implica promover la justicia, garantizar el acceso a la justicia para todos y fortalecer las instituciones.</p>
+        </div>
+    </div>
+
+    <div id="p5InfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="p5InfoTitle">
+        <div class="info-content">
+            <button id="p5InfoClose" class="info-close" aria-label="Cerrar">×</button>
+            <div class="info-header">
+                <div class="info-logo">
+                    <img src="img/silbico.png" alt="SILBico">
+                </div>
+                <h2 id="p5InfoTitle">Alianzas</h2>
+            </div>
+            <p>Alianzas (Partnership): Este pilar destaca la importancia de la cooperación internacional y las alianzas sólidas para lograr los Objetivos de Desarrollo Sostenible (ODS). Se busca movilizar recursos y fortalecer la colaboración entre los países para implementar la Agenda 2030.</p>
         </div>
     </div>
 
