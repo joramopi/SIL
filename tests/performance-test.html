@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance Test - Dashboard</title>
+  <script src="https://unpkg.com/web-vitals/dist/web-vitals.iife.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 1rem; }
+    #controls button { margin-right: 0.5rem; }
+    iframe { border: 1px solid #ccc; display: block; margin-top: 1rem; }
+    table { margin-top: 1rem; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem 0.75rem; }
+  </style>
+</head>
+<body>
+  <h1>Performance Test</h1>
+  <div id="controls">
+    <button onclick="setSize('mobile')">Mobile</button>
+    <button onclick="setSize('tablet')">Tablet</button>
+    <button onclick="setSize('desktop')">Desktop</button>
+  </div>
+  <iframe id="perfFrame" src="../index.html" title="Dashboard"></iframe>
+  <table>
+    <tr><th>Metric</th><th>Value</th></tr>
+    <tr><td>LCP</td><td id="lcp">-</td></tr>
+    <tr><td>FID</td><td id="fid">-</td></tr>
+    <tr><td>CLS</td><td id="cls">-</td></tr>
+  </table>
+  <script>
+    const sizes = {
+      mobile: { width: 375, height: 667 },
+      tablet: { width: 768, height: 1024 },
+      desktop: { width: 1280, height: 800 }
+    };
+
+    function setSize(mode) {
+      const frame = document.getElementById('perfFrame');
+      const s = sizes[mode];
+      frame.width = s.width;
+      frame.height = s.height;
+      frame.onload = measureVitals;
+      frame.src = '../index.html';
+    }
+
+    function measureVitals() {
+      document.getElementById('cls').textContent = '-';
+      document.getElementById('fid').textContent = '-';
+      document.getElementById('lcp').textContent = '-';
+
+      webVitals.getCLS(m => {
+        document.getElementById('cls').textContent = m.value.toFixed(2);
+      });
+      webVitals.getFID(m => {
+        document.getElementById('fid').textContent = m.value.toFixed(2);
+      });
+      webVitals.getLCP(m => {
+        document.getElementById('lcp').textContent = m.value.toFixed(2);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => setSize('desktop'));
+  </script>
+</body>
+</html>
