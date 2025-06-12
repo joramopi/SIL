@@ -1,25 +1,31 @@
-/* Estilos adicionales para gráficos con valores y porcentajes visibles */
-
-/* Mejorar la legibilidad de las leyendas de gráficos */
-.chart-container canvas {
-    max-height: 350px !important; /* Dar más espacio para las etiquetas */
-}
-
-/* Estilos para la leyenda del gráfico de componentes */
+/* Chart container base styles */
 .chart-card .chart-container {
     position: relative;
-    height: 350px; /* Aumentar altura para acomodar etiquetas */
+    height: clamp(300px, 40vh, 450px);
     margin-bottom: 1rem;
+    overflow: hidden;
 }
 
-/* Asegurar que las leyendas tengan suficiente espacio */
 .chart-card {
-    min-height: 450px; /* Aumentar altura mínima de las tarjetas de gráfico */
+    min-height: clamp(380px, 50vh, 520px);
 }
 
-/* Mejorar la visualización de la leyenda con valores y porcentajes */
+.chart-container canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.chart-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Responsive legend */
 .chart-container .chartjs-legend {
-    margin-top: 20px;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem 0.75rem;
 }
 
 .chart-container .chartjs-legend ul {
@@ -29,40 +35,36 @@
 }
 
 .chart-container .chartjs-legend li {
-    display: inline-block;
-    margin: 5px 10px;
-    font-size: 12px;
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
     white-space: nowrap;
 }
 
-/* Estilos para mejorar la legibilidad del texto en gráficos */
-.chart-container {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Responsive adjustments para gráficos con etiquetas */
-@media (max-width: 768px) {
-    .chart-container {
-        height: 300px;
+/* Tablet */
+@media (max-width: 991.98px) {
+    .chart-card .chart-container {
+        height: clamp(250px, 35vh, 400px);
     }
-    
     .chart-card {
-        min-height: 400px;
+        min-height: clamp(340px, 45vh, 470px);
     }
-    
-    /* Ajustar tamaño de fuente en móviles */
-    .chart-container canvas {
-        font-size: 10px;
+    .chart-container .chartjs-legend {
+        font-size: 0.8125rem;
     }
 }
 
-@media (max-width: 480px) {
-    .chart-container {
-        height: 250px;
+/* Mobile */
+@media (max-width: 575.98px) {
+    .chart-card .chart-container {
+        height: clamp(200px, 30vh, 350px);
     }
-    
     .chart-card {
-        min-height: 350px;
+        min-height: clamp(300px, 40vh, 420px);
+    }
+    .chart-container .chartjs-legend {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
 
