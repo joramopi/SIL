@@ -752,7 +752,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
         if (window.ResponsiveManager) {
-            window.ResponsiveManager.init();
+            ResponsiveManager.init();
         }
         dashboardInstance = new Dashboard();
 
