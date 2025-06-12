@@ -10,7 +10,8 @@ class FilterManager {
             direction: '',
             search: '',
             ods: '',
-            fivep: ''
+            fivep: '',
+            epdot: ''
         };
 
         this.datalistOptions = {
@@ -313,6 +314,13 @@ class FilterManager {
                 const p1 = DataUtils.getFieldValue(item, '5P1', '').toLowerCase();
                 const p2 = DataUtils.getFieldValue(item, '5P2', '').toLowerCase();
                 if (p1 !== pVal && p2 !== pVal) return false;
+            }
+
+            // Filtro 5E PDOT
+            if (filters.epdot && filters.epdot !== '') {
+                const ejeVal = filters.epdot.toLowerCase().replace(/[\s-]+/g, '');
+                const ejeItem = DataUtils.getFieldValue(item, 'epdot', '').toLowerCase().replace(/[\s-]+/g, '');
+                if (ejeItem !== ejeVal) return false;
             }
 
 

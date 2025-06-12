@@ -125,7 +125,8 @@ const CONFIG = {
         direction: ['Direccion', 'Direction', 'Dir'],
         sector: ['SectorE', 'Sector', 'Sector_Estadistico'],
         registroAdmin: ['Registro_Administrativo', 'RA', 'Reg_Admin'],
-        idRA: ['Id_RA', 'ID_RA', 'RA_ID', 'RegistroAdministrativo']
+        idRA: ['Id_RA', 'ID_RA', 'RA_ID', 'RegistroAdministrativo'],
+        epdot: ['Eje_PDOT']
     },
     
     // Validation Rules
