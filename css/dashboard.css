@@ -497,40 +497,107 @@ body {
 }
 
 .table-container {
+    width: 100%;
     overflow-x: auto;
-    max-height: 600px;
-    overflow-y: auto;
 }
 
+/* Mobile-first card style for the indicators table */
 .indicators-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.indicators-table th {
-    background: var(--light-gray);
-    padding: 0.35rem;
-    text-align: left;
-    font-weight: 600;
-    color: var(--dark-gray);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 2px solid var(--medium-gray);
-    position: sticky;
-    top: 0;
-    z-index: 10;
+.indicators-table thead {
+    display: none;
 }
 
+.indicators-table tr {
+    display: block;
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius-small);
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+}
 
 .indicators-table td {
-    padding: 0.35rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.5rem;
     border-bottom: 1px solid var(--medium-gray);
     font-size: 0.85rem;
 }
 
-.indicators-table tr:hover {
-    background: var(--beach-beige);
+.indicators-table td:last-child {
+    border-bottom: none;
+}
+
+.indicators-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--dark-gray);
+    margin-right: 0.5rem;
+}
+
+@media (min-width: 768px) {
+    .table-container {
+        max-height: 600px;
+        overflow-y: auto;
+    }
+
+    .indicators-table {
+        display: table;
+    }
+
+    .indicators-table thead {
+        display: table-header-group;
+    }
+
+    .indicators-table tr {
+        display: table-row;
+        border: none;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    .indicators-table th,
+    .indicators-table td {
+        display: table-cell;
+        padding: 0.35rem;
+    }
+
+    .indicators-table th {
+        background: var(--light-gray);
+        text-align: left;
+        font-weight: 600;
+        color: var(--dark-gray);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--medium-gray);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .indicators-table td {
+        border-bottom: 1px solid var(--medium-gray);
+    }
+
+    .indicators-table td::before {
+        content: none;
+    }
+
+    .indicators-table tr:hover {
+        background: var(--beach-beige);
+    }
+}
+
+@media (max-width: 480px) {
+    .indicators-table td {
+        font-size: 0.75rem;
+    }
 }
 
 /* Button for dashboard links */
