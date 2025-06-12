@@ -113,14 +113,22 @@
                 </div>
 
                 <div class="filter-group">
-                    <label class="filter-label" for="direction-filter"><i class="fas fa-sitemap"></i> Direcciones</label>
+                    <label class="filter-label" for="direction-filter"><i class="fas fa-sitemap"></i> Direcciones
+                        <button id="directionInfoBtn" class="info-btn" type="button" aria-label="Más información">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </label>
                     <input class="filter-input" id="direction-filter" list="direction-options" placeholder="Todas las direcciones" aria-describedby="direction-help">
                     <datalist id="direction-options"></datalist>
                     <div id="direction-help" class="sr-only">Selecciona una dirección para filtrar los indicadores</div>
                 </div>
 
                 <div class="filter-group">
-                    <label class="filter-label" for="theme-filter"><i class="fas fa-folder-open"></i> Registros Administrativos</label>
+                    <label class="filter-label" for="theme-filter"><i class="fas fa-folder-open"></i> Registros Administrativos
+                        <button id="themeInfoBtn" class="info-btn" type="button" aria-label="Más información">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </label>
                     <input class="filter-input" id="theme-filter" list="theme-options" placeholder="Todos los RA" aria-describedby="theme-help">
                     <datalist id="theme-options"></datalist>
                     <div id="theme-help" class="sr-only">Selecciona un registro administrativo para filtrar los indicadores</div>
@@ -319,6 +327,32 @@
             <p><strong>Atención Ciudadana:</strong> Nodo que concentrará toda la información relacionada con las actividades y medios para facilitar el ejercicio de derechos ciudadanos: protección de grupos de atención prioritaria, seguridad y temas de cooperación internacional.</p>
             <p><strong>Administrativo Financiero:</strong> Nodo que concentrará toda la información Administrativa Financiera institucional.</p>
             <p><strong>Institucional:</strong> Nodo que concentrará toda la información derivada de la Gestión Interna y Externa de la Institución y que incluye el Marco Regulatorio Institucional.</p>
+        </div>
+    </div>
+
+    <div id="directionInfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="directionInfoTitle">
+        <div class="info-content">
+            <button id="directionInfoClose" class="info-close" aria-label="Cerrar">×</button>
+            <div class="info-header">
+                <div class="info-logo">
+                    <img src="img/silbico.png" alt="SILBico">
+                </div>
+                <h2 id="directionInfoTitle">Direcciones</h2>
+            </div>
+            <p>Direcciones: Se enlistan todas las direcciones del GADPM que contribuyen a cada componente.</p>
+        </div>
+    </div>
+
+    <div id="themeInfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="themeInfoTitle">
+        <div class="info-content">
+            <button id="themeInfoClose" class="info-close" aria-label="Cerrar">×</button>
+            <div class="info-header">
+                <div class="info-logo">
+                    <img src="img/silbico.png" alt="SILBico">
+                </div>
+                <h2 id="themeInfoTitle">Registros Administrativos</h2>
+            </div>
+            <p>Registros Administrativos: Fuente de Información oficial del SIL que contiene la mayor desagregación posible de las intervenciones ejecutadas, así como su territorialización, para el cálculo del indicador.</p>
         </div>
     </div>
 
