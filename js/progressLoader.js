@@ -103,6 +103,18 @@ class ProgressLoader {
             }, 3000); // extra time to read messages
         }
     }
+
+    async revealWhenReady(selector, promise) {
+        const section = DOMUtils.safeQuerySelector(selector);
+        if (!section) return;
+        section.classList.add('hidden-section');
+        try {
+            await promise;
+        } finally {
+            section.classList.add('fade-in-section');
+            section.classList.remove('hidden-section');
+        }
+    }
 }
 
 window.ProgressLoader = ProgressLoader;
