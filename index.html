@@ -175,23 +175,23 @@
                 <div class="epdot-images">
                     <div class="epdot-item">
                         <img src="img/5e1.png" alt="Manabí Vivo-Sostenible" data-label="Manabí Vivo-Sostenible">
-                        <button class="info-btn component-info-btn" type="button" aria-label="Más información">+</button>
+                        <button class="info-btn component-info-btn" data-target="5e1InfoOverlay" type="button" aria-label="Más información">+</button>
                     </div>
                     <div class="epdot-item">
                         <img src="img/5e2.png" alt="Manabí Integrado" data-label="Manabí Integrado">
-                        <button class="info-btn component-info-btn" type="button" aria-label="Más información">+</button>
+                        <button class="info-btn component-info-btn" data-target="5e2InfoOverlay" type="button" aria-label="Más información">+</button>
                     </div>
                     <div class="epdot-item">
                         <img src="img/5e3.png" alt="Manabí Humano" data-label="Manabí Humano">
-                        <button class="info-btn component-info-btn" type="button" aria-label="Más información">+</button>
+                        <button class="info-btn component-info-btn" data-target="5e3InfoOverlay" type="button" aria-label="Más información">+</button>
                     </div>
                     <div class="epdot-item">
                         <img src="img/5e4.png" alt="Manabí Próspero" data-label="Manabí Próspero">
-                        <button class="info-btn component-info-btn" type="button" aria-label="Más información">+</button>
+                        <button class="info-btn component-info-btn" data-target="5e4InfoOverlay" type="button" aria-label="Más información">+</button>
                     </div>
                     <div class="epdot-item">
                         <img src="img/5e5.png" alt="Manabí Estratégico" data-label="Manabí Estratégico">
-                        <button class="info-btn component-info-btn" type="button" aria-label="Más información">+</button>
+                        <button class="info-btn component-info-btn" data-target="5e5InfoOverlay" type="button" aria-label="Más información">+</button>
                     </div>
                 </div>
                 <div class="stat-footer" id="fiveepdotFooter"></div>
@@ -436,6 +436,70 @@
         </div>
     </div>
 
+<div id="5e1InfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="5e1InfoTitle">
+    <div class="info-content">
+        <button id="5e1InfoClose" class="info-close" aria-label="Cerrar">×</button>
+        <div class="info-header">
+            <div class="info-logo">
+                <img src="img/silbico.png" alt="SILBico">
+            </div>
+            <h2 id="5e1InfoTitle">Manabí Vivo y Sostenible</h2>
+        </div>
+        <p>Busca la protección y conservación del medio ambiente y los recursos naturales, promoviendo la economía sostenible y la biodiversidad. Se enfoca en la gestión responsable de los recursos naturales, la adaptación al cambio climático y la promoción de prácticas sostenibles.</p>
+    </div>
+</div>
+
+<div id="5e2InfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="5e2InfoTitle">
+    <div class="info-content">
+        <button id="5e2InfoClose" class="info-close" aria-label="Cerrar">×</button>
+        <div class="info-header">
+            <div class="info-logo">
+                <img src="img/silbico.png" alt="SILBico">
+            </div>
+            <h2 id="5e2InfoTitle">Manabí Integrado</h2>
+        </div>
+        <p>Fomenta la conexión y articulación de todos los territorios de la provincia, promoviendo la movilidad, la infraestructura y la comunicación. Se busca una integración territorial que permita el acceso a servicios y oportunidades para todos los habitantes, independientemente de su ubicación.</p>
+    </div>
+</div>
+
+<div id="5e3InfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="5e3InfoTitle">
+    <div class="info-content">
+        <button id="5e3InfoClose" class="info-close" aria-label="Cerrar">×</button>
+        <div class="info-header">
+            <div class="info-logo">
+                <img src="img/silbico.png" alt="SILBico">
+            </div>
+            <h2 id="5e3InfoTitle">Manabí Humano</h2>
+        </div>
+        <p>Prioriza el desarrollo de las personas, con énfasis en la educación, salud, seguridad y bienestar social. Se enfoca en la equidad, la inclusión y los derechos de todos los habitantes de la provincia, con un enfoque de género e intergeneracional.</p>
+    </div>
+</div>
+
+<div id="5e4InfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="5e4InfoTitle">
+    <div class="info-content">
+        <button id="5e4InfoClose" class="info-close" aria-label="Cerrar">×</button>
+        <div class="info-header">
+            <div class="info-logo">
+                <img src="img/silbico.png" alt="SILBico">
+            </div>
+            <h2 id="5e4InfoTitle">Manabí Próspero</h2>
+        </div>
+        <p>Se enfoca en el desarrollo económico sostenible y la generación de empleo, promoviendo la innovación, la diversificación productiva y el turismo. Busca crear un ambiente propicio para la inversión y el emprendimiento, impulsando la economía local y la competitividad de la provincia.</p>
+    </div>
+</div>
+
+<div id="5e5InfoOverlay" class="info-overlay" aria-modal="true" role="dialog" aria-labelledby="5e5InfoTitle">
+    <div class="info-content">
+        <button id="5e5InfoClose" class="info-close" aria-label="Cerrar">×</button>
+        <div class="info-header">
+            <div class="info-logo">
+                <img src="img/silbico.png" alt="SILBico">
+            </div>
+            <h2 id="5e5InfoTitle">Manabí Estratégico</h2>
+        </div>
+        <p>Define los objetivos y metas de largo plazo para la provincia, alineándose con los Objetivos de Desarrollo Sostenible (ODS) y las agendas de desarrollo global. Se busca posicionar a Manabí como un referente en el desarrollo sostenible, la innovación y la inclusión social, a nivel nacional e internacional.</p>
+    </div>
+</div>
     <div id="silbi-container" role="region" aria-label="Asistente virtual">
         <div id="silbi-inner">
             <div id="silbi-emote">😊</div>
