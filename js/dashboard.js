@@ -117,7 +117,6 @@ class Dashboard {
         } finally {
             if (this.progressLoader) {
                 this.progressLoader.finish();
-                this.progressLoader.revealWhenReady('main.container', Promise.resolve());
             }
             this.setLoadingState(false);
         }
@@ -749,11 +748,8 @@ let dashboardInstance = null;
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("📄 DOM cargado, inicializando dashboard...");
-
+    
     try {
-        if (window.ResponsiveManager) {
-            ResponsiveManager.init();
-        }
         dashboardInstance = new Dashboard();
 
         // Hacer la instancia disponible globalmente para debugging
