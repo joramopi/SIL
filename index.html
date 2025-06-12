@@ -371,13 +371,13 @@
         </div>
     </div>
 
-    <div id="silbi-container">
+    <div id="silbi-container" role="region" aria-label="Asistente virtual">
         <div id="silbi-inner">
             <div id="silbi-emote">😊</div>
-            <img id="silbi-character" src="img/silbi.png" alt="SILBí personaje" />
+            <img id="silbi-character" src="img/silbi.png" alt="SILBí personaje" role="button" tabindex="0" aria-label="Reaccionar" />
         </div>
-        <div id="silbi-bubble">
-            <button id="silbi-close">×</button>
+        <div id="silbi-bubble" role="status" aria-live="polite">
+            <button id="silbi-close" aria-label="Cerrar mensaje">×</button>
             <span id="silbi-message">¡Hola!</span>
         </div>
     </div>

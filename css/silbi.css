@@ -1,9 +1,9 @@
 /* Styles for SILB\xed virtual assistant */
 #silbi-container{
   position:fixed;
-  bottom:20px;
-  right:20px;
-  width:180px;
+  bottom:clamp(0.625rem,2vw,1.25rem);
+  right:clamp(0.625rem,2vw,1.25rem);
+  width:clamp(8.75rem,20vw,11.25rem);
   z-index:1000;
   font-family:Arial, sans-serif;
 }
@@ -15,12 +15,16 @@
   50%{transform:translate(3px,-6px);}
   75%{transform:translate(-3px,-3px);}
 }
-#silbi-bubble{position:absolute;bottom:200px;right:0;background-color:#fff;color:#333;padding:8px 12px;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,0.15);font-size:12px;max-width:150px;opacity:0;transform:translateY(10px);transition:all 0.5s ease;pointer-events:none;}
-#silbi-bubble::after{content:'';position:absolute;bottom:-8px;right:20px;border-width:10px 10px 0 10px;border-style:solid;border-color:#ffffff transparent transparent transparent;}
+#silbi-bubble{position:absolute;bottom:clamp(10rem,55vw,12.5rem);right:0;background-color:#fff;color:#333;padding:0.5rem 0.75rem;border-radius:15px;box-shadow:0 4px 12px rgba(0,0,0,0.15);font-size:clamp(0.625rem,2vw,0.75rem);max-width:150px;opacity:0;transform:translateY(10px);transition:all 0.5s ease;pointer-events:none;}
+#silbi-bubble::after{content:'';position:absolute;bottom:-8px;right:clamp(1rem,3vw,1.25rem);border-width:10px 10px 0 10px;border-style:solid;border-color:#ffffff transparent transparent transparent;}
 #silbi-bubble.show{opacity:1;transform:translateY(0);pointer-events:auto;}
-#silbi-close{position:absolute;top:-10px;right:-10px;background:#f00;color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;z-index:10;}
-#silbi-emote{position:absolute;top:72%;left:58%;transform:translate(-50%, -50%) scale(0);font-size:40px;opacity:0;animation:zoomEffect 2s ease-in-out forwards;pointer-events:none;z-index:10;}
+#silbi-close{position:absolute;top:-10px;right:-10px;background:#f00;color:#fff;border:none;border-radius:50%;width:clamp(1.5rem,3vw,2rem);height:clamp(1.5rem,3vw,2rem);font-size:clamp(0.75rem,2vw,1rem);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
+#silbi-emote{position:absolute;top:72%;left:58%;transform:translate(-50%, -50%) scale(0);font-size:clamp(1.875rem,8vw,2.5rem);opacity:0;animation:zoomEffect 2s ease-in-out forwards;pointer-events:none;z-index:10;}
 @keyframes zoomEffect{0%{transform:translate(-50%, -50%) scale(0.2);opacity:0;}60%{transform:translate(-50%, -50%) scale(1.2);opacity:1;}100%{transform:translate(-50%, -50%) scale(0);opacity:0;}}
-@media(max-width:600px){#silbi-container{width:140px;bottom:10px;right:10px;}#silbi-bubble{bottom:160px;font-size:10px;max-width:150px;}#silbi-bubble::after{right:16px;}#silbi-emote{font-size:30px;top:75%;left:51%;}}
+@media(max-width:600px){#silbi-emote{top:75%;left:51%;}}
+
+@media(prefers-reduced-motion: reduce){
+  #silbi-character{animation:none;}
+}
 
 #gadpm-phrase{margin-top:4px;text-align:center;font-size:0.85rem;color:var(--dark-gray);}
