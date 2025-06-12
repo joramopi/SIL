@@ -769,7 +769,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (fivepCard) {
             const moveHandler = evt => moveCardBubble(evt);
             fivepCard.addEventListener('mouseenter', evt => {
-                showCardBubble('Espacio destinado a las 5P', true);
+                showCardBubble('5P dimensiones Agenda 2030', true);
                 moveCardBubble(evt);
                 fivepCard.addEventListener('mousemove', moveHandler);
             });
