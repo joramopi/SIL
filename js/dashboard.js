@@ -563,9 +563,21 @@ class Dashboard {
             }
         ];
 
+        // Etiquetas para vista de tarjetas
+        const dataLabels = [
+            'Indicador',
+            'Componente',
+            'Dirección',
+            'Sector',
+            'Registro',
+            'Periodicidad',
+            'Dashboard'
+        ];
+
         // Crear celdas
-        rowData.forEach(cellData => {
+        rowData.forEach((cellData, idx) => {
             const cell = row.insertCell();
+            cell.setAttribute('data-label', dataLabels[idx]);
             if (cellData.isHTML) {
                 cell.innerHTML = cellData.content;
             } else {
